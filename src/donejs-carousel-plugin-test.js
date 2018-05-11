@@ -1,9 +1,10 @@
 import QUnit from 'steal-qunit';
-import plugin from './donejs-carousel-plugin';
+import { ViewModel } from './donejs-carousel-plugin';
 
+// ViewModel unit tests
 QUnit.module('donejs-carousel-plugin');
 
-QUnit.test('Initialized the plugin', function(){
-  QUnit.equal(typeof plugin, 'function');
-  QUnit.equal(plugin(), 'This is the donejs-carousel-plugin plugin');
+QUnit.test('Has message', function(){
+  var vm = new ViewModel();
+  QUnit.equal(vm.message, 'This is the tucows-donejs-carousel component');
 });
