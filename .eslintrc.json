@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jquery": true,
+        "node": true,
+        "mocha": true,
+        "qunit": true
+    },
+    "extends": "eslint-config-tucows",
+    "globals": {
+        "can": true,
+        "steal": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    }
+}

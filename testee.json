@@ -1,0 +1,15 @@
+{
+    "reporter": "spec",
+    "delay": 2000,
+    "browsers": [
+        {
+            "browser": "chrome",
+            "args": [
+                "--headless",
+                "--disable-gpu",
+                "--disable-extensions",
+                "--remote-debugging-port=9222"
+            ]
+        }
+    ]
+}
