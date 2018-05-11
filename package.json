@@ -1,6 +1,6 @@
 {
   "name": "@tucows/donejs-carousel-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A carousel plugin for donejs",
   "homepage": "https://github.com/tucows/donejs-carousel-plugin",
   "repository": {
