@@ -1,0 +1,9 @@
+{
+  "generator-donejs": {
+    "promptValues": {
+      "authorName": "Ranjan Subbiah",
+      "authorEmail": "",
+      "authorUrl": ""
+    }
+  }
+}
