@@ -1,5 +1,5 @@
 {
-  "name": "donejs-carousel-plugin",
+  "name": "@tucows/donejs-carousel-plugin",
   "version": "0.0.0",
   "description": "A carousel plugin for donejs",
   "homepage": "https://github.com/tucows/donejs-carousel-plugin",
@@ -33,7 +33,6 @@
     ]
   },
   "keywords": [
-    "",
     "donejs-plugin"
   ],
   "steal": {
@@ -83,5 +82,8 @@
     "steal-qunit": "^1.0.1",
     "testee": "^0.3.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tucows/donejs-carousel-plugin/issues"
+  }
 }
