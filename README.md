@@ -9,7 +9,7 @@ A carousel plugin for DoneJS.
 ### Import in stache
 
 ```js
-<can-import from="@tucows/tucows-carousel-plugin" />
+<can-import from="@tucows/donejs-carousel-plugin" />
 ```
 
 ### Insert component in stache 
