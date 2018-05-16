@@ -620,6 +620,7 @@ describe('tucows-donejs-carousel', () => {
 		let moveCarouselStub;
 		let getLeftStub;
 		let defineTouchStub;
+		let preventDefaultStub;
 		let clientX = chance.natural();
 		let pageX = chance.natural();
 		let event = {touches: [{pageX: pageX}] };
@@ -630,12 +631,14 @@ describe('tucows-donejs-carousel', () => {
 			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
 			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
 			getLeftStub = sinon.stub(vm, 'getLeft');
+			preventDefaultStub = sinon.stub(vm, 'preventDefault');
 		});
 
 		afterEach(() => {
 			defineTouchStub.restore();
 			moveCarouselStub.restore();
 			getLeftStub.restore();
+			preventDefaultStub.restore();
 		});
 
 		it('should call getLeft function once with the active slide', () => {
