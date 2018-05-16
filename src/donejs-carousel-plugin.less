@@ -5,6 +5,8 @@ tucows-donejs-carousel {
 		overflow: hidden;
 		position: relative;
 		text-align: center;
+		// prevents the div from flashing on click on mobile and tablet view
+		-webkit-tap-highlight-color: transparent; 
 		width: 100%;
 	}
 
@@ -61,6 +63,8 @@ tucows-donejs-carousel {
 
 	.dot {
 		margin-right: 10px;
+		// prevents the div from flashing on click on mobile and tablet view
+		-webkit-tap-highlight-color: transparent;
 
 		&:last-child {
 			margin-right: 0;

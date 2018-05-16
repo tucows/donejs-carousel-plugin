@@ -336,6 +336,10 @@ export const ViewModel = DefineMap.extend({
 		// figure out and assign the swipe length (positive is swipe right, negative is swipe left)
 		let swipeLength;
 		this.swipeObject.swipeLength = swipeLength = this.swipeObject.currentX - this.swipeObject.startX;
+		// prevent horizontal scrolling when swiping the carousel
+		if (this.swipeObject.swipeLength < -4 || this.swipeObject.swipeLength > 4) {
+			this.preventDefault(event);
+		}
 		// based on swipe length and the inital position, figure out how much the slide should move horizontally
 		let moveAmount = currentLeft + swipeLength;
 		// move carousel to where the mouse or finger has traveled
