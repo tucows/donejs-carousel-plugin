@@ -97,3 +97,15 @@ extraClasses | string | none | class name to be added to parent carousel element
 breakOnDesktop | boolean | false |  turn off the carousel on desktop view (1024px width and greater). All slides will shown side-by-side.
 autoPlay | number | off | enable auto-play sliding. the number represents interval in millisecond.
 
+### Carousel in action
+
+screen shots from https://ting.com
+
+#### screenshot 1
+
+<img src="https://user-images.githubusercontent.com/20194649/41558218-23029dcc-730e-11e8-8dd9-08403c426f24.png" alt="screen shot of carousel at ting.com" width="700px"/>
+
+#### screenshot 2
+
+<img src="https://user-images.githubusercontent.com/20194649/41559658-a84e7e5c-7312-11e8-9d32-30b3a8fb2742.png" alt="screen shot of carousel at ting.com" width="530px"/>
+
