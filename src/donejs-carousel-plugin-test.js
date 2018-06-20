@@ -74,6 +74,10 @@ describe('tucows-donejs-carousel', () => {
 				autoPlay: {
 					type: 'number',
 					value: autoPlayInitValue
+				},
+				slides: {
+					type: 'obervable',
+					value: ["slide1", "slide2"]
 				}
 			}));
 
@@ -94,7 +98,24 @@ describe('tucows-donejs-carousel', () => {
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
-				describe('when breakOnDesktop is true and it is not desktop view (-)', () => {
+				describe('when slides length is 1', () => {
+					it('should not set autoPlay in the view model', () => {
+						// setup 
+						let randomNumber = chance.natural();
+						let newOptions = {
+							autoPlay: randomNumber,
+							breakOnDesktop: true
+						};
+						vm.isDesktop = true;
+						vm.slides = ["slide1"];
+						// run
+						vm.carouselOptions = newOptions;
+						// test
+						vm.autoPlay.should.equal(autoPlayInitValue);
+						vm.carouselOptions.should.deep.equal(newOptions);
+					});
+				});
+				describe('when breakOnDesktop is true, it is not desktop view (-) and slide length is > 1', () => {
 					it('should set autoPlay in the view model', () => {
 						// setup 
 						let randomNumber = chance.natural();
@@ -103,6 +124,7 @@ describe('tucows-donejs-carousel', () => {
 							breakOnDesktop: true
 						};
 						vm.isDesktop = false;
+						vm.slides = ["slide1", "slide2"];
 						// run
 						vm.carouselOptions = newOptions;
 						// test
@@ -110,7 +132,7 @@ describe('tucows-donejs-carousel', () => {
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
-				describe('when breakOnDesktop is not defined (-)', () => {
+				describe('when breakOnDesktop is not defined (-) and slide length is > 1', () => {
 					it('should set autoPlay in the view model', () => {
 						// setup 
 						let randomNumber = chance.natural();
@@ -125,7 +147,7 @@ describe('tucows-donejs-carousel', () => {
 				});
 			});
 
-			describe('when autoPlay is not defined in carousel options (-)', () => {
+			describe('when autoPlay is not defined in carousel options (-) and slide length is > 1', () => {
 				it('should not set autoPlay in the view model', () => {
 					// setup 
 					vm.autoPlay = autoPlayInitValue; // reset auto play to default value
