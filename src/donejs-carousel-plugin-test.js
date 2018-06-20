@@ -77,7 +77,7 @@ describe('tucows-donejs-carousel', () => {
 				},
 				slides: {
 					type: 'obervable',
-					value: ["slide1", "slide2"]
+					value: ['slide1', 'slide2']
 				}
 			}));
 
@@ -107,7 +107,7 @@ describe('tucows-donejs-carousel', () => {
 							breakOnDesktop: true
 						};
 						vm.isDesktop = true;
-						vm.slides = ["slide1"];
+						vm.slides = ['slide1'];
 						// run
 						vm.carouselOptions = newOptions;
 						// test
@@ -124,7 +124,7 @@ describe('tucows-donejs-carousel', () => {
 							breakOnDesktop: true
 						};
 						vm.isDesktop = false;
-						vm.slides = ["slide1", "slide2"];
+						vm.slides = ['slide1', 'slide2'];
 						// run
 						vm.carouselOptions = newOptions;
 						// test
