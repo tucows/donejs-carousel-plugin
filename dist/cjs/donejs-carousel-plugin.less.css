@@ -1,0 +1,80 @@
+/*@tucows/donejs-carousel-plugin@0.4.0#donejs-carousel-plugin.less!steal-less@1.3.0#less*/
+tucows-donejs-carousel .carousel {
+  cursor: default;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+}
+tucows-donejs-carousel .slideTrack {
+  display: flex;
+  text-align: center;
+  transform: translateX(0%);
+}
+tucows-donejs-carousel .arrow {
+  position: absolute;
+  top: 45%;
+}
+tucows-donejs-carousel .arrow svg {
+  fill: #00aaee;
+  height: 40px;
+  width: 40px;
+}
+tucows-donejs-carousel .arrow:focus,
+tucows-donejs-carousel .arrow:active,
+tucows-donejs-carousel .arrow:hover {
+  text-decoration: none;
+}
+tucows-donejs-carousel .leftArrow {
+  left: 0;
+}
+tucows-donejs-carousel .leftArrow svg {
+  padding-left: 5px;
+}
+tucows-donejs-carousel .rightArrow {
+  right: 0;
+}
+tucows-donejs-carousel .rightArrow svg {
+  padding-right: 5px;
+}
+tucows-donejs-carousel .slide {
+  flex: 1 0 100%;
+}
+tucows-donejs-carousel .navDots {
+  bottom: 35px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+tucows-donejs-carousel .dot {
+  margin-right: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+tucows-donejs-carousel .dot:last-child {
+  margin-right: 0;
+}
+tucows-donejs-carousel .dot svg {
+  fill: #e8e8e8;
+  height: 13px;
+  width: 13px;
+}
+tucows-donejs-carousel .dot.active svg {
+  fill: #00aaee;
+}
+@media screen and (min-width: 1024px) {
+  tucows-donejs-carousel .breakOnDesktop .slide {
+    flex: 1 0;
+  }
+  tucows-donejs-carousel .breakOnDesktop .navArrows {
+    display: none;
+  }
+  tucows-donejs-carousel .breakOnDesktop .navDots {
+    display: none;
+  }
+  tucows-donejs-carousel .navDots.breakOnDesktop {
+    display: none;
+  }
+}
