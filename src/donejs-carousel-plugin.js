@@ -71,8 +71,9 @@ export const ViewModel = DefineMap.extend({
 		* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
 		*/
 		get() {
-			if ($('.slide')) {
-				return $('.slide').outerWidth(true);
+			let slide = $(`.${this.carouselOptions.extraClass} .slide`);
+			if (slide) {
+				return slide.outerWidth(true);
 			}
 		}
 	},
