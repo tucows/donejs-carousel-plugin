@@ -68,8 +68,8 @@ export const ViewModel = DefineMap.extend({
 	slideWidth: {
 		type: 'number',
 		/**
-    * @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
-    */
+		* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
+		*/
 		get() {
 			if ($('.slide')) {
 				return $('.slide').outerWidth(true);
@@ -79,8 +79,8 @@ export const ViewModel = DefineMap.extend({
 	isDesktop: {
 		type: 'boolean',
 		/**
-      * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
-      */
+		 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
+		 */
 		get() {
 			return !isMobile('isTablet');
 		}
@@ -88,13 +88,13 @@ export const ViewModel = DefineMap.extend({
 	carouselOptions: {
 		type: 'any',
 		/**
-    * @property {object} carouselOptions passed in from the parent component 
-    */
+		* @property {object} carouselOptions passed in from the parent component 
+		*/
 		set(newVal) {
 			// if it's defined
 			if (newVal) {
-				// if autoPlay is defined
-				if (newVal.autoPlay && (newVal.breakOnDesktop ? !this.isDesktop : true)) {
+				// if autoPlay is defined AND if carousel is supposed to break on desktop and is desktop AND slides is greater than 1
+				if (newVal.autoPlay && (newVal.breakOnDesktop ? !this.isDesktop : true) && (this.slides.length > 1)) {
 					// set autoPlay
 					this.autoPlay = newVal.autoPlay;
 				}
