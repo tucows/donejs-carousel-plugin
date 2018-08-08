@@ -86,11 +86,15 @@ export const ViewModel = DefineMap.extend({
 			return !isMobile('isTablet');
 		}
 	},
+	/**
+	* @property {object} carouselOptions passed in from the parent component 
+	*/
 	carouselOptions: {
 		type: 'any',
+		value: {},
 		/**
-		* @property {object} carouselOptions passed in from the parent component 
-		*/
+		* @function set called when new carouselOptions is set
+		* */
 		set(newVal) {
 			// if it's defined
 			if (newVal) {

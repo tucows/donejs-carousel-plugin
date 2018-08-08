@@ -1,6 +1,24 @@
 <script type="text/stache" can-autorender>
-  <can-import from="donejs-carousel-plugin/" />
-  <tucows-donejs-carousel></tucows-donejs-carousel>
+  <can-import from="@tucows/donejs-carousel-plugin/test.less!" />
+  <can-import from="@tucows/donejs-carousel-plugin" />
+	<tucows-donejs-carousel>
+		 <div class="block slide {{#is ./activeSlideIndex 0}} active {{/is}}" tabindex="{{#is ./activeSlideIndex 0}} 0 {{else}} -1 {{/is}}">
+				<h1>*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!</h1>
+				<p>I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</p>
+				<p><strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!</p>
+		</div>
+		 <div class="block slide {{#is ./activeSlideIndex 1}} active {{/is}}" tabindex="{{#is ./activeSlideIndex 1}} 0 {{else}} -1 {{/is}}">
+			<h1>They're not aliens, they're Earth…liens!</h1>
+			<p>All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?</p>
+			<p>You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!</p>
+		</div>
+		 <div class="block slide {{#is ./activeSlideIndex 2}} active {{/is}}" tabindex="{{#is ./activeSlideIndex 2}} 0 {{else}} -1 {{/is}}">
+		<h1>Stop talking, brain thinking. Hush.</h1>
+		<p>You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.</p>
+		<p>Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?</p>
+		</div>
+	</tucows-donejs-carousel>	
+		
 </script>
 <script src="../node_modules/steal/steal.js"
         main="can-view-autorender"></script>

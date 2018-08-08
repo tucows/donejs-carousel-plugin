@@ -443,10 +443,7 @@ describe('tucows-donejs-carousel', () => {
 				type: 'bool',
 				value: true
 			},
-			carouselOptions: {
-				type: 'any',
-				value: {breakOnDesktop: true}
-			}
+			carouselOptions: {type: 'any'}
 		}));
 
 		let event = 'anything, just for testing';
@@ -470,6 +467,7 @@ describe('tucows-donejs-carousel', () => {
 		describe('when break-on-desktop flag and is-desktop flag is true', () => {
 			it('should not call the swipe functions at all', () => {
 				// setup 
+				vm.carouselOptions.breakOnDesktop = true;
 				action = chance.pickone(['start', 'move', 'end']);
 				// run 
 				vm.swipeHandler(event, action);
@@ -484,7 +482,6 @@ describe('tucows-donejs-carousel', () => {
 			describe('when action is start', () => {
 				it('should call swipe-start function with the event', () => {
 					// setup 
-					vm.carouselOptions.breakOnDesktop = false;
 					action = 'start';
 					// run 
 					vm.swipeHandler(event, action);
