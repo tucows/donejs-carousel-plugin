@@ -32,6 +32,7 @@ export const ViewModel = DefineMap.extend({
 	/**
 	* @property {array} slides populates slides with the appropriate data. This will likely change.
 	*/
+	// slides: 'any',
 	slides: 'any',
 	/**
 	* @property {number} activeSlideIndex slide that the user wants to see
@@ -71,10 +72,12 @@ export const ViewModel = DefineMap.extend({
 		* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
 		*/
 		get() {
-			let slide = $(`.${this.carouselOptions.extraClass} .slide`);
-			if (slide) {
-				return slide.outerWidth(true);
-			}
+
+			let extraClass = this.carouselOptions.extraClass;
+
+			let slide = extraClass ? $(`.${extraClass} .slide`) : $('.slide');
+
+			return slide.outerWidth(true);
 		}
 	},
 	isDesktop: {
