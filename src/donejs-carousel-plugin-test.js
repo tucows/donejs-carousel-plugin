@@ -438,14 +438,7 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('swipeHandler()', () => {
 		// setup
-		let vm = new (ViewModel.extend({seal: false}, {
-			isDesktop: {
-				type: 'bool',
-				value: true
-			},
-			carouselOptions: {type: 'any'}
-		}));
-
+		let vm;
 		let event = 'anything, just for testing';
 		let action;
 		let swipeStartStub;
@@ -453,6 +446,16 @@ describe('tucows-donejs-carousel', () => {
 		let swipeEndStub;
 
 		beforeEach(() => {
+			vm = new (ViewModel.extend({seal: false}, {
+				isDesktop: {
+					type: 'bool',
+					value: true
+				},
+				carouselOptions: {
+					type: 'any',
+					value: {}
+				}
+			}));
 			swipeStartStub = sinon.stub(vm, 'swipeStart');
 			swipeMoveStub = sinon.stub(vm, 'swipeMove');
 			swipeEndStub = sinon.stub(vm, 'swipeEnd');
