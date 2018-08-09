@@ -8,13 +8,13 @@
     "url": "git://github.com/Tucows/donejs-carousel-plugin.git"
   },
   "author": "Ranjan Subbiah <rsubbiah@tucows.com>",
-	"contributors": [
-		{
-			"name": "Paul Tichonczuk",
-			"email": "junk@tracer.ca",
-			"url": "http://tracer.ca"
-		}
-	],
+  "contributors": [
+    {
+      "name": "Paul Tichonczuk",
+      "email": "junk@tracer.ca",
+      "url": "http://tracer.ca"
+    }
+  ],
   "scripts": {
     "preversion": "npm test && npm run build",
     "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/",
@@ -28,10 +28,10 @@
     "build": "node build.js",
     "develop": "done-serve --static --develop --port 8080"
   },
-  "main": "donejs-carousel-plugin",
-	"files": [
-		 "src"
-	],
+  "main": "@tucows/donejs-carousel-plugin",
+  "files": [
+    "src"
+  ],
   "browser": {
     "transform": [
       "cssify"
