@@ -10,6 +10,16 @@
                 "--disable-extensions",
                 "--remote-debugging-port=9222"
             ]
+        },
+        {
+            "browser": "firefox",
+            "args": [
+                "--headless"
+            ]
         }
-    ]
+    ],
+	"coverage": {
+		"dir": "coverage",
+		"ignore": ["node_modules"]
+	}
 }

@@ -66,13 +66,15 @@ export const ViewModel = DefineMap.extend({
 		type: 'boolean',
 		value: false
 	},
+	/**
+	* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
+	* */
 	slideWidth: {
 		type: 'number',
 		/**
-		* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
-		*/
+		 * @function get gets the extra class information if available
+		 * */
 		get() {
-
 			let extraClass = this.carouselOptions.extraClass;
 
 			let slide = extraClass ? $(`.${extraClass} .slide`) : $('.slide');
@@ -80,11 +82,14 @@ export const ViewModel = DefineMap.extend({
 			return slide.outerWidth(true);
 		}
 	},
+	/**
+	 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
+	 */
 	isDesktop: {
 		type: 'boolean',
 		/**
-		 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
-		 */
+		 * @function get returns the reverse of isMobile
+		 * */
 		get() {
 			return !isMobile('isTablet');
 		}
@@ -116,11 +121,14 @@ export const ViewModel = DefineMap.extend({
 	*/
 	autoPlayInterval: {type: 'any'},
 
+	/**
+	* @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
+	* */
 	autoPlay: {
 		type: 'number',
 		/**
-    * @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
-    */
+		 * @function set sets the autoplay number and figures out the interval
+		 * */
 		set(duration) {
 			// make sure duration is a number
 			if (!isNaN(duration)) {
