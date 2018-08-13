@@ -438,17 +438,7 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('swipeHandler()', () => {
 		// setup
-		let vm = new (ViewModel.extend({seal: false}, {
-			isDesktop: {
-				type: 'bool',
-				value: true
-			},
-			carouselOptions: {
-				type: 'any',
-				value: {breakOnDesktop: true}
-			}
-		}));
-
+		let vm;
 		let event = 'anything, just for testing';
 		let action;
 		let swipeStartStub;
@@ -456,6 +446,16 @@ describe('tucows-donejs-carousel', () => {
 		let swipeEndStub;
 
 		beforeEach(() => {
+			vm = new (ViewModel.extend({seal: false}, {
+				isDesktop: {
+					type: 'bool',
+					value: true
+				},
+				carouselOptions: {
+					type: 'any',
+					value: {}
+				}
+			}));
 			swipeStartStub = sinon.stub(vm, 'swipeStart');
 			swipeMoveStub = sinon.stub(vm, 'swipeMove');
 			swipeEndStub = sinon.stub(vm, 'swipeEnd');
@@ -470,6 +470,7 @@ describe('tucows-donejs-carousel', () => {
 		describe('when break-on-desktop flag and is-desktop flag is true', () => {
 			it('should not call the swipe functions at all', () => {
 				// setup 
+				vm.carouselOptions.breakOnDesktop = true;
 				action = chance.pickone(['start', 'move', 'end']);
 				// run 
 				vm.swipeHandler(event, action);
@@ -484,7 +485,6 @@ describe('tucows-donejs-carousel', () => {
 			describe('when action is start', () => {
 				it('should call swipe-start function with the event', () => {
 					// setup 
-					vm.carouselOptions.breakOnDesktop = false;
 					action = 'start';
 					// run 
 					vm.swipeHandler(event, action);

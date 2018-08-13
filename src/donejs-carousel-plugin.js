@@ -32,6 +32,7 @@ export const ViewModel = DefineMap.extend({
 	/**
 	* @property {array} slides populates slides with the appropriate data. This will likely change.
 	*/
+	// slides: 'any',
 	slides: 'any',
 	/**
 	* @property {number} activeSlideIndex slide that the user wants to see
@@ -65,32 +66,43 @@ export const ViewModel = DefineMap.extend({
 		type: 'boolean',
 		value: false
 	},
+	/**
+	* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
+	* */
 	slideWidth: {
 		type: 'number',
 		/**
-		* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
-		*/
+		 * @function get gets the extra class information if available
+		 * */
 		get() {
-			let slide = $(`.${this.carouselOptions.extraClass} .slide`);
-			if (slide) {
-				return slide.outerWidth(true);
-			}
+			let extraClass = this.carouselOptions.extraClass;
+
+			let slide = extraClass ? $(`.${extraClass} .slide`) : $('.slide');
+
+			return slide.outerWidth(true);
 		}
 	},
+	/**
+	 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
+	 */
 	isDesktop: {
 		type: 'boolean',
 		/**
-		 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
-		 */
+		 * @function get returns the reverse of isMobile
+		 * */
 		get() {
 			return !isMobile('isTablet');
 		}
 	},
+	/**
+	* @property {object} carouselOptions passed in from the parent component 
+	*/
 	carouselOptions: {
 		type: 'any',
+		value: {},
 		/**
-		* @property {object} carouselOptions passed in from the parent component 
-		*/
+		* @function set called when new carouselOptions is set
+		* */
 		set(newVal) {
 			// if it's defined
 			if (newVal) {
@@ -109,11 +121,14 @@ export const ViewModel = DefineMap.extend({
 	*/
 	autoPlayInterval: {type: 'any'},
 
+	/**
+	* @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
+	* */
 	autoPlay: {
 		type: 'number',
 		/**
-    * @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
-    */
+		 * @function set sets the autoplay number and figures out the interval
+		 * */
 		set(duration) {
 			// make sure duration is a number
 			if (!isNaN(duration)) {
