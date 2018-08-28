@@ -99,7 +99,7 @@ autoPlay | number | off | enable auto-play sliding. the number represents interv
 
 ### Carousel in action
 
-screen shots from https://ting.com
+Screen shots from https://ting.com
 
 #### screenshot 1
 
@@ -108,4 +108,8 @@ screen shots from https://ting.com
 #### screenshot 2
 
 <img src="https://user-images.githubusercontent.com/20194649/41559658-a84e7e5c-7312-11e8-9d32-30b3a8fb2742.png" alt="screen shot of carousel at ting.com" width="530px"/>
+
+### acknowledgment 
+
+Open source project, Slick Carousel (http://kenwheeler.github.io/slick/), was a big help in developing this carousel.
 

@@ -155,6 +155,15 @@ export const ViewModel = DefineMap.extend({
 		type: 'boolean',
 		value: platform.isDesktopBrowser
 	},
+	isActiveYes: 'boolean',
+	isActive(index) {
+		console.log('fired');
+		if(index == this.activeSlideIndex) {
+			return true;
+		}
+
+		return false;
+	},
 	/**
 	* @function oneSlideOver
 	*
