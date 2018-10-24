@@ -39,7 +39,14 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0
+		value: 0,
+		set(newIndex) {
+			if(newIndex != this.activeSlideIndex) {
+				this.moveCarousel('active slide', newIndex)
+			}
+			
+			return newIndex;
+		}
 	},
 	lastSlideIndex: {
 		type: 'number',
@@ -171,8 +178,6 @@ export const ViewModel = DefineMap.extend({
 			// reduce the active slide index flag
 			this.activeSlideIndex--;
 		}
-		// move carousel to the new active slide
-		this.moveCarousel('active slide');
 	},
 	/**
 	* @function directionHandler
@@ -260,8 +265,6 @@ export const ViewModel = DefineMap.extend({
 	dotClickHandler(index) {
 		// set active slide to the selected index
 		this.activeSlideIndex = index;
-		// move carousel so the newly activated slide is shown
-		this.moveCarousel('active slide');
 	},
 	/**
 	* @function swipeHandler
@@ -375,18 +378,14 @@ export const ViewModel = DefineMap.extend({
 		if (swipePercentage < -10 && this.activeSlideIndex != this.lastSlideIndex) {
 			// set the next slide to active
 			this.activeSlideIndex++;
-			// move carousel to the next slide
-			this.moveCarousel('active slide');
 			// if you swipe right enough and it's not the first slides
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
-			// move carousel to the next slide
-			this.moveCarousel('active slide');
 			// if you don't swipe right or left enough, stay on the current slide
 		} else {
 			// move carousel back to the center of the current slide
-			this.moveCarousel('active slide');
+			this.moveCarousel('active slide', this.activeSlideIndex);
 		}
 		// reset the swipe object
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
@@ -414,7 +413,7 @@ export const ViewModel = DefineMap.extend({
 	*
 	* @param {object} eventType cli  
 	*/
-	moveCarousel(moveTo, pointerPosition) {
+	moveCarousel(moveTo, position) {
 		let translateX;
 		// default is none
 		let transitionAnimation = 'none';
@@ -422,11 +421,15 @@ export const ViewModel = DefineMap.extend({
 		switch (moveTo) {
 			case 'active slide':
 				// first slide is 0, second slide is -100%, etc.
-				translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
+				if (!isNaN(position)) {
+					translateX = `translateX(${-(position * 100)}%)`;	
+				} else {
+					translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
+				}
 				transitionAnimation = '500ms ease';
 				break;
 			case 'pointer position':
-				translateX = `translateX(${pointerPosition}px)`;
+				translateX = `translateX(${position}px)`;
 				break;
 		}
 
