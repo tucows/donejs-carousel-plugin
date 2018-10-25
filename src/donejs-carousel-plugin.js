@@ -105,7 +105,7 @@ export const ViewModel = DefineMap.extend({
 	* @property {object} carouselOptions passed in from the parent component 
 	*/
 	carouselOptions: {
-		type: 'any',
+		type: 'observable',
 		value: {},
 		/**
 		* @function set called when new carouselOptions is set
@@ -161,6 +161,12 @@ export const ViewModel = DefineMap.extend({
 	isDesktopBrowser: {
 		type: 'boolean',
 		value: platform.isDesktopBrowser
+	},
+	isLengthLessThanOne(length) {
+		if(length <= 1) {
+			return true;
+		}
+		return false;
 	},
 	/**
 	* @function oneSlideOver
