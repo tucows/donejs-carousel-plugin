@@ -43,19 +43,19 @@
 				breakOnDesktop
 			{{/if}}"
 
-			on:dragstart="./preventDefault(%event)"
+			on:dragstart="./preventDefault(scope.event)"
 
-			on:mousedown="./swipeHandler(%event, 'start')"
-			on:mouseup="./swipeHandler(%event, 'end')"
-			on:mouseleave="./swipeHandler(%event, 'end')"
-			on:mousemove="./swipeHandler(%event, 'move')"
+			on:mousedown="./swipeHandler(scope.event, 'start')"
+			on:mouseup="./swipeHandler(scope.event, 'end')"
+			on:mouseleave="./swipeHandler(scope.event, 'end')"
+			on:mousemove="./swipeHandler(scope.event, 'move')"
 
-			on:touchstart="./swipeHandler(%event, 'start')"
-			on:touchend="./swipeHandler(%event, 'end')"
-			on:touchcancel="./swipeHandler(%event, 'end')"
-			on:touchmove="./swipeHandler(%event, 'move')"
+			on:touchstart="./swipeHandler(scope.event, 'start')"
+			on:touchend="./swipeHandler(scope.event, 'end')"
+			on:touchcancel="./swipeHandler(scope.event, 'end')"
+			on:touchmove="./swipeHandler(scope.event, 'move')"
 
-			on:keydown="./arrowClickHandler('keyboard', %event)"
+			on:keydown="./arrowClickHandler('keyboard', scope.event)"
 		> 
 			<div class="slideTrack">
 				
@@ -70,7 +70,7 @@
 			>
 
 				<a class="leftArrow arrow" 
-					on:click="./arrowClickHandler('left', %event)"
+					on:click="./arrowClickHandler('left', scope.event)"
 				>
 					<svg role="img"
 						class="iconSvg"
@@ -82,7 +82,7 @@
 				</a>
 				
 				<a class="rightArrow arrow" 
-					on:click="./arrowClickHandler('right', %event)"
+					on:click="./arrowClickHandler('right', scope.event)"
 				>
 					<svg role="img"
 						class="iconSvg"
@@ -100,7 +100,7 @@
 			{{/if}}"
 		>
 			{{#each ./slides}}
-				<div class="dot {{#is ../activeSlideIndex %index}}active{{/is}}" on:click="../dotClickHandler(%index)">
+				<div class="dot {{#is ../activeSlideIndex scope.index}}active{{/is}}" on:click="../dotClickHandler(scope.index)">
 					{{>navDotsSVG}}
 				</div>
 			{{/each}}
@@ -119,7 +119,7 @@
             {{/if}}"
         >
             {{#each ./slides}}
-                <div class="dot {{#is %index 0}}active{{/is}}">
+                <div class="dot {{#is scope.index 0}}active{{/is}}">
                     {{>navDotsSVG}}
                 </div>
             {{/each}}
