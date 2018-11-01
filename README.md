@@ -38,7 +38,7 @@ Make sure to do the following:
 
 * Loop through same property that you passed into component as 'slides'; in the example below, this is userReviews
 * Include this in the class of the parent element
-    * ```jsclass="slide {{#is ../activeSlideIndexAltTest %index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest %index}} 0 {{else}} -1 {{/is}}">```
+    * ```jsclass="slide {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">```
     * And any other class you want; in the example below, block and icon are optional classes for styling
 
 ```js
@@ -48,7 +48,7 @@ Make sure to do the following:
     carouselOptions:from='./carouselOptions'
 >
     {{#each ./userReviews}}
-        <div class="block icon slide {{#is ../activeSlideIndexAltTest %index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest %index}} 0 {{else}} -1 {{/is}}">
+        <div class="block icon slide {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">
         <div class="pointIcon">
             <ting-svg hash="{{./icon}}" title="" dimensions="66" />
         </div>
