@@ -3,16 +3,6 @@
     "delay": 2000,
     "browsers": [
         {
-            "browser": "chrome",
-            "args": [
-                "--headless",
-                "--disable-gpu",
-                "--disable-extensions",
-								"--no-sandbox",
-                "--remote-debugging-port=9222"
-            ]
-        },
-        {
             "browser": "firefox",
             "args": [
                 "--headless"
