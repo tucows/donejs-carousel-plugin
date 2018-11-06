@@ -352,14 +352,19 @@ export const ViewModel = DefineMap.extend({
 		// figure out and assign the swipe length (positive is swipe right, negative is swipe left)
 		let swipeLength;
 		this.swipeObject.swipeLength = swipeLength = this.swipeObject.currentX - this.swipeObject.startX;
+		// console.log(swipeLength);
+		console.log(this.swipeObject.currentX, this.swipeObject.startX);
+
 		// prevent horizontal scrolling when swiping the carousel
 		if (this.swipeObject.swipeLength < -4 || this.swipeObject.swipeLength > 4) {
 			this.preventDefault(event);
 		}
-		// based on swipe length and the inital position, figure out how much the slide should move horizontally
+		// based on swipe length and the initial position, figure out how much the slide should move horizontally
 		let moveAmount = currentLeft + swipeLength;
 		// move carousel to where the mouse or finger has traveled
 		this.moveCarousel('pointer position', moveAmount);
+
+		console.log(moveAmount, swipeLength, currentLeft);
 	},
 	/**
 	* @function swipeEnd
@@ -415,35 +420,68 @@ export const ViewModel = DefineMap.extend({
 	* @param {object} eventType cli  
 	*/
 	moveCarousel(moveTo, pointerPosition) {
-		let translateX;
-		// default is none
-		let transitionAnimation = 'none';
-		// set css properties according to where we are trying to move to
-		switch (moveTo) {
-			case 'active slide':
-				// first slide is 0, second slide is -100%, etc.
-				translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
-				transitionAnimation = '500ms ease';
-				break;
-			case 'pointer position':
-				translateX = `translateX(${pointerPosition}px)`;
-				break;
-		}
 
-		let classSelector;
-		// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
-		if (this.carouselOptions.extraClass) {
-			classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
-		} else {
-			classSelector = '.slideTrack';
-		}
-
-		$(classSelector).css(
-			{
-				'transform': translateX,
-				'transition': transitionAnimation
+		if (this.carouselOptions.transition == 'dissolve') {
+			
+			let classSelector;
+			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
+			if (this.carouselOptions.extraClass) {
+				classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
+			} else {
+				classSelector = '.slideTrack';
 			}
-		);
+
+			switch (moveTo) {
+				case 'active slide':
+					$(`${classSelector} .slide`).css({ 'opacity': 0 });
+					$(`${classSelector} .slide.active`).css({ 'opacity': 1 });
+					break;
+				case 'pointer position':
+					let swipeAmount = this.swipeObject.swipeLength / this.slideWidth;
+					let opacity = 1 - Math.abs(swipeAmount*2);
+
+					$(`${classSelector} .slide.active`).css({ 'opacity': opacity });
+
+					if (swipeAmount > 0) {
+						$(`${classSelector} .slide.active`).prev().css({ 'opacity': 1 - opacity });
+					} else {
+						$(`${classSelector} .slide.active`).next().css({ 'opacity': 1 - opacity });
+					}
+					break;
+			}
+
+		} else {
+
+			let translateX;
+			// default is none
+			let transitionAnimation = 'none';
+			// set css properties according to where we are trying to move to
+			switch (moveTo) {
+				case 'active slide':
+					// first slide is 0, second slide is -100%, etc.
+					translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
+					transitionAnimation = '500ms ease';
+					break;
+				case 'pointer position':
+					translateX = `translateX(${pointerPosition}px)`;
+					break;
+			}
+
+			let classSelector;
+			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
+			if (this.carouselOptions.extraClass) {
+				classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
+			} else {
+				classSelector = '.slideTrack';
+			}
+
+			$(classSelector).css(
+				{
+					'transform': translateX,
+					'transition': transitionAnimation
+				}
+			);
+		}
 	},
 	/**
 	* @function preventDefault

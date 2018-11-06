@@ -11,7 +11,7 @@ tucows-donejs-carousel {
 	}
 
 	.slideTrack {
-		display: flex;
+		display: grid;
 		text-align: center;
 		transform: translateX(0%);
 	}
@@ -50,10 +50,16 @@ tucows-donejs-carousel {
 	}
 
 	.slide {
-		flex: 1 0 100%;
+		grid-column: 1;
+		grid-row: 1;
+		opacity: 1;
 
 		&:focus {
 			outline: none;
+		}
+
+		&.active {
+			opacity: 0;
 		}
 	}
 
