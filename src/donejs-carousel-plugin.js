@@ -156,6 +156,20 @@ export const ViewModel = DefineMap.extend({
 		value: platform.isDesktopBrowser
 	},
 	/**
+	* @property {boolean} classSelector specifies the appropriate carousel class especially if there are multiple carousels on page
+	*/
+	classSelector: {
+		type: 'string',
+		get() {
+			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
+			if (this.carouselOptions.extraClass) {
+				return `.${this.carouselOptions.extraClass} .slideTrack`;
+			} else {
+				return '.slideTrack';
+			}
+		}
+	},
+	/**
 	* @function oneSlideOver
 	*
 	* @description
@@ -172,7 +186,7 @@ export const ViewModel = DefineMap.extend({
 			this.activeSlideIndex--;
 		}
 		// move carousel to the new active slide
-		this.moveCarousel('active slide');
+		this.changeToActiveSlide();
 	},
 	/**
 	* @function directionHandler
@@ -261,7 +275,7 @@ export const ViewModel = DefineMap.extend({
 		// set active slide to the selected index
 		this.activeSlideIndex = index;
 		// move carousel so the newly activated slide is shown
-		this.moveCarousel('active slide');
+		this.changeToActiveSlide();
 	},
 	/**
 	* @function swipeHandler
@@ -345,26 +359,32 @@ export const ViewModel = DefineMap.extend({
 			// break out of this function
 			return false;
 		}
-		// get the x position of the left of the active slide (i.e. first slide is 0, second slide is width of slide 1, etc.)
-		let currentLeft = this.getLeft(this.activeSlideIndex);
+
 		// reassign the current x coordinate based on the event data
 		this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// figure out and assign the swipe length (positive is swipe right, negative is swipe left)
 		let swipeLength;
 		this.swipeObject.swipeLength = swipeLength = this.swipeObject.currentX - this.swipeObject.startX;
-		// console.log(swipeLength);
-		console.log(this.swipeObject.currentX, this.swipeObject.startX);
 
 		// prevent horizontal scrolling when swiping the carousel
 		if (this.swipeObject.swipeLength < -4 || this.swipeObject.swipeLength > 4) {
 			this.preventDefault(event);
 		}
-		// based on swipe length and the initial position, figure out how much the slide should move horizontally
-		let moveAmount = currentLeft + swipeLength;
-		// move carousel to where the mouse or finger has traveled
-		this.moveCarousel('pointer position', moveAmount);
 
-		console.log(moveAmount, swipeLength, currentLeft);
+		// determine type of slide transition (dissolve vs slide)
+		if (this.carouselOptions.transition == 'dissolve') {
+			// calculate swipeAmount as a number between 0 and 1
+			let swipeAmount = swipeLength / this.slideWidth;
+			// fade slide and its sibling by swipeAmount
+			this.fadeSlideByAmount(swipeAmount);
+		} else {
+			// get the x position of the left of the active slide (i.e. first slide is 0, second slide is width of slide 1, etc.)
+			let currentLeft = this.getLeft(this.activeSlideIndex);
+			// based on swipe length and the initial position, figure out how much the slide should move horizontally
+			let pointerPosition = currentLeft + swipeLength;
+			// move carousel to where the mouse or finger has traveled
+			this.moveCarouselToPosition(pointerPosition);
+		}
 	},
 	/**
 	* @function swipeEnd
@@ -381,17 +401,17 @@ export const ViewModel = DefineMap.extend({
 			// set the next slide to active
 			this.activeSlideIndex++;
 			// move carousel to the next slide
-			this.moveCarousel('active slide');
+			this.changeToActiveSlide();
 			// if you swipe right enough and it's not the first slides
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
 			// move carousel to the next slide
-			this.moveCarousel('active slide');
+			this.changeToActiveSlide();
 			// if you don't swipe right or left enough, stay on the current slide
 		} else {
 			// move carousel back to the center of the current slide
-			this.moveCarousel('active slide');
+			this.changeToActiveSlide();
 		}
 		// reset the swipe object
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
@@ -412,76 +432,121 @@ export const ViewModel = DefineMap.extend({
 		return leftOfSlide;
 	},
 	/**
-	* @function moveCarousel
+	* @function changeToActiveSlide
+	*
+	* @description
+	* based on carousel options, either fade slide or translate carousel
+	*/
+	changeToActiveSlide() {
+		if (this.carouselOptions.transition == 'dissolve') {
+			this.fadeToActiveSlide();
+		} else {
+			this.moveCarouselToActiveSlide();
+		}
+	},
+	/**
+	* @function moveCarouselToPosition
 	*
 	* @description
 	* set css transform and transition properties to move the slide 
 	*
-	* @param {object} eventType cli  
+	* @param {number} pointerPosition (in pixels)
 	*/
-	moveCarousel(moveTo, pointerPosition) {
+	moveCarouselToPosition(pointerPosition) {
+		let classSelector = this.classSelector;
 
-		if (this.carouselOptions.transition == 'dissolve') {
-			
-			let classSelector;
-			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
-			if (this.carouselOptions.extraClass) {
-				classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
-			} else {
-				classSelector = '.slideTrack';
+		// set css properties according to where we are trying to move to
+		$(classSelector).css(
+			{
+				'transform': `translateX(${pointerPosition}px)`,
+				// no transition necessary when we are moving slide manually
+				'transition': 'none'
 			}
+		);
+	},
+	/**
+	* @function moveCarouselToActiveSlide
+	*
+	* @description
+	* translate the carousel .slideTrack by moving it to the active slide
+	*/
+	moveCarouselToActiveSlide() {
+		let classSelector = this.classSelector;
 
-			switch (moveTo) {
-				case 'active slide':
-					$(`${classSelector} .slide`).css({ 'opacity': 0 });
-					$(`${classSelector} .slide.active`).css({ 'opacity': 1 });
-					break;
-				case 'pointer position':
-					let swipeAmount = this.swipeObject.swipeLength / this.slideWidth;
-					let opacity = 1 - Math.abs(swipeAmount*2);
-
-					$(`${classSelector} .slide.active`).css({ 'opacity': opacity });
-
-					if (swipeAmount > 0) {
-						$(`${classSelector} .slide.active`).prev().css({ 'opacity': 1 - opacity });
-					} else {
-						$(`${classSelector} .slide.active`).next().css({ 'opacity': 1 - opacity });
-					}
-					break;
+		// set css properties according to where we are trying to move to
+		$(classSelector).css(
+			{
+				// first slide is 0, second slide is -100%, etc.
+				'transform': `translateX(${-(this.activeSlideIndex * 100)}%)`,
+				// 500ms transition when moving between slides
+				'transition': '500ms ease'
 			}
+		);
+	},
+	/**
+	* @function fadeSlideByAmount
+	*
+	* @description
+	* set css transform and transition properties to move the slide 
+	*
+	* @param {number} swipeAmount (number between 0 and 1) 
+	*/
+	fadeSlideByAmount(swipeAmount) {
+		let classSelector = this.classSelector;
 
-		} else {
+		// controls how much one should have to swipe/drag in order for slide to fade in or out
+		let OPACITY_FADE_MULTIPLIER = 2;
 
-			let translateX;
-			// default is none
-			let transitionAnimation = 'none';
-			// set css properties according to where we are trying to move to
-			switch (moveTo) {
-				case 'active slide':
-					// first slide is 0, second slide is -100%, etc.
-					translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
-					transitionAnimation = '500ms ease';
-					break;
-				case 'pointer position':
-					translateX = `translateX(${pointerPosition}px)`;
-					break;
-			}
+		// value of 1 means opaque, anything 0 or less is transparent
+		let opacity = 1 - Math.abs(swipeAmount * OPACITY_FADE_MULTIPLIER);
 
-			let classSelector;
-			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
-			if (this.carouselOptions.extraClass) {
-				classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
-			} else {
-				classSelector = '.slideTrack';
-			}
+		let isFirstSlide = this.activeSlideIndex == 0;
+		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
 
-			$(classSelector).css(
-				{
-					'transform': translateX,
-					'transition': transitionAnimation
-				}
-			);
+		// only fade the active slide if it's fading out into another slide, not on it's own
+		if (
+			(swipeAmount > 0 && !isFirstSlide) ||
+			(swipeAmount < 0 && !isLastSlide)
+		){
+			$(`${classSelector} .slide.active`).css({
+				'opacity': opacity,
+				'transition': 'none'
+			});
 		}
+
+		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
+		if (swipeAmount > 0) {
+			$(`${classSelector} .slide.active`).prev().css({
+				'opacity': 1 - opacity,
+				'transition': 'none'
+			});
+		} else {
+			$(`${classSelector} .slide.active`).next().css({
+				'opacity': 1 - opacity,
+				'transition': 'none'
+			});
+		}
+	},
+	/**
+	* @function fadeToActiveSlide
+	*
+	* @description
+	* make all slides but the active one transparent, active slide should be opaque
+	*/
+	fadeToActiveSlide() {
+		let classSelector = this.classSelector;
+
+		let transitionAnimation = '1s ease';
+		// render all slides transparent
+		$(`${classSelector} .slide`).css({
+			'opacity': 0,
+			'transition': transitionAnimation 
+		});
+		// render the active slide opaque
+		$(`${classSelector} .slide.active`).css({
+			'opacity': 1,
+			'transition': transitionAnimation
+		});
 	},
 	/**
 	* @function preventDefault
@@ -502,8 +567,10 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	handleBreakOnDesktop() {
+		//set activeSlideIndex to 0
+		this.activeSlideIndex = 0
 		// slide track back to square one
-		this.moveCarousel('pointer position', 0);
+		this.changeToActiveSlide();
 		// stop auto play
 		this.clearAutoPlay();
 	},
