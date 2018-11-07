@@ -164,9 +164,8 @@ export const ViewModel = DefineMap.extend({
 			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
 			if (this.carouselOptions.extraClass) {
 				return `.${this.carouselOptions.extraClass} .slideTrack`;
-			} else {
-				return '.slideTrack';
 			}
+			return '.slideTrack';
 		}
 	},
 	/**
@@ -540,7 +539,7 @@ export const ViewModel = DefineMap.extend({
 		// render all slides transparent
 		$(`${classSelector} .slide`).css({
 			'opacity': 0,
-			'transition': transitionAnimation 
+			'transition': transitionAnimation
 		});
 		// render the active slide opaque
 		$(`${classSelector} .slide.active`).css({
@@ -567,8 +566,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	handleBreakOnDesktop() {
-		//set activeSlideIndex to 0
-		this.activeSlideIndex = 0
+		// set activeSlideIndex to 0
+		this.activeSlideIndex = 0;
 		// slide track back to square one
 		this.changeToActiveSlide();
 		// stop auto play

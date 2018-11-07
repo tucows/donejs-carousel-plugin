@@ -202,7 +202,7 @@ describe('tucows-donejs-carousel', () => {
 		// setup 
 		let vm = new (ViewModel.extend({seal: false}, {}));
 
-		let moveCarouselStub;
+		let changeToActiveSlideStub;
 		let direction;
 
 		let fakeSlides = [1, 2, 3];
@@ -210,10 +210,10 @@ describe('tucows-donejs-carousel', () => {
 		vm.slides = fakeSlides;
 
 		beforeEach(() => {
-			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
+			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
 		});
 		afterEach(() => {
-			moveCarouselStub.restore();
+			changeToActiveSlideStub.restore();
 		});
 
 		it('should call the move carousel function', () => {
@@ -222,8 +222,7 @@ describe('tucows-donejs-carousel', () => {
 			// run
 			vm.oneSlideOver(direction);
 			// test
-			moveCarouselStub.calledOnce.should.be.true;
-			moveCarouselStub.calledWith('active slide').should.be.true;
+			changeToActiveSlideStub.calledOnce.should.be.true;
 		});
 
 		describe('when direction is right', () => {
