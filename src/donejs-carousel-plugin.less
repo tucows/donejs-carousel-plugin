@@ -1,4 +1,5 @@
 tucows-donejs-carousel {
+
 	.carousel {
 		cursor: default;
 		margin: 0 auto;
@@ -11,7 +12,7 @@ tucows-donejs-carousel {
 	}
 
 	.slideTrack {
-		display: grid;
+		display: flex;
 		text-align: center;
 		transform: translateX(0%);
 	}
@@ -50,16 +51,10 @@ tucows-donejs-carousel {
 	}
 
 	.slide {
-		grid-column: 1;
-		grid-row: 1;
-		opacity: 0;
+		flex: 1 0 100%;
 
 		&:focus {
 			outline: none;
-		}
-
-		&.active {
-			opacity: 1;
 		}
 	}
 
@@ -92,6 +87,21 @@ tucows-donejs-carousel {
 			}
 		}
 	}
+}
+
+tucows-donejs-carousel.dissolve-transition {
+	.slideTrack {
+		display: grid;
+	}
+	.slide {
+    	grid-column: 1;
+    	grid-row: 1;
+    	opacity: 0;
+
+    	&.active {
+    	        opacity: 1;
+    	}
+    }
 }
 
 @media screen and (min-width: 1024px) {

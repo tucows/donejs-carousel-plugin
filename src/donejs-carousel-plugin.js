@@ -406,7 +406,7 @@ export const ViewModel = DefineMap.extend({
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
-			// move carousel to the next slide
+			// move carousel to the previous slide
 			this.changeToActiveSlide();
 			// if you don't swipe right or left enough, stay on the current slide
 		} else {
