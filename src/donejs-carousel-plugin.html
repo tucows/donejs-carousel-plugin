@@ -9,7 +9,34 @@
 			>
 				{{#each ./slides}}
 
-					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}">
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
+<div class="demo">
+	<script id="demo-html2" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
 						
 						<div class="slideContent">
 							<h1>{{./title}}</h1>
@@ -32,27 +59,62 @@ import canViewModel from 'can-view-model';
 const demoHtml = document.getElementById('demo-html');
 const demoVM = canViewModel(demoHtml);
 
+const demoHtml2 = document.getElementById('demo-html2');
+const demoVM2 = canViewModel(demoHtml2);
+
 demoVM.slides = [
 	{
 		title: "*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
 		content1: `I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.`,
-		content2: `<strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`
+		content2: `<strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`,
+		backgroundColor: '#23f2a3'
 	},
 	{
 		title: "They're not aliens, they're Earth…liens!",
 		content1: `All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?`,
-		content2: `You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!`
+		content2: `You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!`,
+		backgroundColor: 'orange'
 	},
 	{
 		title: "Stop talking, brain thinking. Hush.",
 		content1: `You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.`,
-		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?`
+		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?`,
+		backgroundColor: 'lightblue'
+	}
+];
+
+demoVM2.slides = [
+	{
+		title: "*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
+		content1: `I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.`,
+		content2: `<strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`,
+		backgroundColor: '#23f2a3'
+	},
+	{
+		title: "They're not aliens, they're Earth…liens!",
+		content1: `All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?`,
+		content2: `You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!`,
+		backgroundColor: 'orange'
+	},
+	{
+		title: "Stop talking, brain thinking. Hush.",
+		content1: `You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.`,
+		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?`,
+		backgroundColor: 'lightblue'
 	}
 ];
 
 demoVM.carouselOptions = {
 	navArrows: true,
 	breakOnDesktop: false,
+	extraClass: 'slide'
+}
+
+demoVM2.carouselOptions = {
+	navArrows: true,
+	breakOnDesktop: false,
+	extraClass: 'fade',
+	transition: 'dissolve'
 }
 
 </script>

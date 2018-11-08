@@ -76,7 +76,7 @@ describe('tucows-donejs-carousel', () => {
 					value: autoPlayInitValue
 				},
 				slides: {
-					type: 'obervable',
+					type: 'observable',
 					value: ['slide1', 'slide2']
 				}
 			}));
@@ -203,7 +203,7 @@ describe('tucows-donejs-carousel', () => {
 			});
 
 			it('should be ".x-carousel .slideTrack" if "x-carousel" defined as extra class', () => {
-				vm.carouselOptions.extraClass = 'x-carousel'
+				vm.carouselOptions.extraClass = 'x-carousel';
 				vm.classSelector.should.equal('.x-carousel .slideTrack');
 			});
 		});
@@ -761,7 +761,7 @@ describe('tucows-donejs-carousel', () => {
 
 		describe('when carouselOptions.transition is "dissolve"', () => {
 			it('should call the fadeSlideByAmount function with swipeAmount', () => {
-				vm.carouselOptions.transition = "dissolve";
+				vm.carouselOptions.transition = 'dissolve';
 				// setup 
 				defineTouchStub.returns({
 					fingerCount: 1,
@@ -775,8 +775,8 @@ describe('tucows-donejs-carousel', () => {
 				// test
 				fadeSlideByAmountStub.calledOnce.should.be.true;
 				fadeSlideByAmountStub.calledWith(swipeAmount).should.be.true;
-			})
-		})
+			});
+		});
 
 		describe('when carouselOptions.transition is not specified', () => {
 			it('should call getLeft function once with the active slide', () => {
@@ -810,13 +810,13 @@ describe('tucows-donejs-carousel', () => {
 				getLeftStub.returns(currentLeft);
 
 				let pointerPosition = currentLeft + swipeLength;
-				//run
+				// run
 				vm.swipeMove(event);
 				// test
 				moveCarouselToPositionStub.calledOnce.should.be.true;
 				moveCarouselToPositionStub.calledWith(pointerPosition).should.be.true;
 			});
-		})
+		});
 	});
 
 	describe('swipeEnd()', () => {
@@ -940,9 +940,7 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: {
-						transition: 'dissolve'
-					}
+					value: {transition: 'dissolve'}
 				}
 			}));
 			beforeEach(() => {
@@ -951,7 +949,7 @@ describe('tucows-donejs-carousel', () => {
 			afterEach(() => {
 				fadeToActiveSlideStub.restore();
 			});
-			it("should call fadeToActiveSlide function", () => {
+			it('should call fadeToActiveSlide function', () => {
 				vm.changeToActiveSlide();
 				fadeToActiveSlideStub.calledOnce.should.be.true;
 			});
@@ -971,7 +969,7 @@ describe('tucows-donejs-carousel', () => {
 			afterEach(() => {
 				moveCarouselToActiveSlideStub.restore();
 			});
-			it("should call moveCarouselToActiveSlide function", () => {
+			it('should call moveCarouselToActiveSlide function', () => {
 				vm.changeToActiveSlide();
 				moveCarouselToActiveSlideStub.calledOnce.should.be.true;
 			});

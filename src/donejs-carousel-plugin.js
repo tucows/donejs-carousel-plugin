@@ -27,12 +27,10 @@ export const isMobile = function(isTablet) {
 	return window.innerWidth < 600;
 };
 
-
 export const ViewModel = DefineMap.extend({
 	/**
 	* @property {array} slides populates slides with the appropriate data. This will likely change.
 	*/
-	// slides: 'any',
 	slides: 'any',
 	/**
 	* @property {number} activeSlideIndex slide that the user wants to see
@@ -41,11 +39,14 @@ export const ViewModel = DefineMap.extend({
 		type: 'number',
 		value: 0
 	},
+	/**
+	* @property {number} lastSlideIndex index of last slide in the array
+	*/
 	lastSlideIndex: {
 		type: 'number',
 		/**
-    * @property {number} lastSlideIndex index of last slide in the array
-    */
+	 	 * @function return last slide index
+	 	 * */
 		get() {
 			if (this.slides) {
 				return this.slides.length - 1;
@@ -120,7 +121,6 @@ export const ViewModel = DefineMap.extend({
 	* @property {number} autoPlayInterval current interval of setInterval function that handles the auto play of the carousel
 	*/
 	autoPlayInterval: {type: 'any'},
-
 	/**
 	* @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
 	* */
@@ -160,6 +160,9 @@ export const ViewModel = DefineMap.extend({
 	*/
 	classSelector: {
 		type: 'string',
+		/**
+		 * @function concatenate extraclass to .slideTrack, if available, otherwise output just .slideTrack
+		 * */
 		get() {
 			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
 			if (this.carouselOptions.extraClass) {
