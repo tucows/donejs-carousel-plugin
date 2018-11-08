@@ -494,7 +494,7 @@ export const ViewModel = DefineMap.extend({
 		let classSelector = this.classSelector;
 
 		// controls how much one should have to swipe/drag in order for slide to fade in or out
-		let OPACITY_FADE_MULTIPLIER = 2;
+		const OPACITY_FADE_MULTIPLIER = 2;
 
 		// value of 1 means opaque, anything 0 or less is transparent
 		let opacity = 1 - Math.abs(swipeAmount * OPACITY_FADE_MULTIPLIER);

@@ -227,7 +227,7 @@ describe('tucows-donejs-carousel', () => {
 			changeToActiveSlideStub.restore();
 		});
 
-		it('should call the move carousel function', () => {
+		it('should call the changeToActiveSlide function', () => {
 			// setup 
 			direction = 'right';
 			// run
@@ -822,7 +822,7 @@ describe('tucows-donejs-carousel', () => {
 	describe('swipeEnd()', () => {
 		// setup
 
-		let moveCarouselStub;
+		let changeToActiveSlideStub;
 
 		let vm = new (ViewModel.extend({seal: false}, {
 			lastSlideIndex: {
@@ -844,15 +844,15 @@ describe('tucows-donejs-carousel', () => {
 		}));
 
 		beforeEach(() => {
-			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
+			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
 		});
 
 		afterEach(() => {
-			moveCarouselStub.restore();
+			changeToActiveSlideStub.restore();
 		});
 
 		describe('when swipe is to the left and greater than 10%, AND it is not the last slide', () => {
-			it('should increment the active slide property and call the move carousel function', () => {
+			it('should increment the active slide property and call the changeToActiveSlide function', () => {
 				// setup 
 				vm.swipeObject.swipeLength = -15;
 				vm.slideWidth = 100;
@@ -861,14 +861,13 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				moveCarouselStub.calledOnce.should.be.true;
-				moveCarouselStub.calledWith('active slide').should.be.true;
+				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide + 1);
 			});
 		});
 
 		describe('when swipe is to the right and is greater than 10%, AND it is not the first slide', () => {
-			it('should reduce the active slide property and call the move carousel function', () => {
+			it('should reduce the active slide property and call the changeToActiveSlide function', () => {
 				// setup 
 				vm.swipeObject.swipeLength = 15;
 				vm.slideWidth = 100;
@@ -877,14 +876,13 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				moveCarouselStub.calledOnce.should.be.true;
-				moveCarouselStub.calledWith('active slide').should.be.true;
+				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide - 1);
 			});
 		});
 
 		describe('when swipe (to right or left) is less than 10% OR its the first/last slide', () => {
-			it('should call move carousel on the existing active slide index (goes back to center)', () => {
+			it('should call changeToActiveSlide on the existing active slide index (goes back to center)', () => {
 				// setup 
 				vm.swipeObject.swipeLength = chance.pickone([5, -5, 1, -8]);
 				vm.slideWidth = 100;
@@ -893,8 +891,7 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				moveCarouselStub.calledOnce.should.be.true;
-				moveCarouselStub.calledWith('active slide').should.be.true;
+				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide);
 			});
 		});
@@ -937,7 +934,63 @@ describe('tucows-donejs-carousel', () => {
 		});
 	});
 
-	describe('moveCarousel()', () => {
+	describe('changeToActiveSlide()', () => {
+		describe('when carousel options transition is "dissolve"', () => {
+			let fadeToActiveSlideStub;
+			let vm = new (ViewModel.extend({seal: false}, {
+				carouselOptions: {
+					type: 'any',
+					value: {
+						transition: 'dissolve'
+					}
+				}
+			}));
+			beforeEach(() => {
+				fadeToActiveSlideStub = sinon.stub(vm, 'fadeToActiveSlide');
+			});
+			afterEach(() => {
+				fadeToActiveSlideStub.restore();
+			});
+			it("should call fadeToActiveSlide function", () => {
+				vm.changeToActiveSlide();
+				fadeToActiveSlideStub.calledOnce.should.be.true;
+			});
+		});
+
+		describe('when carousel options transition is not specified', () => {
+			let moveCarouselToActiveSlideStub;
+			let vm = new (ViewModel.extend({seal: false}, {
+				carouselOptions: {
+					type: 'any',
+					value: {}
+				}
+			}));
+			beforeEach(() => {
+				moveCarouselToActiveSlideStub = sinon.stub(vm, 'moveCarouselToActiveSlide');
+			});
+			afterEach(() => {
+				moveCarouselToActiveSlideStub.restore();
+			});
+			it("should call moveCarouselToActiveSlide function", () => {
+				vm.changeToActiveSlide();
+				moveCarouselToActiveSlideStub.calledOnce.should.be.true;
+			});
+		});
+	});
+
+	describe('moveCarouselToPosition()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('moveCarouselToActiveSlide()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('fadeSlideByAmount()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('fadeSlideToActivePosition()', () => {
 		// NOTE: We are not currently testing DOM manipulation
 	});
 
@@ -946,24 +999,23 @@ describe('tucows-donejs-carousel', () => {
 	});
 
 	describe('handleBreakOnDesktop()', () => {
-		let moveCarouselStub;
+		let changeToActiveSlideStub;
 
 		let vm = new (ViewModel.extend({seal: false}, {}));
 
 		beforeEach(() => {
-			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
+			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
 		});
 
 		afterEach(() => {
-			moveCarouselStub.restore();
+			changeToActiveSlideStub.restore();
 		});
 
-		it('should call move carousel once with a 0 pointer position', () => {
+		it('should call changeToActiveSlide once with no parameters', () => {
 			// run 
 			vm.handleBreakOnDesktop();
 			// test
-			moveCarouselStub.calledOnce.should.be.true;
-			moveCarouselStub.calledWith('pointer position', 0).should.be.true;
+			changeToActiveSlideStub.calledOnce.should.be.true;
 		});
 	});
 });
