@@ -11,6 +11,9 @@
 			{{#if ./carouselOptions.extraClass}} 
 				{{./carouselOptions.extraClass}} 
 			{{/if}}
+			{{#is ./carouselOptions.transition 'dissolve'}} 
+				dissolve-transition
+			{{/is}}
 			{{#if ./carouselOptions.breakOnDesktop}}
 				breakOnDesktop
 			{{/if}}">
@@ -39,6 +42,9 @@
 			{{#if ./carouselOptions.extraClass}} 
 				{{./carouselOptions.extraClass}} 
 			{{/if}}
+			{{#is ./carouselOptions.transition 'dissolve'}} 
+				dissolve-transition
+			{{/is}}
 			{{#if ./carouselOptions.breakOnDesktop}}
 				breakOnDesktop
 			{{/if}}"

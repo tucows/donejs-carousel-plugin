@@ -1,4 +1,5 @@
 <div class="demo">
+	<h2>Standard Carousel</h2>
 	<script id="demo-html" type="text/stache" can-autorender>
 		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
 		<can-import from="@tucows/donejs-carousel-plugin" />
@@ -26,7 +27,92 @@
 </div>
 
 <div class="demo">
+	<h2>Carousel with Fade Transition</h2>
 	<script id="demo-html2" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
+<div class="demo">
+	<h2>Carousel without ArrowNav</h2>
+	<script id="demo-html3" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
+<div class="demo">
+	<h2>Carousel Break on Desktop Slide Transition</h2>
+	<script id="demo-html4" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
+<div class="demo">
+	<h2>Carousel Break on Desktop Fade Transition</h2>
+	<script id="demo-html5" type="text/stache" can-autorender>
 		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
 		<can-import from="@tucows/donejs-carousel-plugin" />
 			<tucows-donejs-carousel
@@ -56,13 +142,7 @@
 import 'can-view-autorender';
 import canViewModel from 'can-view-model';
 
-const demoHtml = document.getElementById('demo-html');
-const demoVM = canViewModel(demoHtml);
-
-const demoHtml2 = document.getElementById('demo-html2');
-const demoVM2 = canViewModel(demoHtml2);
-
-demoVM.slides = [
+const slides = [
 	{
 		title: "*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
 		content1: `I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.`,
@@ -83,37 +163,48 @@ demoVM.slides = [
 	}
 ];
 
-demoVM2.slides = [
-	{
-		title: "*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
-		content1: `I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.`,
-		content2: `<strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`,
-		backgroundColor: '#23f2a3'
-	},
-	{
-		title: "They're not aliens, they're Earth…liens!",
-		content1: `All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?`,
-		content2: `You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!`,
-		backgroundColor: 'orange'
-	},
-	{
-		title: "Stop talking, brain thinking. Hush.",
-		content1: `You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.`,
-		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?`,
-		backgroundColor: 'lightblue'
-	}
-];
+const demoVM = canViewModel(document.getElementById('demo-html'));
+const demoVM2 = canViewModel(document.getElementById('demo-html2'));
+const demoVM3 = canViewModel(document.getElementById('demo-html3'));
+const demoVM4 = canViewModel(document.getElementById('demo-html4'));
+const demoVM5 = canViewModel(document.getElementById('demo-html5'));
+
+
+demoVM.slides = slides;
+demoVM2.slides = slides;
+demoVM3.slides = slides;
+demoVM4.slides = slides;
+demoVM5.slides = slides;
 
 demoVM.carouselOptions = {
 	navArrows: true,
 	breakOnDesktop: false,
-	extraClass: 'slide'
+	extraClass: 'default-carousel'
 }
 
 demoVM2.carouselOptions = {
 	navArrows: true,
 	breakOnDesktop: false,
-	extraClass: 'fade',
+	extraClass: 'fade-transition',
+	transition: 'dissolve'
+}
+
+demoVM3.carouselOptions = {
+	breakOnDesktop: false,
+	navArrows: false,
+	extraClass: 'no-nav-arrows',
+}
+
+demoVM4.carouselOptions = {
+	navArrows: true,
+	breakOnDesktop: true,
+	extraClass: 'break-on-desktop-slide',
+}
+
+demoVM5.carouselOptions = {
+	navArrows: true,
+	breakOnDesktop: true,
+	extraClass: 'break-on-desktop-fade',
 	transition: 'dissolve'
 }
 

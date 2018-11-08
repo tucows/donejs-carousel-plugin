@@ -89,19 +89,23 @@ tucows-donejs-carousel {
 	}
 }
 
-tucows-donejs-carousel.dissolve-transition {
-	.slideTrack {
-		display: grid;
-	}
-	.slide {
-    	grid-column: 1;
-    	grid-row: 1;
-    	opacity: 0;
+@media screen and (max-width: 1023px) {
+	tucows-donejs-carousel {
+		.dissolve-transition {
+			.slideTrack {
+				display: grid;
+			}
+			.slide {
+		    	grid-column: 1;
+		    	grid-row: 1;
+		    	opacity: 0;
 
-    	&.active {
-    	        opacity: 1;
-    	}
-    }
+		    	&.active {
+		    	        opacity: 1;
+		    	}
+		    }
+		}
+	}
 }
 
 @media screen and (min-width: 1024px) {
