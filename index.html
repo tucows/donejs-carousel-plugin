@@ -4,83 +4,43 @@
     <title>donejs-carousel-plugin - A Plugin for DoneJS</title>
     <style>
       * {box-sizing: border-box;}
+      body, html {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
       body {
-        margin: 0px;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        border-top: 2px solid #CB3036;
+        display:flex;
+        flex-direction: column;
       }
-      .container {
-        margin: 20px auto;
-        max-width: 800px;
-        padding: 20px;
+      .plugin-information {
+         font-family: 'Helvetica Neue', Arial, sans-serif;
+         margin: 40px;
       }
-      .text-right {
-        text-align: right;
+      iframe {
+        width: 100;
+        flex-grow: 1;
+        border: 0;
       }
-      pre {
-        background-color: #eee;
-        border-radius: 2px;
-        color: #222;
-        margin-bottom: 1.5em;
-        overflow-x: scroll;
-        padding: 10px;
+      h1 {
+        margin: 0;
       }
 
-      header h1 {
-        margin: 0px;
-        color: #111;
-      }
 
-      header h2 {
-        margin: 0px 1em 0px 0px;
-        color: #222;
-      }
 
-      .links {
-        float: right;
-      }
 
-      h3 {
-        margin: 5px 0px;
-        color: #555;
-        font-size: 1.1em;
-      }
-
-      p {
-        color: #333;
-        margin: 0 0 1em 0;
-      }
-
-      a {
-        color: #2c83a0;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-
-      footer {
-        font-size: 0.9em;
-        opacity: 0.9;
-      }
     </style>
   </head>
+
   <body>
-    <div class="container">
-      <header>
-        <div class='links'>
-          <p><a href="https://github.com/Tucows/donejs-carousel-plugin">View on GitHub</a></p>
-          <p class="text-right"><a href="https://travis-ci.org/Tucows/donejs-carousel-plugin"><img alt='Build Status' src='https://travis-ci.org/Tucows/donejs-carousel-plugin.svg?branch=master'/></a></p>
-        </div>
-        <h1>donejs-carousel-plugin</h1>
-        <h2></h2>
-      </header>
-      <footer>
-        <p>This page was created with the
-          <a href='https://donejs.com/plugin.html'>DoneJS</a>
-          <a href='https://www.bitovi.com/blog/create-reusable-components-for-your-donejs-applications'>plugin generator</a>.
-        </p>
-      </footer>
+    <div class="plugin-information">
+      <h1>donejs-carousel-plugin</h1>
+      <div class='links'>
+        <p><a href="https://github.com/Tucows/donejs-carousel-plugin">View on GitHub</a></p>
+        <p class="text-right"><a href="https://travis-ci.org/tucows/donejs-carousel-plugin"><img alt='Build Status' src='https://travis-ci.org/tucows/donejs-carousel-plugin.svg?branch=master'/></a></p>
+      </div>
     </div>
+   <iframe src="src/donejs-carousel-plugin.html" />
   </body>
+
 </html>
