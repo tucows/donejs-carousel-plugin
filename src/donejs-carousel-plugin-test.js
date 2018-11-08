@@ -196,6 +196,17 @@ describe('tucows-donejs-carousel', () => {
 				vm.autoPlayDirection.should.equal('right');
 			});
 		});
+
+		describe('classSelector', () => {
+			it('should be ".slideTrack" if no extra class defined', () => {
+				vm.classSelector.should.equal('.slideTrack');
+			});
+
+			it('should be ".x-carousel .slideTrack" if "x-carousel" defined as extra class', () => {
+				vm.carouselOptions.extraClass = 'x-carousel'
+				vm.classSelector.should.equal('.x-carousel .slideTrack');
+			});
+		});
 	});
 
 	describe('oneSlideOver()', () => {
@@ -409,14 +420,14 @@ describe('tucows-donejs-carousel', () => {
 		// setup
 		let vm = new (ViewModel.extend({seal: false}, {}));
 		let index = 2;
-		let moveCarouselStub;
+		let changeToActiveSlideStub;
 
 		beforeEach(() => {
-			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
+			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
 		});
 
 		afterEach(() => {
-			moveCarouselStub.restore();
+			changeToActiveSlideStub.restore();
 		});
 
 		it('should set active slide index', () => {
@@ -426,12 +437,11 @@ describe('tucows-donejs-carousel', () => {
 			vm.activeSlideIndex.should.equal(index);
 		});
 
-		it('should call the move carousel function', () => {
+		it('should call the changeToActiveSlide function', () => {
 			// run 
 			vm.dotClickHandler(index);
 			// test
-			moveCarouselStub.calledOnce.should.be.true;
-			moveCarouselStub.calledWith('active slide').should.be.true;
+			changeToActiveSlideStub.calledOnce.should.be.true;
 		});
 	});
 
@@ -637,8 +647,14 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('swipeMove()', () => {
 		// setup
-		let vm = new (ViewModel.extend({seal: false}, {}));
-		let moveCarouselStub;
+		let vm = new (ViewModel.extend({seal: false}, {
+			slideWidth: {
+				type: 'number',
+				value: '1180'
+			}
+		}));
+		let moveCarouselToPositionStub;
+		let fadeSlideByAmountStub;
 		let getLeftStub;
 		let defineTouchStub;
 		let preventDefaultStub;
@@ -650,44 +666,18 @@ describe('tucows-donejs-carousel', () => {
 
 		beforeEach(() => {
 			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
-			moveCarouselStub = sinon.stub(vm, 'moveCarousel');
+			moveCarouselToPositionStub = sinon.stub(vm, 'moveCarouselToPosition');
+			fadeSlideByAmountStub = sinon.stub(vm, 'fadeSlideByAmount');
 			getLeftStub = sinon.stub(vm, 'getLeft');
 			preventDefaultStub = sinon.stub(vm, 'preventDefault');
 		});
 
 		afterEach(() => {
 			defineTouchStub.restore();
-			moveCarouselStub.restore();
+			moveCarouselToPositionStub.restore();
+			fadeSlideByAmountStub.restore();
 			getLeftStub.restore();
 			preventDefaultStub.restore();
-		});
-
-		it('should call getLeft function once with the active slide', () => {
-			// setup 
-			defineTouchStub.returns({
-				fingerCount: 1,
-				touches: null
-			});
-			vm.dragging = true;
-			let activeSlide = 77;
-			vm.activeSlideIndex = activeSlide;
-			// run 
-			vm.swipeMove(event);
-			// test
-			getLeftStub.calledOnce.should.be.true;
-			getLeftStub.calledWith(activeSlide);
-		});
-
-		it('should call the move carousel function', () => {
-			// run 
-			defineTouchStub.returns({
-				fingerCount: 1,
-				touches: null
-			});
-			vm.dragging = true;
-			vm.swipeMove(event);
-			// test
-			moveCarouselStub.calledOnce.should.be.true;
 		});
 
 		describe('when dragging is false', () => {
@@ -732,23 +722,6 @@ describe('tucows-donejs-carousel', () => {
 				// test
 				vm.swipeObject.swipeLength.should.equal(swipeLength);
 			});
-
-			it('should call the move carousel function with the move amount', () => {
-				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches[0]
-				});
-				vm.dragging = true;
-				let swipeLength = pageX - startX;
-				let currentLeft = chance.natural();
-				getLeftStub.returns(currentLeft);
-				let moveAmount = currentLeft + swipeLength;
-				// run
-				vm.swipeMove(event);
-				// test
-				moveCarouselStub.calledWith('pointer position', moveAmount).should.be.true;
-			});
 		});
 
 		describe('when touch and pageX are not defined', () => {
@@ -783,8 +756,12 @@ describe('tucows-donejs-carousel', () => {
 				// test
 				vm.swipeObject.swipeLength.should.equal(swipeLength);
 			});
+		});
 
-			it('should call the move carousel function with the move amount', () => {
+
+		describe('when carouselOptions.transition is "dissolve"', () => {
+			it('should call the fadeSlideByAmount function with swipeAmount', () => {
+				vm.carouselOptions.transition = "dissolve";
 				// setup 
 				defineTouchStub.returns({
 					fingerCount: 1,
@@ -792,15 +769,54 @@ describe('tucows-donejs-carousel', () => {
 				});
 				vm.dragging = true;
 				let swipeLength = clientX - startX;
-				let currentLeft = chance.natural();
-				getLeftStub.returns(currentLeft);
-				let moveAmount = currentLeft + swipeLength;
+				let swipeAmount = swipeLength / vm.slideWidth;
 				// run
 				vm.swipeMove(event);
 				// test
-				moveCarouselStub.calledWith('pointer position', moveAmount).should.be.true;
+				fadeSlideByAmountStub.calledOnce.should.be.true;
+				fadeSlideByAmountStub.calledWith(swipeAmount).should.be.true;
+			})
+		})
+
+		describe('when carouselOptions.transition is not specified', () => {
+			it('should call getLeft function once with the active slide', () => {
+				vm.carouselOptions.transition = null;
+				// setup 
+				defineTouchStub.returns({
+					fingerCount: 1,
+					touches: null
+				});
+				vm.dragging = true;
+				let activeSlide = 77;
+				vm.activeSlideIndex = activeSlide;
+				// run 
+				vm.swipeMove(event);
+				// test
+				getLeftStub.calledOnce.should.be.true;
+				getLeftStub.calledWith(activeSlide);
 			});
-		});
+
+			it('should call the moveCarouselToPosition function with pointerPosition', () => {
+				vm.carouselOptions.transition = null;
+				// setup 
+				defineTouchStub.returns({
+					fingerCount: 1,
+					touches: event.touches
+				});
+				vm.dragging = true;
+				let swipeLength = clientX - startX;
+
+				let currentLeft = chance.natural();
+				getLeftStub.returns(currentLeft);
+
+				let pointerPosition = currentLeft + swipeLength;
+				//run
+				vm.swipeMove(event);
+				// test
+				moveCarouselToPositionStub.calledOnce.should.be.true;
+				moveCarouselToPositionStub.calledWith(pointerPosition).should.be.true;
+			});
+		})
 	});
 
 	describe('swipeEnd()', () => {
