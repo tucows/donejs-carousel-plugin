@@ -1,32 +1,4 @@
-<div class="demo">
-	<h2>Default Carousel</h2>
-	<script id="demo-html1" type="text/stache" can-autorender>
-		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
-		<can-import from="@tucows/donejs-carousel-plugin" />
-			<tucows-donejs-carousel
-				activeSlideIndex:to="./activeSlideIndex"
-				slides:from='./slides'
-				carouselOptions:from='./carouselOptions'
-			>
-				{{#each ./slides}}
-
-					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
-						
-						<div class="slideContent">
-							<h1>{{./title}}</h1>
-							<p>{{{./content1}}}</p>
-							<p>{{{./content2}}}</p>
-						</div>
-					
-					</div>
-
-				{{/each}}
-
-			</tucows-donejs-carousel>	
-	</script>
-</div>
-
-<div class="demo">
+<!-- <div class="demo">
 	<h2>Carousel with Fade Transition</h2>
 	<script id="demo-html2" type="text/stache" can-autorender>
 		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
@@ -220,11 +192,13 @@
 
 			</tucows-donejs-carousel>	
 	</script>
-</div>
+</div> -->
 
 <script src="../node_modules/steal/steal.js" main="@empty">
 import 'can-view-autorender';
 import canViewModel from 'can-view-model';
+import DefineMap from 'can-define/map/map';
+import stache from 'can-stache';
 
 const slides = [
 	{
@@ -247,75 +221,176 @@ const slides = [
 	}
 ];
 
-const demoVM1 = canViewModel(document.getElementById('demo-html1'));
-const demoVM2 = canViewModel(document.getElementById('demo-html2'));
-const demoVM3 = canViewModel(document.getElementById('demo-html3'));
-const demoVM4 = canViewModel(document.getElementById('demo-html4'));
-const demoVM5 = canViewModel(document.getElementById('demo-html5'));
-const demoVM6 = canViewModel(document.getElementById('demo-html6'));
-const demoVM7 = canViewModel(document.getElementById('demo-html7'));
-const demoVM8 = canViewModel(document.getElementById('demo-html8'));
+import template from "src/demo-carousel.stache";
 
+const slideArray = [
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: false,
+			extraClass: 'default-carousel'
+		},
+		carouselName: 'default-carousel'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: true,
+			transition: 'dissolve'
+			extraClass: 'fade-carousel',
 
-demoVM1.slides = slides;
-demoVM2.slides = slides;
-demoVM3.slides = slides;
-demoVM4.slides = slides;
-demoVM5.slides = slides;
-demoVM6.slides = slides;
-demoVM7.slides = slides;
-demoVM8.slides = slides;
+		},
+		carouselName: 'fade-carousel'
+	}
+];
 
-demoVM1.carouselOptions = {
-	navArrows: true,
-	breakOnDesktop: false,
-	extraClass: 'default-carousel'
+for (let i = 0; i < slideArray.length; i++) {
+	let map = new DefineMap(slideArray[i]);
+	document.body.appendChild(template(map));
 }
 
-demoVM2.carouselOptions = {
-	navArrows: true,
-	breakOnDesktop: false,
-	extraClass: 'fade-transition',
-	transition: 'dissolve'
-}
+// var map = new DefineMap({subject: "World"});
+// var fragment = renderer(map)
 
-demoVM3.carouselOptions = {
-	breakOnDesktop: false,
-	navArrows: false,
-	extraClass: 'no-nav-arrows',
-}
+// document.body.appendChild(template(slideArray[0]));
+// document.body.appendChild(template2(slideArray[1]));
+// carouselHTML.push(
+// 	template({
+// 		slides: slides,
+// 		carouselOptions: {
+// 			navArrows: true,
+// 			breakOnDesktop: false,
+// 			extraClass: 'default-carousel'
+// 		},
+// 		carouselName: 'default-carousel'
+// 	})
+// );
 
-demoVM4.carouselOptions = {
-	navArrows: true,
-	autoPlay: 4000,
-	extraClass: 'autoplay-slide'
-}
+// demoVM1.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: false,
+// 	extraClass: 'default-carousel'
+// }
 
-demoVM5.carouselOptions = {
-	navArrows: true,
-	autoPlay: 4000,
-	transition: 'dissolve',
-	extraClass: 'autoplay-fade'
-}
+// demoVM2.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: false,
+// 	extraClass: 'fade-transition',
+// 	transition: 'dissolve'
+// }
 
-demoVM6.carouselOptions = {
-	navArrows: true,
-	breakOnDesktop: true,
-	extraClass: 'break-on-desktop-slide',
-}
+// demoVM3.carouselOptions = {
+// 	breakOnDesktop: false,
+// 	navArrows: false,
+// 	extraClass: 'no-nav-arrows',
+// }
 
-demoVM7.carouselOptions = {
-	navArrows: true,
-	breakOnDesktop: true,
-	extraClass: 'break-on-desktop-fade',
-	transition: 'dissolve'
-}
+// demoVM4.carouselOptions = {
+// 	navArrows: true,
+// 	autoPlay: 4000,
+// 	extraClass: 'autoplay-slide'
+// }
 
-demoVM8.carouselOptions = {
-	navArrows: true,
-	breakOnDesktop: true,
-	autoPlay: 4000,
-	extraClass: 'break-on-desktop-autoplay'
-}
+// demoVM5.carouselOptions = {
+// 	navArrows: true,
+// 	autoPlay: 4000,
+// 	transition: 'dissolve',
+// 	extraClass: 'autoplay-fade'
+// }
+
+// demoVM6.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	extraClass: 'break-on-desktop-slide',
+// }
+
+// demoVM7.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	extraClass: 'break-on-desktop-fade',
+// 	transition: 'dissolve'
+// }
+
+// demoVM8.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	autoPlay: 4000,
+// 	extraClass: 'break-on-desktop-autoplay'
+// }
+
+// const = stache()
+
+// const demoVM1 = canViewModel(document.getElementById('demo-html1'));
+// const demoVM2 = canViewModel(document.getElementById('demo-html2'));
+// const demoVM3 = canViewModel(document.getElementById('demo-html3'));
+// const demoVM4 = canViewModel(document.getElementById('demo-html4'));
+// const demoVM5 = canViewModel(document.getElementById('demo-html5'));
+// const demoVM6 = canViewModel(document.getElementById('demo-html6'));
+// const demoVM7 = canViewModel(document.getElementById('demo-html7'));
+// const demoVM8 = canViewModel(document.getElementById('demo-html8'));
+
+
+// demoVM1.slides = slides;
+// demoVM2.slides = slides;
+// demoVM3.slides = slides;
+// demoVM4.slides = slides;
+// demoVM5.slides = slides;
+// demoVM6.slides = slides;
+// demoVM7.slides = slides;
+// demoVM8.slides = slides;
+
+// demoVM1.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: false,
+// 	extraClass: 'default-carousel'
+// }
+
+// demoVM2.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: false,
+// 	extraClass: 'fade-transition',
+// 	transition: 'dissolve'
+// }
+
+// demoVM3.carouselOptions = {
+// 	breakOnDesktop: false,
+// 	navArrows: false,
+// 	extraClass: 'no-nav-arrows',
+// }
+
+// demoVM4.carouselOptions = {
+// 	navArrows: true,
+// 	autoPlay: 4000,
+// 	extraClass: 'autoplay-slide'
+// }
+
+// demoVM5.carouselOptions = {
+// 	navArrows: true,
+// 	autoPlay: 4000,
+// 	transition: 'dissolve',
+// 	extraClass: 'autoplay-fade'
+// }
+
+// demoVM6.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	extraClass: 'break-on-desktop-slide',
+// }
+
+// demoVM7.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	extraClass: 'break-on-desktop-fade',
+// 	transition: 'dissolve'
+// }
+
+// demoVM8.carouselOptions = {
+// 	navArrows: true,
+// 	breakOnDesktop: true,
+// 	autoPlay: 4000,
+// 	extraClass: 'break-on-desktop-autoplay'
+// }
 
 </script>

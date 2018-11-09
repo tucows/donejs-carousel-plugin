@@ -189,6 +189,7 @@ export const ViewModel = DefineMap.extend({
 		}
 		// move carousel to the new active slide
 		this.changeToActiveSlide();
+		console.log('changed active slide');
 	},
 	/**
 	* @function directionHandler
