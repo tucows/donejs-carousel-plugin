@@ -1,5 +1,5 @@
 <div class="demo">
-	<h2>Standard Carousel</h2>
+	<h2>Default Carousel</h2>
 	<script id="demo-html" type="text/stache" can-autorender>
 		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
 		<can-import from="@tucows/donejs-carousel-plugin" />
@@ -138,6 +138,62 @@
 	</script>
 </div>
 
+<div class="demo">
+	<h2>Carousel AutoPlay with Slide Transition</h2>
+	<script id="demo-html6" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
+<div class="demo">
+	<h2>Carousel AutoPlay with Fade Transition</h2>
+	<script id="demo-html7" type="text/stache" can-autorender>
+		<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
+		<can-import from="@tucows/donejs-carousel-plugin" />
+			<tucows-donejs-carousel
+				activeSlideIndex:to="./activeSlideIndex"
+				slides:from='./slides'
+				carouselOptions:from='./carouselOptions'
+			>
+				{{#each ./slides}}
+
+					<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+						
+						<div class="slideContent">
+							<h1>{{./title}}</h1>
+							<p>{{{./content1}}}</p>
+							<p>{{{./content2}}}</p>
+						</div>
+					
+					</div>
+
+				{{/each}}
+
+			</tucows-donejs-carousel>	
+	</script>
+</div>
+
 <script src="../node_modules/steal/steal.js" main="@empty">
 import 'can-view-autorender';
 import canViewModel from 'can-view-model';
@@ -168,6 +224,8 @@ const demoVM2 = canViewModel(document.getElementById('demo-html2'));
 const demoVM3 = canViewModel(document.getElementById('demo-html3'));
 const demoVM4 = canViewModel(document.getElementById('demo-html4'));
 const demoVM5 = canViewModel(document.getElementById('demo-html5'));
+const demoVM6 = canViewModel(document.getElementById('demo-html6'));
+const demoVM7 = canViewModel(document.getElementById('demo-html7'));
 
 
 demoVM.slides = slides;
@@ -175,6 +233,8 @@ demoVM2.slides = slides;
 demoVM3.slides = slides;
 demoVM4.slides = slides;
 demoVM5.slides = slides;
+demoVM6.slides = slides;
+demoVM7.slides = slides;
 
 demoVM.carouselOptions = {
 	navArrows: true,
@@ -206,6 +266,19 @@ demoVM5.carouselOptions = {
 	breakOnDesktop: true,
 	extraClass: 'break-on-desktop-fade',
 	transition: 'dissolve'
+}
+
+demoVM6.carouselOptions = {
+	navArrows: true,
+	autoPlay: 2000,
+	extraClass: 'autoplay-slide'
+}
+
+demoVM7.carouselOptions = {
+	navArrows: true,
+	autoPlay: 2000,
+	transition: 'dissolve',
+	extraClass: 'autoplay-fade'
 }
 
 </script>

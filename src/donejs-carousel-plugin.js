@@ -538,17 +538,21 @@ export const ViewModel = DefineMap.extend({
 	fadeToActiveSlide() {
 		let classSelector = this.classSelector;
 
-		let transitionAnimation = '1s ease';
-		// render all slides transparent
-		$(`${classSelector} .slide`).css({
-			'opacity': 0,
-			'transition': transitionAnimation
-		});
-		// render the active slide opaque
-		$(`${classSelector} .slide.active`).css({
-			'opacity': 1,
-			'transition': transitionAnimation
-		});
+		//only fade if slides are in carousel, not broken on desktop
+		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
+
+			let transitionAnimation = '1s ease';
+			// render all slides transparent
+			$(`${classSelector} .slide`).css({
+				'opacity': 0,
+				'transition': transitionAnimation
+			});
+			// render the active slide opaque
+			$(`${classSelector} .slide.active`).css({
+				'opacity': 1,
+				'transition': transitionAnimation
+			});
+		}
 	},
 	/**
 	* @function preventDefault
@@ -565,7 +569,8 @@ export const ViewModel = DefineMap.extend({
 	* @function handleBreakOnDesktop
 	*
 	* @description
-	* When the carousel breaks on desktop, make sure the slide track is translated back to 0 and auto play is turned off
+	* When the carousel breaks on desktop, handle behaviour of how slides should
+	* be displayed without carousel b
 	*
 	*/
 	handleBreakOnDesktop() {
@@ -588,7 +593,38 @@ export const ViewModel = DefineMap.extend({
 			// set time interval is cleared
 			clearInterval(this.autoPlayInterval);
 		}
-	}
+	},
+	/**
+	* @function makeAllSlidesOpaque
+	*
+	* @description
+	* Reset the opacity of all the slides when breaking on Desktop
+	*
+	*/
+	makeAllSlidesOpaque() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({
+			'opacity': 1
+		});
+	},
+	/**
+	* @function makeOnlyActiveSlideOpaque
+	*
+	* @description
+	* Make only the active slide opaque and all other slides should be transparent
+	*
+	*/
+	makeOnlyActiveSlideOpaque() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({
+			'opacity': 0
+		});
+		$(`${classSelector} .slide.active`).css({
+			'opacity': 1
+		});
+	},
 });
 
 export default Component.extend({
@@ -604,8 +640,27 @@ export default Component.extend({
 		*
 		*/
 		'{window} resize'() {
-			if (this.viewModel.carouselOptions.breakOnDesktop && this.viewModel.isDesktop) {
-				this.viewModel.handleBreakOnDesktop();
+			let breakOnDesktop = this.viewModel.carouselOptions.breakOnDesktop;
+			let isDesktop = this.viewModel.isDesktop;
+			let dissolveTransition = this.viewModel.carouselOptions.transition == "dissolve";
+
+			if (breakOnDesktop) {
+				if (isDesktop) {
+					// pause autoplay and set slide to 0
+					this.viewModel.handleBreakOnDesktop();
+					// if dissolve transition, set opacity of all slides to 1
+					if (dissolveTransition) {
+						this.viewModel.makeAllSlidesOpaque();
+					}
+				} else {
+					// if set to break on desktop, but not in desktop, this could mean
+					// that the browser was resized to mobile, so we need to make only
+					// the active slide opaque and all the others transparent in order
+					// for dissolve transition to work properly
+					if (dissolveTransition) {
+						this.viewModel.makeOnlyActiveSlideOpaque();
+					}
+				}
 			}
 		},
 		/**

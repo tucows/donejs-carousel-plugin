@@ -1016,7 +1016,16 @@ describe('tucows-donejs-carousel', () => {
 			changeToActiveSlideStub.calledOnce.should.be.true;
 		});
 	});
+
+	describe('makeAllSlidesOpaque()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('makeOnlyActiveSlideOpaque()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('clearAutoPlay()', () => {
+		// NOTE: We are not currently testing DOM manipulation
+	});
 });
-
-
-
