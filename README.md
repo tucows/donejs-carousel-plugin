@@ -8,7 +8,14 @@ A carousel plugin for DoneJS.
 
 ![Autplay Carousel Demo](carousel-slide-autoplay.gif)
 
-[Carousel demoes with different configuration options](src/donejs-carousel-plugin.html)
+To view the demo page with different carousel options, run the following commands:
+
+```
+npm install
+donejs develop
+```
+
+Then visit `localhost:8080/`
 
 ## Usage
 

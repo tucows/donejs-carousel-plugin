@@ -2,7 +2,7 @@
 
 ## Developing Locally
 
-This section will walk you through setting up the [repository](https://github.com/Tucows/donejs-carousel-plugin) on your computer.
+This section will walk you through setting up the [repository](https://github.com/tucows/donejs-carousel-plugin) on your computer.
 
 ### Signing up for GitHub
 
