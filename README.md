@@ -4,6 +4,12 @@
 
 A carousel plugin for DoneJS.
 
+## Demo
+
+![Autplay Carousel Demo](carousel-slide-autoplay.gif)
+
+[Carousel demoes with different configuration options]()
+
 ## Usage
 
 ### Import in stache
