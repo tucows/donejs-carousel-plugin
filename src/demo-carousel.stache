@@ -1,5 +1,18 @@
-<div class="demo">
+<div class="information">
 	<h2>{{./carouselName}}</h2>
+	<pre>
+	{
+		slides: slides,
+		carouselOptions: {
+			{{#each ./carouselOptions }} {{scope.key}}: '{{.}}' 
+			{{/each}}
+		}
+	}
+	</pre>
+
+</div>
+
+<div class="demo">
 	<can-import from="@tucows/donejs-carousel-plugin/demo.less!" />
 	<can-import from="@tucows/donejs-carousel-plugin" />
 	<tucows-donejs-carousel
@@ -16,8 +29,6 @@
 					<p>{{{./content1}}}</p>
 					<p>{{{./content2}}}</p>
 				</div>
-
-				{{../activeSlideIndex}}
 			
 			</div>
 
