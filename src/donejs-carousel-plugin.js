@@ -538,9 +538,8 @@ export const ViewModel = DefineMap.extend({
 	fadeToActiveSlide() {
 		let classSelector = this.classSelector;
 
-		//only fade if slides are in carousel, not broken on desktop
+		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
-
 			let transitionAnimation = '1s ease';
 			// render all slides transparent
 			$(`${classSelector} .slide`).css({
@@ -604,9 +603,7 @@ export const ViewModel = DefineMap.extend({
 	makeAllSlidesOpaque() {
 		let classSelector = this.classSelector;
 
-		$(`${classSelector} .slide`).css({
-			'opacity': 1
-		});
+		$(`${classSelector} .slide`).css({'opacity': 1});
 	},
 	/**
 	* @function makeOnlyActiveSlideOpaque
@@ -618,12 +615,8 @@ export const ViewModel = DefineMap.extend({
 	makeOnlyActiveSlideOpaque() {
 		let classSelector = this.classSelector;
 
-		$(`${classSelector} .slide`).css({
-			'opacity': 0
-		});
-		$(`${classSelector} .slide.active`).css({
-			'opacity': 1
-		});
+		$(`${classSelector} .slide`).css({'opacity': 0});
+		$(`${classSelector} .slide.active`).css({'opacity': 1});
 	},
 });
 
@@ -642,7 +635,7 @@ export default Component.extend({
 		'{window} resize'() {
 			let breakOnDesktop = this.viewModel.carouselOptions.breakOnDesktop;
 			let isDesktop = this.viewModel.isDesktop;
-			let dissolveTransition = this.viewModel.carouselOptions.transition == "dissolve";
+			let dissolveTransition = this.viewModel.carouselOptions.transition == 'dissolve';
 
 			if (breakOnDesktop) {
 				if (isDesktop) {
@@ -652,14 +645,12 @@ export default Component.extend({
 					if (dissolveTransition) {
 						this.viewModel.makeAllSlidesOpaque();
 					}
-				} else {
+				} else if (dissolveTransition) {
 					// if set to break on desktop, but not in desktop, this could mean
 					// that the browser was resized to mobile, so we need to make only
 					// the active slide opaque and all the others transparent in order
 					// for dissolve transition to work properly
-					if (dissolveTransition) {
-						this.viewModel.makeOnlyActiveSlideOpaque();
-					}
+					this.viewModel.makeOnlyActiveSlideOpaque();
 				}
 			}
 		},

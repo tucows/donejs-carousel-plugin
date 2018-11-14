@@ -1,7 +1,7 @@
 @parent donejs-carousel-plugin
 @module {can.Component} donejs-carousel-plugin <tucows-donejs-carousel>
 
-Create a sliding carousel based on pre-defined slides. Utilizes arrow, dot and touch/mouse-drag navigation.
+Create a sliding or fading carousel based on pre-defined slides. Utilizes arrow, dot and touch/mouse-drag navigation.
 
 @signature `<tucows-donejs-carousel>`
 

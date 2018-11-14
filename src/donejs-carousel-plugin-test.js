@@ -18,8 +18,6 @@ import DefineMap from 'can-define/map/map';
 
 import {ViewModel, SWIPE_OBJECT_DEFAULT} from './donejs-carousel-plugin';
 
-// import clone from 'steal-clone';
-
 // ViewModel unit tests
 describe('tucows-donejs-carousel', () => {
 	describe('viewModel properties', () => {
