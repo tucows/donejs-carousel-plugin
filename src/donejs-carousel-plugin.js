@@ -27,12 +27,10 @@ export const isMobile = function(isTablet) {
 	return window.innerWidth < 600;
 };
 
-
 export const ViewModel = DefineMap.extend({
 	/**
 	* @property {array} slides populates slides with the appropriate data. This will likely change.
 	*/
-	// slides: 'any',
 	slides: 'any',
 	/**
 	* @property {number} activeSlideIndex slide that the user wants to see
@@ -41,11 +39,14 @@ export const ViewModel = DefineMap.extend({
 		type: 'number',
 		value: 0
 	},
+	/**
+	* @property {number} lastSlideIndex index of last slide in the array
+	*/
 	lastSlideIndex: {
 		type: 'number',
 		/**
-    * @property {number} lastSlideIndex index of last slide in the array
-    */
+	 	 * @function return last slide index
+	 	 * */
 		get() {
 			if (this.slides) {
 				return this.slides.length - 1;
@@ -120,7 +121,6 @@ export const ViewModel = DefineMap.extend({
 	* @property {number} autoPlayInterval current interval of setInterval function that handles the auto play of the carousel
 	*/
 	autoPlayInterval: {type: 'any'},
-
 	/**
 	* @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
 	* */
@@ -156,6 +156,22 @@ export const ViewModel = DefineMap.extend({
 		value: platform.isDesktopBrowser
 	},
 	/**
+	* @property {boolean} classSelector specifies the appropriate carousel class especially if there are multiple carousels on page
+	*/
+	classSelector: {
+		type: 'string',
+		/**
+		 * @function concatenate extraclass to .slideTrack, if available, otherwise output just .slideTrack
+		 * */
+		get() {
+			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
+			if (this.carouselOptions.extraClass) {
+				return `.${this.carouselOptions.extraClass} .slideTrack`;
+			}
+			return '.slideTrack';
+		}
+	},
+	/**
 	* @function oneSlideOver
 	*
 	* @description
@@ -172,7 +188,7 @@ export const ViewModel = DefineMap.extend({
 			this.activeSlideIndex--;
 		}
 		// move carousel to the new active slide
-		this.moveCarousel('active slide');
+		this.changeToActiveSlide();
 	},
 	/**
 	* @function directionHandler
@@ -261,7 +277,7 @@ export const ViewModel = DefineMap.extend({
 		// set active slide to the selected index
 		this.activeSlideIndex = index;
 		// move carousel so the newly activated slide is shown
-		this.moveCarousel('active slide');
+		this.changeToActiveSlide();
 	},
 	/**
 	* @function swipeHandler
@@ -345,21 +361,32 @@ export const ViewModel = DefineMap.extend({
 			// break out of this function
 			return false;
 		}
-		// get the x position of the left of the active slide (i.e. first slide is 0, second slide is width of slide 1, etc.)
-		let currentLeft = this.getLeft(this.activeSlideIndex);
+
 		// reassign the current x coordinate based on the event data
 		this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// figure out and assign the swipe length (positive is swipe right, negative is swipe left)
 		let swipeLength;
 		this.swipeObject.swipeLength = swipeLength = this.swipeObject.currentX - this.swipeObject.startX;
+
 		// prevent horizontal scrolling when swiping the carousel
 		if (this.swipeObject.swipeLength < -4 || this.swipeObject.swipeLength > 4) {
 			this.preventDefault(event);
 		}
-		// based on swipe length and the inital position, figure out how much the slide should move horizontally
-		let moveAmount = currentLeft + swipeLength;
-		// move carousel to where the mouse or finger has traveled
-		this.moveCarousel('pointer position', moveAmount);
+
+		// determine type of slide transition (dissolve vs slide)
+		if (this.carouselOptions.transition == 'dissolve') {
+			// calculate swipeAmount as a number between 0 and 1
+			let swipeAmount = swipeLength / this.slideWidth;
+			// fade slide and its sibling by swipeAmount
+			this.fadeSlideByAmount(swipeAmount);
+		} else {
+			// get the x position of the left of the active slide (i.e. first slide is 0, second slide is width of slide 1, etc.)
+			let currentLeft = this.getLeft(this.activeSlideIndex);
+			// based on swipe length and the initial position, figure out how much the slide should move horizontally
+			let pointerPosition = currentLeft + swipeLength;
+			// move carousel to where the mouse or finger has traveled
+			this.moveCarouselToPosition(pointerPosition);
+		}
 	},
 	/**
 	* @function swipeEnd
@@ -376,17 +403,17 @@ export const ViewModel = DefineMap.extend({
 			// set the next slide to active
 			this.activeSlideIndex++;
 			// move carousel to the next slide
-			this.moveCarousel('active slide');
+			this.changeToActiveSlide();
 			// if you swipe right enough and it's not the first slides
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
-			// move carousel to the next slide
-			this.moveCarousel('active slide');
+			// move carousel to the previous slide
+			this.changeToActiveSlide();
 			// if you don't swipe right or left enough, stay on the current slide
 		} else {
 			// move carousel back to the center of the current slide
-			this.moveCarousel('active slide');
+			this.changeToActiveSlide();
 		}
 		// reset the swipe object
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
@@ -407,43 +434,124 @@ export const ViewModel = DefineMap.extend({
 		return leftOfSlide;
 	},
 	/**
-	* @function moveCarousel
+	* @function changeToActiveSlide
+	*
+	* @description
+	* based on carousel options, either fade slide or translate carousel
+	*/
+	changeToActiveSlide() {
+		if (this.carouselOptions.transition == 'dissolve') {
+			this.fadeToActiveSlide();
+		} else {
+			this.moveCarouselToActiveSlide();
+		}
+	},
+	/**
+	* @function moveCarouselToPosition
 	*
 	* @description
 	* set css transform and transition properties to move the slide 
 	*
-	* @param {object} eventType cli  
+	* @param {number} pointerPosition (in pixels)
 	*/
-	moveCarousel(moveTo, pointerPosition) {
-		let translateX;
-		// default is none
-		let transitionAnimation = 'none';
+	moveCarouselToPosition(pointerPosition) {
+		let classSelector = this.classSelector;
+
 		// set css properties according to where we are trying to move to
-		switch (moveTo) {
-			case 'active slide':
-				// first slide is 0, second slide is -100%, etc.
-				translateX = `translateX(${-(this.activeSlideIndex * 100)}%)`;
-				transitionAnimation = '500ms ease';
-				break;
-			case 'pointer position':
-				translateX = `translateX(${pointerPosition}px)`;
-				break;
-		}
-
-		let classSelector;
-		// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
-		if (this.carouselOptions.extraClass) {
-			classSelector = `.${this.carouselOptions.extraClass} .slideTrack`;
-		} else {
-			classSelector = '.slideTrack';
-		}
-
 		$(classSelector).css(
 			{
-				'transform': translateX,
-				'transition': transitionAnimation
+				'transform': `translateX(${pointerPosition}px)`,
+				// no transition necessary when we are moving slide manually
+				'transition': 'none'
 			}
 		);
+	},
+	/**
+	* @function moveCarouselToActiveSlide
+	*
+	* @description
+	* translate the carousel .slideTrack by moving it to the active slide
+	*/
+	moveCarouselToActiveSlide() {
+		let classSelector = this.classSelector;
+
+		// set css properties according to where we are trying to move to
+		$(classSelector).css(
+			{
+				// first slide is 0, second slide is -100%, etc.
+				'transform': `translateX(${-(this.activeSlideIndex * 100)}%)`,
+				// 500ms transition when moving between slides
+				'transition': '500ms ease'
+			}
+		);
+	},
+	/**
+	* @function fadeSlideByAmount
+	*
+	* @description
+	* set css transform and transition properties to move the slide 
+	*
+	* @param {number} swipeAmount (number between 0 and 1) 
+	*/
+	fadeSlideByAmount(swipeAmount) {
+		let classSelector = this.classSelector;
+
+		// controls how much one should have to swipe/drag in order for slide to fade in or out
+		const OPACITY_FADE_MULTIPLIER = 2;
+
+		// value of 1 means opaque, anything 0 or less is transparent
+		let opacity = 1 - Math.abs(swipeAmount * OPACITY_FADE_MULTIPLIER);
+
+		let isFirstSlide = this.activeSlideIndex == 0;
+		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
+
+		// only fade the active slide if it's fading out into another slide, not on it's own
+		if (
+			(swipeAmount > 0 && !isFirstSlide) ||
+			(swipeAmount < 0 && !isLastSlide)
+		){
+			$(`${classSelector} .slide.active`).css({
+				'opacity': opacity,
+				'transition': 'none'
+			});
+		}
+
+		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
+		if (swipeAmount > 0) {
+			$(`${classSelector} .slide.active`).prev().css({
+				'opacity': 1 - opacity,
+				'transition': 'none'
+			});
+		} else {
+			$(`${classSelector} .slide.active`).next().css({
+				'opacity': 1 - opacity,
+				'transition': 'none'
+			});
+		}
+	},
+	/**
+	* @function fadeToActiveSlide
+	*
+	* @description
+	* make all slides but the active one transparent, active slide should be opaque
+	*/
+	fadeToActiveSlide() {
+		let classSelector = this.classSelector;
+
+		// only fade if slides are in carousel, not broken on desktop
+		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
+			let transitionAnimation = '1s ease';
+			// render all slides transparent
+			$(`${classSelector} .slide`).css({
+				'opacity': 0,
+				'transition': transitionAnimation
+			});
+			// render the active slide opaque
+			$(`${classSelector} .slide.active`).css({
+				'opacity': 1,
+				'transition': transitionAnimation
+			});
+		}
 	},
 	/**
 	* @function preventDefault
@@ -460,12 +568,15 @@ export const ViewModel = DefineMap.extend({
 	* @function handleBreakOnDesktop
 	*
 	* @description
-	* When the carousel breaks on desktop, make sure the slide track is translated back to 0 and auto play is turned off
+	* When the carousel breaks on desktop, handle behaviour of how slides should
+	* be displayed without carousel b
 	*
 	*/
 	handleBreakOnDesktop() {
+		// set activeSlideIndex to 0
+		this.activeSlideIndex = 0;
 		// slide track back to square one
-		this.moveCarousel('pointer position', 0);
+		this.changeToActiveSlide();
 		// stop auto play
 		this.clearAutoPlay();
 	},
@@ -481,7 +592,32 @@ export const ViewModel = DefineMap.extend({
 			// set time interval is cleared
 			clearInterval(this.autoPlayInterval);
 		}
-	}
+	},
+	/**
+	* @function makeAllSlidesOpaque
+	*
+	* @description
+	* Reset the opacity of all the slides when breaking on Desktop
+	*
+	*/
+	makeAllSlidesOpaque() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({'opacity': 1});
+	},
+	/**
+	* @function makeOnlyActiveSlideOpaque
+	*
+	* @description
+	* Make only the active slide opaque and all other slides should be transparent
+	*
+	*/
+	makeOnlyActiveSlideOpaque() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({'opacity': 0});
+		$(`${classSelector} .slide.active`).css({'opacity': 1});
+	},
 });
 
 export default Component.extend({
@@ -497,8 +633,25 @@ export default Component.extend({
 		*
 		*/
 		'{window} resize'() {
-			if (this.viewModel.carouselOptions.breakOnDesktop && this.viewModel.isDesktop) {
-				this.viewModel.handleBreakOnDesktop();
+			let breakOnDesktop = this.viewModel.carouselOptions.breakOnDesktop;
+			let isDesktop = this.viewModel.isDesktop;
+			let dissolveTransition = this.viewModel.carouselOptions.transition == 'dissolve';
+
+			if (breakOnDesktop) {
+				if (isDesktop) {
+					// pause autoplay and set slide to 0
+					this.viewModel.handleBreakOnDesktop();
+					// if dissolve transition, set opacity of all slides to 1
+					if (dissolveTransition) {
+						this.viewModel.makeAllSlidesOpaque();
+					}
+				} else if (dissolveTransition) {
+					// if set to break on desktop, but not in desktop, this could mean
+					// that the browser was resized to mobile, so we need to make only
+					// the active slide opaque and all the others transparent in order
+					// for dissolve transition to work properly
+					this.viewModel.makeOnlyActiveSlideOpaque();
+				}
 			}
 		},
 		/**

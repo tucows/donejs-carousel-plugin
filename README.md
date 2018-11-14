@@ -4,6 +4,19 @@
 
 A carousel plugin for DoneJS.
 
+## Demo
+
+![Autplay Carousel Demo](carousel-slide-autoplay.gif)
+
+To view the demo page with different carousel options, run the following commands:
+
+```
+npm install
+donejs develop
+```
+
+Then visit `localhost:8080/`
+
 ## Usage
 
 ### Import in stache
@@ -66,26 +79,26 @@ define activeSlideIndex
 
 ```Js 
     /**
-	 * @property {number} activeSlideIndex passed up from the carousel component
-	 */
-	activeSlideIndex: 'number',
+     * @property {number} activeSlideIndex passed up from the carousel component
+     */
+    activeSlideIndex: 'number',
 ```
 
 define carousel options 
 
 ```js
     /**
-	 * @property {object} carouselOptions options to be passed down to carousel component
-	 */
-	carouselOptions: {
-		type: 'any',
-		value: {
-			navArrows: false,
-			extraClass: 'userReviewsCarousel',
+     * @property {object} carouselOptions options to be passed down to carousel component
+     */
+    carouselOptions: {
+        type: 'any',
+        value: {
+            navArrows: false,
+            extraClass: 'userReviewsCarousel',
             breakOnDesktop: true,
             autoPlay: 6000
-		}
-	},
+        }
+    },
 ```
 
  ### Carousel options
@@ -96,10 +109,11 @@ navArrows | boolean | false | display clickable arrows for slide navigation
 extraClasses | string | none | class name to be added to parent carousel element for styling
 breakOnDesktop | boolean | false |  turn off the carousel on desktop view (1024px width and greater). All slides will shown side-by-side.
 autoPlay | number | off | enable auto-play sliding. the number represents interval in millisecond.
+transition | string | none | if set to 'dissolve', carousel fades between slides instead of sliding
 
-### Carousel in action
+## Carousel in action
 
-screen shots from https://ting.com
+Screen shots from https://ting.com
 
 #### screenshot 1
 

@@ -1,0 +1,38 @@
+<div class="information">
+	<h2>{{./carouselName}}</h2>
+	<pre>
+	{
+		slides: slides,
+		carouselOptions: {
+			{{#each ./carouselOptions }} {{scope.key}}: '{{.}}' 
+			{{/each}}
+		}
+	}
+	</pre>
+
+</div>
+
+<div class="demo">
+	<can-import from="@tucows/donejs-carousel-plugin/demo/demo.less!" />
+	<can-import from="@tucows/donejs-carousel-plugin" />
+	<tucows-donejs-carousel
+		activeSlideIndex:to='./activeSlideIndex'
+		slides:from='./slides'
+		carouselOptions:from='./carouselOptions'
+	>
+		{{#each ./slides}}
+
+			<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+				
+				<div class="slideContent">
+					<h1>{{./title}}</h1>
+					<p>{{{./content1}}}</p>
+					<p>{{{./content2}}}</p>
+				</div>
+			
+			</div>
+
+		{{/each}}
+
+	</tucows-donejs-carousel>
+</div>		
