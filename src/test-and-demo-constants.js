@@ -12,7 +12,7 @@ export const slides = [
 		backgroundColor: 'orange'
 	},
 	{
-		title: "Stop talking, brain thinking. Hush.",
+		title: 'Stop talking, brain thinking. Hush.',
 		content1: `You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.`,
 		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?`,
 		backgroundColor: 'lightblue'
@@ -78,7 +78,7 @@ export const slideArray = [
 		},
 		carouselName: '6. Carousel Break on Desktop Slide Transition'
 	},
-		{
+	{
 		slides: slides,
 		carouselOptions: {
 			navArrows: true,
@@ -88,7 +88,7 @@ export const slideArray = [
 		},
 		carouselName: '7. Carousel Break on Desktop Fade Transition'
 	},
-		{
+	{
 		slides: slides,
 		carouselOptions: {
 			navArrows: true,

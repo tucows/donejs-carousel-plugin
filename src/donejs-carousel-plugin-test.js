@@ -20,7 +20,7 @@ import {ViewModel, SWIPE_OBJECT_DEFAULT} from './donejs-carousel-plugin';
 
 // imports for functional testing
 import {slides, slideArray} from 'src/test-and-demo-constants';
-import template from "src/demo/demo.stache";
+import template from 'src/demo/demo.stache';
 
 // ViewModel unit tests
 describe('tucows-donejs-carousel', () => {
@@ -1035,6 +1035,11 @@ describe('tucows-donejs-carousel', () => {
 		let componentElements;
 		let testArea = document.getElementById('test-area');
 
+		/**
+		 * @function beforeSetup
+		 * @description iterate through slideArray and append all the carousels
+		 * to the testArea DOM
+		 */
 		const beforeSetup = (done) => {
 			for (let i = 0; i < slideArray.length; i++) {
 				let map = new DefineMap(slideArray[i]);
@@ -1046,10 +1051,14 @@ describe('tucows-donejs-carousel', () => {
 			done();
 		};
 
+		/**
+		 * @function afterTeardown
+		 * @description remove everything inside the testArea DOM element
+		 */
 		const afterTeardown = () => {
 			// remove all carousel elements
 			while (testArea.firstChild) {
-			    testArea.removeChild(testArea.firstChild);
+				testArea.removeChild(testArea.firstChild);
 			}
 		};
 
@@ -1061,58 +1070,86 @@ describe('tucows-donejs-carousel', () => {
 				componentElements.length.should.equal(8);
 			});
 		});
-
 	});
 
-	describe('Right Arrow functionality', () => {
+	describe('Functional Tests', () => {
 		let componentElement;
-		let rightArrow;
 		let activeSlide;
+		let indexOfActiveSlide;
 		let testArea = document.getElementById('test-area');
 
+		/**
+		 * @function beforeSetup
+		 * @description create new carousel with navArrows option set to true
+		 */
 		const beforeSetup = (done) => {
 			let map = new DefineMap({
 				slides: slides,
-				carouselOptions: {
-					navArrows: true,
-					breakOnDesktop: false,
-					extraClass: '1'
-				},
-				carouselName: 'hello'
+				carouselOptions: {navArrows: true}
 			});
 			testArea.appendChild(template(map));
 
 			componentElement = document.body.querySelector('tucows-donejs-carousel');
-			rightArrow = document.body.querySelector('.rightArrow');
 
-			rightArrow.click();
 			done();
 		};
 
+		/**
+		 * @function afterTeardown
+		 * @description remove everything inside the testArea DOM element
+		 */
 		const afterTeardown = () => {
 			// remove all carousel elements
 			while (testArea.firstChild) {
-			    testArea.removeChild(testArea.firstChild);
+				testArea.removeChild(testArea.firstChild);
 			}
 		};
 
-		describe('active slide', () => {
+		describe('Click on the right arrow', () => {
+			let rightArrow;
 
-			let indexOfActiveSlide;
-
-			before(beforeSetup);
+			before((done) => {
+				beforeSetup(() => {
+					rightArrow = componentElement.querySelector('.rightArrow');
+					rightArrow.click();
+					done();
+				});
+			});
 			after(afterTeardown);
 
-			it('should be the second one (index 1)', () => {
-				activeSlide = document.body.querySelector('.slide.active');
-				// get the index of the active slide relative to siblings
-				indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
-				
-				indexOfActiveSlide.should.equal(1);
+			describe('active slide', () => {
+				it('should be the second one (index 1)', () => {
+					activeSlide = componentElement.querySelector('.slide.active');
+					// get the index of the active slide relative to siblings
+					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+					indexOfActiveSlide.should.equal(1);
+				});
 			});
 		});
 
-	});
+		describe('Click on the left arrow', () => {
+			let leftArrow;
+
+			before((done) => {
+				beforeSetup(() => {
+					leftArrow = componentElement.querySelector('.leftArrow');
+					leftArrow.click();
+					done();
+				});
+			});
+			after(afterTeardown);
+
+			describe('active slide', () => {
+				it('should stay on first slide', () => {
+					activeSlide = componentElement.querySelector('.slide.active');
+					// get the index of the active slide relative to siblings
+					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+					indexOfActiveSlide.should.equal(0);
+				});
+			});
+		});
 
 		// describe('clicking', () => {
 		// 	before((done) => {
@@ -1155,5 +1192,5 @@ describe('tucows-donejs-carousel', () => {
 		// 		tooltip.classList.contains('show').should.equal(false);
 		// 	});
 		// });
-	// });
+	});
 });
