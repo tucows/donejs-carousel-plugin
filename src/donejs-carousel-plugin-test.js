@@ -1041,10 +1041,10 @@ describe('tucows-donejs-carousel', () => {
 		 * to the testArea DOM
 		 */
 		const beforeSetup = (done) => {
-			for (let i = 0; i < slideArray.length; i++) {
-				let map = new DefineMap(slideArray[i]);
+			slideArray.forEach( (slideOpts) => {
+				let map = new DefineMap(slideOpts);
 				testArea.appendChild(template(map));
-			}
+			});
 
 			componentElements = document.body.querySelectorAll('tucows-donejs-carousel');
 
