@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import Component from 'can-component';
 import DefineMap from 'can-define/map/';
 import './donejs-carousel-plugin.less';
@@ -37,7 +38,13 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0
+		value: 0,
+		set(newIndex) {
+			if (newIndex != this.activeSlideIndex) {
+				this.changeToActiveSlide();
+			}
+			return newIndex;
+		}
 	},
 	/**
 	* @property {number} lastSlideIndex index of last slide in the array
@@ -99,7 +106,7 @@ export const ViewModel = DefineMap.extend({
 	* @property {object} carouselOptions passed in from the parent component 
 	*/
 	carouselOptions: {
-		type: 'any',
+		type: 'observable',
 		value: {},
 		/**
 		* @function set called when new carouselOptions is set
@@ -187,8 +194,6 @@ export const ViewModel = DefineMap.extend({
 			// reduce the active slide index flag
 			this.activeSlideIndex--;
 		}
-		// move carousel to the new active slide
-		this.changeToActiveSlide();
 	},
 	/**
 	* @function directionHandler
@@ -276,8 +281,6 @@ export const ViewModel = DefineMap.extend({
 	dotClickHandler(index) {
 		// set active slide to the selected index
 		this.activeSlideIndex = index;
-		// move carousel so the newly activated slide is shown
-		this.changeToActiveSlide();
 	},
 	/**
 	* @function swipeHandler
@@ -402,14 +405,10 @@ export const ViewModel = DefineMap.extend({
 		if (swipePercentage < -10 && this.activeSlideIndex != this.lastSlideIndex) {
 			// set the next slide to active
 			this.activeSlideIndex++;
-			// move carousel to the next slide
-			this.changeToActiveSlide();
-			// if you swipe right enough and it's not the first slides
+		// if you swipe right enough and it's not the first slides
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
-			// move carousel to the previous slide
-			this.changeToActiveSlide();
 			// if you don't swipe right or left enough, stay on the current slide
 		} else {
 			// move carousel back to the center of the current slide
@@ -575,8 +574,6 @@ export const ViewModel = DefineMap.extend({
 	handleBreakOnDesktop() {
 		// set activeSlideIndex to 0
 		this.activeSlideIndex = 0;
-		// slide track back to square one
-		this.changeToActiveSlide();
 		// stop auto play
 		this.clearAutoPlay();
 	},
@@ -617,6 +614,20 @@ export const ViewModel = DefineMap.extend({
 
 		$(`${classSelector} .slide`).css({'opacity': 0});
 		$(`${classSelector} .slide.active`).css({'opacity': 1});
+	},
+	/**
+	* @function isLengthOneOrLess
+	* @description
+	* stache helper in order to decide whether to show dots or not
+	*
+	* @param {number} length length of slide array 
+	* @returns {boolean} 
+	*/
+	isLengthOneOrLess(length) {
+		if (length <= 1) {
+			return true;
+		}
+		return false;
 	},
 });
 
