@@ -1041,7 +1041,7 @@ describe('tucows-donejs-carousel', () => {
 		 * to the testArea DOM
 		 */
 		const beforeSetup = (done) => {
-			slideArray.forEach( (slideOpts) => {
+			slideArray.forEach((slideOpts) => {
 				let map = new DefineMap(slideOpts);
 				testArea.appendChild(template(map));
 			});

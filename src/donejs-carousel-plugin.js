@@ -431,7 +431,6 @@ export const ViewModel = DefineMap.extend({
 		if (this.carouselOptions.transition == 'dissolve') {
 			this.makeOnlyActiveSlideVisible();
 		}
-
 	},
 	/**
 	* @function getLeft
@@ -555,12 +554,12 @@ export const ViewModel = DefineMap.extend({
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
 			// make 1s ease transition for all slides
-			$(`${classSelector} .slide`).css({ 'transition': '1s ease' });
+			$(`${classSelector} .slide`).css({'transition': '1s ease'});
 
 			// make only active slide opaque and visible, everything else
 			// should be transparent and hidden
 			this.makeOnlyActiveSlideOpaque();
-			this.makeOnlyActiveSlideVisible()
+			this.makeOnlyActiveSlideVisible();
 		}
 	},
 	/**
