@@ -345,6 +345,11 @@ export const ViewModel = DefineMap.extend({
 		this.swipeObject.startX = this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// dragging has started
 		this.dragging = true;
+
+		// set all slides to be visible during the transition
+		if (this.carouselOptions.transition == 'dissolve') {
+			this.makeAllSlidesVisible();
+		}
 	},
 	/**
 	* @function swipeMove
@@ -419,6 +424,14 @@ export const ViewModel = DefineMap.extend({
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
 		// flag dragging as over
 		this.dragging = false;
+
+		// set visibility: hidden for all non active slides so that links on
+		// transparent slides won't affect cursor pointer from correctly appearing
+		// on active slide
+		if (this.carouselOptions.transition == 'dissolve') {
+			this.makeOnlyActiveSlideVisible();
+		}
+
 	},
 	/**
 	* @function getLeft
@@ -533,24 +546,21 @@ export const ViewModel = DefineMap.extend({
 	* @function fadeToActiveSlide
 	*
 	* @description
-	* make all slides but the active one transparent, active slide should be opaque
+	* make all slides but the active one transparent and hidden,
+	* active slide should be opaque and visible
 	*/
 	fadeToActiveSlide() {
 		let classSelector = this.classSelector;
 
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
-			let transitionAnimation = '1s ease';
-			// render all slides transparent
-			$(`${classSelector} .slide`).css({
-				'opacity': 0,
-				'transition': transitionAnimation
-			});
-			// render the active slide opaque
-			$(`${classSelector} .slide.active`).css({
-				'opacity': 1,
-				'transition': transitionAnimation
-			});
+			// make 1s ease transition for all slides
+			$(`${classSelector} .slide`).css({ 'transition': '1s ease' });
+
+			// make only active slide opaque and visible, everything else
+			// should be transparent and hidden
+			this.makeOnlyActiveSlideOpaque();
+			this.makeOnlyActiveSlideVisible()
 		}
 	},
 	/**
@@ -606,6 +616,19 @@ export const ViewModel = DefineMap.extend({
 		$(`${classSelector} .slide`).css({'opacity': 1});
 	},
 	/**
+	* @function makeAllSlidesVisible
+	*
+	* @description
+	* The visibility of slides allows links to function properly
+	* Make all slides visible (only during transitions when fading)
+	*
+	*/
+	makeAllSlidesVisible() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({'visibility': 'visible'});
+	},
+	/**
 	* @function makeOnlyActiveSlideOpaque
 	*
 	* @description
@@ -618,6 +641,20 @@ export const ViewModel = DefineMap.extend({
 		$(`${classSelector} .slide`).css({'opacity': 0});
 		$(`${classSelector} .slide.active`).css({'opacity': 1});
 	},
+	/**
+	* @function makeOnlyActiveSlideVisible
+	*
+	* @description
+	* The visibility of slides allows links to function properly
+	* Make only the active slide visible and all other slides should be hidden
+	*
+	*/
+	makeOnlyActiveSlideVisible() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({'visibility': 'hidden'});
+		$(`${classSelector} .slide.active`).css({'visibility': 'visible'});
+	}
 });
 
 export default Component.extend({
@@ -644,6 +681,7 @@ export default Component.extend({
 					// if dissolve transition, set opacity of all slides to 1
 					if (dissolveTransition) {
 						this.viewModel.makeAllSlidesOpaque();
+						this.viewModel.makeAllSlidesVisible();
 					}
 				} else if (dissolveTransition) {
 					// if set to break on desktop, but not in desktop, this could mean
@@ -651,6 +689,7 @@ export default Component.extend({
 					// the active slide opaque and all the others transparent in order
 					// for dissolve transition to work properly
 					this.viewModel.makeOnlyActiveSlideOpaque();
+					this.viewModel.makeOnlyActiveSlideVisible();
 				}
 			}
 		},
