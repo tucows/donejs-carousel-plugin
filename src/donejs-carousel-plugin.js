@@ -38,13 +38,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0,
-		set(newIndex) {
-			if (newIndex != this.activeSlideIndex) {
-				this.changeToActiveSlide();
-			}
-			return newIndex;
-		}
+		value: 0
 	},
 	/**
 	* @property {number} lastSlideIndex index of last slide in the array
@@ -636,6 +630,16 @@ export default Component.extend({
 	ViewModel,
 	view,
 	events: {
+		/**
+		* @function activeSlideIndex change event handler
+		*
+		* @description
+		* on change of this viewmodel property, fire function to change slidetrack location
+		*
+		*/
+		'{viewModel} activeSlideIndex'() {
+			this.viewModel.changeToActiveSlide();
+		},
 		/**
 		* @function window resize event handler
 		*

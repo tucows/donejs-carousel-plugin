@@ -32,7 +32,10 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: false,
 			extraClass: 'default-carousel'
 		},
@@ -41,7 +44,10 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: false,
 			transition: 'dissolve',
 			extraClass: 'fade-carousel',
@@ -51,7 +57,6 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: false,
 			breakOnDesktop: false,
 			extraClass: 'no-nav-arrows',
 		},
@@ -60,7 +65,6 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: false,
 			autoPlay: 4000,
 			extraClass: 'autoplay-slide',
@@ -70,7 +74,6 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: false,
 			autoPlay: 4000,
 			transition: 'dissolve',
@@ -81,7 +84,6 @@ const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: true,
 			extraClass: 'break-on-desktop-slide',
 		},
@@ -90,7 +92,6 @@ const slideArray = [
 		{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: true,
 			transition: 'dissolve',
 			extraClass: 'break-on-desktop-fade',
@@ -100,7 +101,6 @@ const slideArray = [
 		{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: true,
 			autoPlay: 4000,
 			extraClass: 'break-on-desktop-autplay',

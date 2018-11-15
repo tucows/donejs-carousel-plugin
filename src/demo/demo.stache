@@ -3,8 +3,16 @@
 	<pre>
 	{
 		slides: slides,
-		carouselOptions: {
-			{{#each ./carouselOptions }} {{scope.key}}: '{{.}}' 
+		
+		carouselOptions: { 
+			{{#each ./carouselOptions }} {{#is scope.key 'navArrows'}} 
+			navArrows: { 
+				{{#each .}}
+				{{scope.key}}: '{{.}}', 
+				{{/each}} 
+			},
+			{{else}}
+			{{scope.key}}: '{{.}}',{{/is}}
 			{{/each}}
 		}
 	}
