@@ -9,9 +9,9 @@ import template from "src/demo/demo.stache";
 // array of slide options, slides and slide name
 import {slideArray} from 'src/test-and-demo-constants';
 
-for (let i = 0; i < slideArray.length; i++) {
-	let map = new DefineMap(slideArray[i]);
+slideArray.forEach((slideOpts) => {
+	let map = new DefineMap(slideOpts);
 	document.body.appendChild(template(map));
-}
+});
 
 </script>
