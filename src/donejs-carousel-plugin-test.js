@@ -18,6 +18,10 @@ import DefineMap from 'can-define/map/map';
 
 import {ViewModel, SWIPE_OBJECT_DEFAULT} from './donejs-carousel-plugin';
 
+// imports for functional testing
+import {slides, slideArray} from 'src/test-and-demo-constants';
+import template from 'src/demo/demo.stache';
+
 // ViewModel unit tests
 describe('tucows-donejs-carousel', () => {
 	describe('viewModel properties', () => {
@@ -1025,5 +1029,168 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('clearAutoPlay()', () => {
 		// NOTE: We are not currently testing DOM manipulation
+	});
+
+	describe('Demo Page', () => {
+		let componentElements;
+		let testArea = document.getElementById('test-area');
+
+		/**
+		 * @function beforeSetup
+		 * @description iterate through slideArray and append all the carousels
+		 * to the testArea DOM
+		 */
+		const beforeSetup = (done) => {
+			slideArray.forEach((slideOpts) => {
+				let map = new DefineMap(slideOpts);
+				testArea.appendChild(template(map));
+			});
+
+			componentElements = document.body.querySelectorAll('tucows-donejs-carousel');
+
+			done();
+		};
+
+		/**
+		 * @function afterTeardown
+		 * @description remove everything inside the testArea DOM element
+		 */
+		const afterTeardown = () => {
+			// remove all carousel elements
+			while (testArea.firstChild) {
+				testArea.removeChild(testArea.firstChild);
+			}
+		};
+
+		describe('placement', () => {
+			before(beforeSetup);
+			after(afterTeardown);
+
+			it('should show 8 carousels', () => {
+				componentElements.length.should.equal(8);
+			});
+		});
+	});
+
+	describe('Functional Tests', () => {
+		let componentElement;
+		let activeSlide;
+		let indexOfActiveSlide;
+		let testArea = document.getElementById('test-area');
+
+		/**
+		 * @function beforeSetup
+		 * @description create new carousel with navArrows option set to true
+		 */
+		const beforeSetup = (done) => {
+			let map = new DefineMap({
+				slides: slides,
+				carouselOptions: {navArrows: true}
+			});
+			testArea.appendChild(template(map));
+
+			componentElement = document.body.querySelector('tucows-donejs-carousel');
+
+			done();
+		};
+
+		/**
+		 * @function afterTeardown
+		 * @description remove everything inside the testArea DOM element
+		 */
+		const afterTeardown = () => {
+			// remove all carousel elements
+			while (testArea.firstChild) {
+				testArea.removeChild(testArea.firstChild);
+			}
+		};
+
+		describe('Click on the right arrow', () => {
+			let rightArrow;
+
+			before((done) => {
+				beforeSetup(() => {
+					rightArrow = componentElement.querySelector('.rightArrow');
+					rightArrow.click();
+					done();
+				});
+			});
+			after(afterTeardown);
+
+			describe('active slide', () => {
+				it('should be the second one (index 1)', () => {
+					activeSlide = componentElement.querySelector('.slide.active');
+					// get the index of the active slide relative to siblings
+					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+					indexOfActiveSlide.should.equal(1);
+				});
+			});
+		});
+
+		describe('Click on the left arrow', () => {
+			let leftArrow;
+
+			before((done) => {
+				beforeSetup(() => {
+					leftArrow = componentElement.querySelector('.leftArrow');
+					leftArrow.click();
+					done();
+				});
+			});
+			after(afterTeardown);
+
+			describe('active slide', () => {
+				it('should stay on first slide', () => {
+					activeSlide = componentElement.querySelector('.slide.active');
+					// get the index of the active slide relative to siblings
+					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+					indexOfActiveSlide.should.equal(0);
+				});
+			});
+		});
+
+		// describe('clicking', () => {
+		// 	before((done) => {
+		// 		beforeSetup(() => {
+		// 			button.click();
+		// 			done();
+		// 		});
+		// 	});
+		// 	after(afterTeardown);
+
+		// 	it('should show the tooltip', () => {
+		// 		tooltip.classList.contains('show').should.equal(true);
+		// 	});
+
+		// 	it('should hide the tooltip when clicked again', () => {
+		// 		button.click();
+		// 		tooltip.classList.contains('show').should.equal(false);
+		// 	});
+		// });
+
+		// describe('hovering', () => {
+		// 	before((done) => {
+		// 		beforeSetup(() => {
+		// 			domEvents.dispatch(button, 'mouseover');
+		// 			done();
+		// 		});
+		// 	});
+		// 	after(afterTeardown);
+
+		// 	it('should show the tooltip', () => {
+		// 		tooltip.classList.contains('show').should.equal(true);
+		// 	});
+
+		// 	it('should set lastHoverTimestamp', () => {
+		// 		componentVM.lastHoverTimestamp.should.be.greaterThan(0);
+		// 	});
+
+		// 	it('should hide the tooltip when no longer being hovered over', () => {
+		// 		domEvents.dispatch(button, 'mouseout');
+		// 		tooltip.classList.contains('show').should.equal(false);
+		// 	});
+		// });
 	});
 });
