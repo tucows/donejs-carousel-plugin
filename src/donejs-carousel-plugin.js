@@ -345,11 +345,6 @@ export const ViewModel = DefineMap.extend({
 		this.swipeObject.startX = this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// dragging has started
 		this.dragging = true;
-
-		// set all slides to be visible during the transition
-		if (this.carouselOptions.transition == 'dissolve') {
-			this.makeAllSlidesVisible();
-		}
 	},
 	/**
 	* @function swipeMove
@@ -424,13 +419,6 @@ export const ViewModel = DefineMap.extend({
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
 		// flag dragging as over
 		this.dragging = false;
-
-		// set visibility: hidden for all non active slides so that links on
-		// transparent slides won't affect cursor pointer from correctly appearing
-		// on active slide
-		if (this.carouselOptions.transition == 'dissolve') {
-			this.makeOnlyActiveSlideVisible();
-		}
 	},
 	/**
 	* @function getLeft
@@ -545,21 +533,27 @@ export const ViewModel = DefineMap.extend({
 	* @function fadeToActiveSlide
 	*
 	* @description
-	* make all slides but the active one transparent and hidden,
-	* active slide should be opaque and visible
+	* make all slides but the active one transparent
+	* active slide should have higher z-index value
 	*/
 	fadeToActiveSlide() {
 		let classSelector = this.classSelector;
 
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
-			// make 1s ease transition for all slides
-			$(`${classSelector} .slide`).css({'transition': '1s ease'});
+			// transition length in ms
+			let transitionLength = 1000;
 
-			// make only active slide opaque and visible, everything else
-			// should be transparent and hidden
+			// make 1s ease transition for all slides
+			$(`${classSelector} .slide`).css({'transition': `${transitionLength}ms ease`});
+
+			// make only active slide opaque, everything else
+			// should be transparent
 			this.makeOnlyActiveSlideOpaque();
-			this.makeOnlyActiveSlideVisible();
+
+			// set the z-index on the active slide to be higher than all 
+			// the other slides so that links (anchor tags) are properly clickable
+			this.setActiveSlideZIndex();
 		}
 	},
 	/**
@@ -606,26 +600,14 @@ export const ViewModel = DefineMap.extend({
 	* @function makeAllSlidesOpaque
 	*
 	* @description
-	* Reset the opacity of all the slides when breaking on Desktop
+	* Reset the opacity of all the slides when breaking on desktop
 	*
 	*/
 	makeAllSlidesOpaque() {
 		let classSelector = this.classSelector;
 
 		$(`${classSelector} .slide`).css({'opacity': 1});
-	},
-	/**
-	* @function makeAllSlidesVisible
-	*
-	* @description
-	* The visibility of slides allows links to function properly
-	* Make all slides visible (only during transitions when fading)
-	*
-	*/
-	makeAllSlidesVisible() {
-		let classSelector = this.classSelector;
 
-		$(`${classSelector} .slide`).css({'visibility': 'visible'});
 	},
 	/**
 	* @function makeOnlyActiveSlideOpaque
@@ -641,18 +623,32 @@ export const ViewModel = DefineMap.extend({
 		$(`${classSelector} .slide.active`).css({'opacity': 1});
 	},
 	/**
-	* @function makeOnlyActiveSlideVisible
+	* @function resetZIndexAllSlides
 	*
 	* @description
-	* The visibility of slides allows links to function properly
-	* Make only the active slide visible and all other slides should be hidden
+	* Reset the z-index of slides when resizing the window and going from
+	* broken on desktop to mobile view
 	*
 	*/
-	makeOnlyActiveSlideVisible() {
+	resetZIndexAllSlides() {
 		let classSelector = this.classSelector;
 
-		$(`${classSelector} .slide`).css({'visibility': 'hidden'});
-		$(`${classSelector} .slide.active`).css({'visibility': 'visible'});
+		$(`${classSelector} .slide`).css({'z-index': 0});
+	},
+
+	/**
+	* @function setActiveSlideZIndex
+	*
+	* @description
+	* Setting a larger z-index for the active slide allows the links to function properly
+	* Set z-index to 100 for active slide, 0 for all other slides
+	*
+	*/
+	setActiveSlideZIndex() {
+		let classSelector = this.classSelector;
+
+		$(`${classSelector} .slide`).css({'z-index': 0});
+		$(`${classSelector} .slide.active`).css({'z-index': 100});
 	}
 });
 
@@ -680,15 +676,16 @@ export default Component.extend({
 					// if dissolve transition, set opacity of all slides to 1
 					if (dissolveTransition) {
 						this.viewModel.makeAllSlidesOpaque();
-						this.viewModel.makeAllSlidesVisible();
+						this.viewModel.resetZIndexAllSlides();
 					}
 				} else if (dissolveTransition) {
 					// if set to break on desktop, but not in desktop, this could mean
 					// that the browser was resized to mobile, so we need to make only
 					// the active slide opaque and all the others transparent in order
-					// for dissolve transition to work properly
+					// for dissolve transition to work properly. also set z-index for
+					// active slide to be larger than all the others
 					this.viewModel.makeOnlyActiveSlideOpaque();
-					this.viewModel.makeOnlyActiveSlideVisible();
+					this.viewModel.setActiveSlideZIndex();
 				}
 			}
 		},
