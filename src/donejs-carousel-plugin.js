@@ -37,7 +37,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0
+		default: 0
 	},
 	/**
 	* @property {number} lastSlideIndex index of last slide in the array
@@ -58,14 +58,14 @@ export const ViewModel = DefineMap.extend({
 	*/
 	swipeObject: {
 		type: 'observable',
-		value: SWIPE_OBJECT_DEFAULT
+		default: SWIPE_OBJECT_DEFAULT
 	},
 	/**
 	* @property {boolean} dragging flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
 	*/
 	dragging: {
 		type: 'boolean',
-		value: false
+		default: false
 	},
 	/**
 	* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
@@ -100,7 +100,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	carouselOptions: {
 		type: 'any',
-		value: {},
+		default: {},
 		/**
 		* @function set called when new carouselOptions is set
 		* */
@@ -146,14 +146,14 @@ export const ViewModel = DefineMap.extend({
 	*/
 	autoPlayDirection: {
 		type: 'string',
-		value: 'right'
+		default: 'right'
 	},
 	/**
 	* @property {boolean} isDesktopBrowser whether or not the current environment is browser
 	*/
 	isDesktopBrowser: {
 		type: 'boolean',
-		value: platform.isDesktopBrowser
+		default: platform.isDesktopBrowser
 	},
 	/**
 	* @property {boolean} classSelector specifies the appropriate carousel class especially if there are multiple carousels on page
