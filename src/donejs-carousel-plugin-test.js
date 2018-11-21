@@ -1033,7 +1033,7 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('Demo Page', () => {
 		let componentElements;
-		let testArea = document.getElementById('test-area');
+		let testArea = document.getElementById('mocha-fixture');
 
 		/**
 		 * @function beforeSetup
@@ -1076,7 +1076,7 @@ describe('tucows-donejs-carousel', () => {
 		let componentElement;
 		let activeSlide;
 		let indexOfActiveSlide;
-		let testArea = document.getElementById('test-area');
+		let testArea = document.getElementById('mocha-fixture');
 
 		/**
 		 * @function beforeSetup
