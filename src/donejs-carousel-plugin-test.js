@@ -79,7 +79,9 @@ describe('tucows-donejs-carousel', () => {
 				},
 				slides: {
 					type: 'observable',
-					value: ['slide1', 'slide2']
+					value: () => {
+						['slide1', 'slide2']
+					}
 				}
 			}));
 
@@ -464,7 +466,9 @@ describe('tucows-donejs-carousel', () => {
 				},
 				carouselOptions: {
 					type: 'any',
-					value: {}
+					value: () => {
+						return {};
+					},
 				}
 			}));
 			swipeStartStub = sinon.stub(vm, 'swipeStart');
@@ -837,7 +841,9 @@ describe('tucows-donejs-carousel', () => {
 			},
 			swipeObject: {
 				type: 'any',
-				value: {swipeLength: 0}
+				value: () => {
+					return {swipeLength: 0};
+				}
 			},
 			slideWidth: {
 				type: 'number',
@@ -942,7 +948,9 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: {transition: 'dissolve'}
+					value: () => {
+						return {transition: 'dissolve'};
+					}
 				}
 			}));
 			beforeEach(() => {
@@ -962,7 +970,9 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: {}
+					value: () => {
+						return {};
+					},
 				}
 			}));
 			beforeEach(() => {
