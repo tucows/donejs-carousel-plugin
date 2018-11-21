@@ -1,20 +1,20 @@
 export const slides = [
 	{
-		title: "*Insistently* Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
+		title: "<a href=#overlap1>*Insistently*</a>Bow ties are cool! Come on Amy, I'm a normal bloke, tell me what normal blokes do!",
 		content1: `I hate yogurt. It's just stuff with bits in. I am the Doctor, and you are the Daleks! I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.`,
-		content2: `<a href=#>Just a link to nowhere!</a><strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`,
+		content2: `<a href=#linkone>Just a link to nowhere!</a><strong>I'm nobody's taxi service; I'm not gonna be there to catch you every time you feel like jumping out of a spaceship.</strong> <em> You know how I sometimes have really brilliant ideas?</em> I am the last of my species, and I know how that weighs on the heart so don't lie to me!`,
 		backgroundColor: '#23f2a3'
 	},
 	{
-		title: "They're not aliens, they're Earth…liens!",
-		content1: `<a href=#>Just a link to nowhere!</a>All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?`,
+		title: "<a href=#overlap2>They're not aliens</a>, they're Earth…liens!",
+		content1: `<a href=#linktwo>Just a link to nowhere!</a>All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? All I've got to do is pass as an ordinary human being. Simple. What could possibly go wrong? Did I mention we have comfy chairs?`,
 		content2: `You've swallowed a planet! I am the last of my species, and I know how that weighs on the heart so don't lie to me! <strong> I am the Doctor, and you are the Daleks!</strong> <em> *Insistently* Bow ties are cool!</em> Come on Amy, I'm a normal bloke, tell me what normal blokes do!`,
 		backgroundColor: 'orange'
 	},
 	{
 		title: 'Stop talking, brain thinking. Hush.',
 		content1: `You hate me; you want to kill me! Well, go on! Kill me! KILL ME! I'm the Doctor, I'm worse than everyone's aunt. *catches himself* And that is not how I'm introducing myself. You hit me with a cricket bat.`,
-		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?<a href=#>Just a link to nowhere!</a>`,
+		content2: `Father Christmas. Santa Claus. Or as I've always known him: Jeff. I hate yogurt. It's just stuff with bits in. <strong> All I've got to do is pass as an ordinary human being.</strong> <em> Simple.</em> What could possibly go wrong?<a href=#linkethree>Just a link to nowhere!</a>`,
 		backgroundColor: 'lightblue'
 	}
 ];
