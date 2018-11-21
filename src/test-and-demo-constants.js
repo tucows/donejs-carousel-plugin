@@ -20,15 +20,15 @@ export const slides = [
 ];
 
 export const slideArray = [
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: false,
-	// 		extraClass: 'default-carousel'
-	// 	},
-	// 	carouselName: '1. Carousel with Slide Transition'
-	// },
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: false,
+			extraClass: 'default-carousel'
+		},
+		carouselName: '1. Carousel with Slide Transition'
+	},
 	{
 		slides: slides,
 		carouselOptions: {
@@ -38,63 +38,63 @@ export const slideArray = [
 		},
 		carouselName: '2. Carousel with Fade Transition'
 	},
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: false,
-	// 		breakOnDesktop: false,
-	// 		extraClass: 'no-nav-arrows',
-	// 	},
-	// 	carouselName: '3. Carousel without Nav Arrows'
-	// },
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: false,
-	// 		autoPlay: 4000,
-	// 		extraClass: 'autoplay-slide',
-	// 	},
-	// 	carouselName: '4. Carousel with Autoplay Slide Transition'
-	// },
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: false,
-	// 		autoPlay: 4000,
-	// 		transition: 'dissolve',
-	// 		extraClass: 'autoplay-fade',
-	// 	},
-	// 	carouselName: '5. Carousel with Autoplay Fade Transition'
-	// },
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: true,
-	// 		extraClass: 'break-on-desktop-slide',
-	// 	},
-	// 	carouselName: '6. Carousel Break on Desktop Slide Transition'
-	// },
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: true,
-	// 		transition: 'dissolve',
-	// 		extraClass: 'break-on-desktop-fade',
-	// 	},
-	// 	carouselName: '7. Carousel Break on Desktop Fade Transition'
-	// },
-	// {
-	// 	slides: slides,
-	// 	carouselOptions: {
-	// 		navArrows: true,
-	// 		breakOnDesktop: true,
-	// 		autoPlay: 4000,
-	// 		extraClass: 'break-on-desktop-autplay',
-	// 	},
-	// 	carouselName: '8. Carousel Break on Desktop with Autoplay'
-	// },
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: false,
+			breakOnDesktop: false,
+			extraClass: 'no-nav-arrows',
+		},
+		carouselName: '3. Carousel without Nav Arrows'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: false,
+			autoPlay: 4000,
+			extraClass: 'autoplay-slide',
+		},
+		carouselName: '4. Carousel with Autoplay Slide Transition'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: false,
+			autoPlay: 4000,
+			transition: 'dissolve',
+			extraClass: 'autoplay-fade',
+		},
+		carouselName: '5. Carousel with Autoplay Fade Transition'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: true,
+			extraClass: 'break-on-desktop-slide',
+		},
+		carouselName: '6. Carousel Break on Desktop Slide Transition'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: true,
+			transition: 'dissolve',
+			extraClass: 'break-on-desktop-fade',
+		},
+		carouselName: '7. Carousel Break on Desktop Fade Transition'
+	},
+	{
+		slides: slides,
+		carouselOptions: {
+			navArrows: true,
+			breakOnDesktop: true,
+			autoPlay: 4000,
+			extraClass: 'break-on-desktop-autplay',
+		},
+		carouselName: '8. Carousel Break on Desktop with Autoplay'
+	},
 ];

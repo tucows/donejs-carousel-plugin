@@ -24,13 +24,16 @@
 	<can-import from="@tucows/donejs-carousel-plugin/demo/demo.less!" />
 	<can-import from="@tucows/donejs-carousel-plugin" />
 	<tucows-donejs-carousel
-		activeSlideIndex:to='./activeSlideIndex'
+		activeSlideIndex:bind='./activeSlideIndex'
 		slides:from='./slides'
 		carouselOptions:from='./carouselOptions'
 	>
 		{{#each ./slides}}
 
-			<div class="block slide {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" style="background-color: {{./backgroundColor}}">
+			<div class="block slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" 
+				tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" 
+				style="background-color: {{./backgroundColor}}"
+			>
 				
 				<div class="slideContent">
 					<h1>{{{./title}}}</h1>

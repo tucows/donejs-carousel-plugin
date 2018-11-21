@@ -30,18 +30,32 @@ export const isMobile = function(isTablet) {
 
 export const ViewModel = DefineMap.extend({
 	/**
-	* @property {array} slides populates slides with the appropriate data. This will likely change.
+	* @property {array} slides 
+	* @description populates slides with the appropriate data. This will likely change.
 	*/
 	slides: 'any',
 	/**
-	* @property {number} activeSlideIndex slide that the user wants to see
+	* @property {number} activeSlideIndex 
+	* @description slide that the user wants to see
 	*/
 	activeSlideIndex: {
 		type: 'number',
 		value: 0
 	},
 	/**
-	* @property {number} lastSlideIndex index of last slide in the array
+	* @property {number} activeSlide 
+	* @description active slide dom element
+	*/
+	activeSlide: {
+		get() {
+			if (this.activeSlideIndex !== undefined && this.classSelector) {
+				return $(`${this.classSelector} .slide${this.activeSlideIndex}`);
+			}
+		}
+	},
+	/**
+	* @property {number} lastSlideIndex 
+	* @description index of last slide in the array
 	*/
 	lastSlideIndex: {
 		type: 'number',
@@ -55,21 +69,24 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {object} swipeObject properties used to complete the swipe(drag but not drop) functionality (via touch and mouse)
+	* @property {object} swipeObject 
+	* @description properties used to complete the swipe(drag but not drop) functionality (via touch and mouse)
 	*/
 	swipeObject: {
 		type: 'observable',
 		value: SWIPE_OBJECT_DEFAULT
 	},
 	/**
-	* @property {boolean} dragging flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
+	* @property {boolean} dragging 
+	* @description flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
 	*/
 	dragging: {
 		type: 'boolean',
 		value: false
 	},
 	/**
-	* @property {number} slideWidth returns the width of the slide (assumes all slides are equal width)
+	* @property {number} slideWidth 
+	* @description returns the width of the slide (assumes all slides are equal width)
 	* */
 	slideWidth: {
 		type: 'number',
@@ -85,7 +102,8 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	 * @property {boolean} isDesktop returns true if screen is desktop size (> 1024px)
+	 * @property {boolean} isDesktop 
+	 * @description returns true if screen is desktop size (> 1024px)
 	 */
 	isDesktop: {
 		type: 'boolean',
@@ -97,7 +115,8 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {object} carouselOptions passed in from the parent component 
+	* @property {object} carouselOptions 
+	* @description passed in from the parent component 
 	*/
 	carouselOptions: {
 		type: 'observable',
@@ -119,16 +138,19 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {number} autoPlayInterval current interval of setInterval function that handles the auto play of the carousel
+	* @property {number} autoPlayInterval 
+	* @description current interval of setInterval function that handles the auto play of the carousel
 	*/
 	autoPlayInterval: {type: 'any'},
 	/**
-	* @property {number} autoPlay determines the setInterval duration for the auto sliding of the carousel
+	* @property {number} autoPlay 
+	* @description determines the setInterval duration for the auto sliding of the carousel
 	* */
 	autoPlay: {
 		type: 'number',
 		/**
-		 * @function set sets the autoplay number and figures out the interval
+		 * @function set 
+		 * @description sets the autoplay number and figures out the interval
 		 * */
 		set(duration) {
 			// make sure duration is a number
@@ -143,26 +165,30 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {string} autoPlayDirection changes based on active slide index
+	* @property {string} autoPlayDirection 
+	* @description changes based on active slide index
 	*/
 	autoPlayDirection: {
 		type: 'string',
 		value: 'right'
 	},
 	/**
-	* @property {boolean} isDesktopBrowser whether or not the current environment is browser
+	* @property {boolean} isDesktopBrowser 
+	* @description whether or not the current environment is browser
 	*/
 	isDesktopBrowser: {
 		type: 'boolean',
 		value: platform.isDesktopBrowser
 	},
 	/**
-	* @property {boolean} classSelector specifies the appropriate carousel class especially if there are multiple carousels on page
+	* @property {boolean} classSelector 
+	* @description specifies the appropriate carousel class especially if there are multiple carousels on page
 	*/
 	classSelector: {
 		type: 'string',
 		/**
-		 * @function concatenate extraclass to .slideTrack, if available, otherwise output just .slideTrack
+		 * @function concatenate 
+		 * @description extraclass to .slideTrack, if available, otherwise output just .slideTrack
 		 * */
 		get() {
 			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
@@ -493,7 +519,6 @@ export const ViewModel = DefineMap.extend({
 	* @param {number} swipeAmount (number between 0 and 1) 
 	*/
 	fadeSlideByAmount(swipeAmount) {
-		let classSelector = this.classSelector;
 
 		// controls how much one should have to swipe/drag in order for slide to fade in or out
 		const OPACITY_FADE_MULTIPLIER = 2;
@@ -503,13 +528,13 @@ export const ViewModel = DefineMap.extend({
 
 		let isFirstSlide = this.activeSlideIndex == 0;
 		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
-
+		
 		// only fade the active slide if it's fading out into another slide, not on it's own
 		if (
 			(swipeAmount > 0 && !isFirstSlide) ||
 			(swipeAmount < 0 && !isLastSlide)
 		){
-			$(`${classSelector} .slide.active`).css({
+			this.activeSlide.css({
 				'opacity': opacity,
 				'transition': 'none'
 			});
@@ -517,12 +542,12 @@ export const ViewModel = DefineMap.extend({
 
 		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
 		if (swipeAmount > 0) {
-			$(`${classSelector} .slide.active`).prev().css({
+			this.activeSlide.prev().css({
 				'opacity': 1 - opacity,
 				'transition': 'none'
 			});
 		} else {
-			$(`${classSelector} .slide.active`).next().css({
+			this.activeSlide.next().css({
 				'opacity': 1 - opacity,
 				'transition': 'none'
 			});
@@ -536,15 +561,14 @@ export const ViewModel = DefineMap.extend({
 	* active slide should have higher z-index value
 	*/
 	fadeToActiveSlide() {
-		let classSelector = this.classSelector;
-
+		
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
 			// transition length in ms
 			let transitionLength = 1000;
 
 			// make 1s ease transition for all slides
-			$(`${classSelector} .slide`).css({'transition': `${transitionLength}ms ease`});
+			$(`${this.classSelector} .slide`).css({'transition': `${transitionLength}ms ease`});
 
 			// make only active slide opaque, everything else
 			// should be transparent
@@ -601,9 +625,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeAllSlidesOpaque() {
-		let classSelector = this.classSelector;
-
-		$(`${classSelector} .slide`).css({'opacity': 1});
+		
+		$(`${this.classSelector} .slide`).css({'opacity': 1});
 
 	},
 	/**
@@ -614,10 +637,9 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeOnlyActiveSlideOpaque() {
-		let classSelector = this.classSelector;
-
-		$(`${classSelector} .slide`).css({'opacity': 0});
-		$(`${classSelector} .slide.active`).css({'opacity': 1});
+	
+		$(`${this.classSelector} .slide`).css({'opacity': 0});
+		this.activeSlide.css({'opacity': 1});
 	},
 	/**
 	* @function resetZIndexAllSlides
@@ -628,9 +650,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	resetZIndexAllSlides() {
-		let classSelector = this.classSelector;
-
-		$(`${classSelector} .slide`).css({'z-index': 0});
+		
+		$(`${this.classSelector} .slide`).css({'z-index': 0});
 	},
 
 	/**
@@ -642,10 +663,9 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	setActiveSlideZIndex() {
-		let classSelector = this.classSelector;
-
-		$(`${classSelector} .slide`).css({ 'z-index': 0 });
-		$(`${classSelector} .slide.active`).css({ 'z-index': 100 });
+		
+		$(`${this.classSelector} .slide`).css({ 'z-index': 0 });
+		this.activeSlide.css({ 'z-index': 100 });
 	},
 	/**
 	* @function isLengthOneOrLess
@@ -676,10 +696,8 @@ export default Component.extend({
 		*
 		*/
 		'{viewModel} activeSlideIndex'() {
-			setTimeout(() => {
-				this.viewModel.changeToActiveSlide();
-			}, 10);
-			// this.viewModel.changeToActiveSlide();
+			
+			this.viewModel.changeToActiveSlide();
 		},
 		/**
 		* @function window resize event handler
