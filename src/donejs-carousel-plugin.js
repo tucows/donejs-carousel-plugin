@@ -58,12 +58,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	swipeObject: {
 		type: 'observable',
-		/**
-		* @function set default swipeObject
-		* */
-		value: () => {
-			return SWIPE_OBJECT_DEFAULT;
-		}
+		value: SWIPE_OBJECT_DEFAULT
 	},
 	/**
 	* @property {boolean} dragging flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
@@ -105,12 +100,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	carouselOptions: {
 		type: 'any',
-		/**
-		* @function set default carouselOptions (empty object)
-		* */
-		value: () => {
-			return {};
-		},
+		value: {},
 		/**
 		* @function set called when new carouselOptions is set
 		* */
