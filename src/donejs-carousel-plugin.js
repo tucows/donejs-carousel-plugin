@@ -119,7 +119,7 @@ export const ViewModel = DefineMap.extend({
 	* @description passed in from the parent component 
 	*/
 	carouselOptions: {
-		type: 'observable',
+		type: 'any',
 		value: {},
 		/**
 		* @function set called when new carouselOptions is set
@@ -326,7 +326,7 @@ export const ViewModel = DefineMap.extend({
 				this.swipeMove(event);
 				break;
 			case 'end':
-				this.swipeEnd();
+				this.swipeEnd(event);
 				break;
 		}
 	},
@@ -360,7 +360,7 @@ export const ViewModel = DefineMap.extend({
 	swipeStart(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1
-		if (touchEvent.fingerCount > 1) {
+		if (touchEvent && touchEvent.fingerCount > 1) {
 			// break out of this function
 			return false;
 		}
@@ -380,7 +380,7 @@ export const ViewModel = DefineMap.extend({
 	swipeMove(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
-		if (touchEvent.fingerCount > 1 || !this.dragging) {
+		if ((touchEvent && touchEvent.fingerCount > 1) || !this.dragging) {
 			// break out of this function
 			return false;
 		}
@@ -418,10 +418,10 @@ export const ViewModel = DefineMap.extend({
 	* handles the mouseend, mouseleave, touchend and touchcancel events
 	*
 	*/
-	swipeEnd() {
+	swipeEnd(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
-		if (touchEvent.fingerCount > 1 || !this.dragging) {
+		if ((touchEvent && touchEvent.fingerCount > 1) || !this.dragging) {
 			// break out of this function
 			return false;
 		}

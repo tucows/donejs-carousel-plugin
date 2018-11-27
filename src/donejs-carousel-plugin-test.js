@@ -229,15 +229,6 @@ describe('tucows-donejs-carousel', () => {
 			changeToActiveSlideStub.restore();
 		});
 
-		it('should call the changeToActiveSlide function', () => {
-			// setup 
-			direction = 'right';
-			// run
-			vm.oneSlideOver(direction);
-			// test
-			changeToActiveSlideStub.calledOnce.should.be.true;
-		});
-
 		describe('when direction is right', () => {
 			it('should increment the active slide flag', () => {
 				// setup
@@ -437,13 +428,6 @@ describe('tucows-donejs-carousel', () => {
 			vm.dotClickHandler(index);
 			// test
 			vm.activeSlideIndex.should.equal(index);
-		});
-
-		it('should call the changeToActiveSlide function', () => {
-			// run 
-			vm.dotClickHandler(index);
-			// test
-			changeToActiveSlideStub.calledOnce.should.be.true;
 		});
 	});
 
@@ -823,7 +807,6 @@ describe('tucows-donejs-carousel', () => {
 
 	describe('swipeEnd()', () => {
 		// setup
-
 		let changeToActiveSlideStub;
 
 		let vm = new (ViewModel.extend({seal: false}, {
@@ -845,17 +828,33 @@ describe('tucows-donejs-carousel', () => {
 			}
 		}));
 
+		let defineTouchStub;
+	
 		beforeEach(() => {
+			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
 			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
 		});
 
 		afterEach(() => {
+			defineTouchStub.restore();
 			changeToActiveSlideStub.restore();
+		});
+
+		describe('when dragging is false', () => {
+			it('should stop here and exit the function', () => {
+				// setup 
+				vm.dragging = false;
+				// run 
+				let returnValue = vm.swipeMove();
+				// test
+				returnValue.should.be.false;
+			});
 		});
 
 		describe('when swipe is to the left and greater than 10%, AND it is not the last slide', () => {
 			it('should increment the active slide property and call the changeToActiveSlide function', () => {
 				// setup 
+				vm.dragging = true;
 				vm.swipeObject.swipeLength = -15;
 				vm.slideWidth = 100;
 				let activeSlide = 1;
@@ -863,14 +862,14 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide + 1);
 			});
 		});
 
 		describe('when swipe is to the right and is greater than 10%, AND it is not the first slide', () => {
 			it('should reduce the active slide property and call the changeToActiveSlide function', () => {
-				// setup 
+				// setup
+				vm.dragging = true;
 				vm.swipeObject.swipeLength = 15;
 				vm.slideWidth = 100;
 				let activeSlide = 2;
@@ -878,7 +877,6 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide - 1);
 			});
 		});
@@ -886,6 +884,7 @@ describe('tucows-donejs-carousel', () => {
 		describe('when swipe (to right or left) is less than 10% OR its the first/last slide', () => {
 			it('should call changeToActiveSlide on the existing active slide index (goes back to center)', () => {
 				// setup 
+				vm.dragging = true;
 				vm.swipeObject.swipeLength = chance.pickone([5, -5, 1, -8]);
 				vm.slideWidth = 100;
 				let activeSlide = 2;
@@ -893,12 +892,13 @@ describe('tucows-donejs-carousel', () => {
 				// run 
 				vm.swipeEnd();
 				// test
-				changeToActiveSlideStub.calledOnce.should.be.true;
 				vm.activeSlideIndex.should.equal(activeSlide);
 			});
 		});
 
 		it('should set reset the swipe object', () => {
+			// setup 
+			vm.dragging = true;
 			// run
 			vm.swipeEnd();
 			// test
@@ -999,23 +999,24 @@ describe('tucows-donejs-carousel', () => {
 	});
 
 	describe('handleBreakOnDesktop()', () => {
-		let changeToActiveSlideStub;
+		let clearAutoPlayStub;
 
 		let vm = new (ViewModel.extend({seal: false}, {}));
 
 		beforeEach(() => {
-			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
+			clearAutoPlayStub = sinon.stub(vm, 'clearAutoPlay');
 		});
 
 		afterEach(() => {
-			changeToActiveSlideStub.restore();
+			clearAutoPlayStub.restore();
 		});
 
 		it('should call changeToActiveSlide once with no parameters', () => {
 			// run 
 			vm.handleBreakOnDesktop();
 			// test
-			changeToActiveSlideStub.calledOnce.should.be.true;
+			vm.activeSlideIndex.should.equal(0);
+			clearAutoPlayStub.calledOnce.should.be.true;
 		});
 	});
 
