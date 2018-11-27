@@ -519,7 +519,6 @@ export const ViewModel = DefineMap.extend({
 	* @param {number} swipeAmount (number between 0 and 1) 
 	*/
 	fadeSlideByAmount(swipeAmount) {
-
 		// controls how much one should have to swipe/drag in order for slide to fade in or out
 		const OPACITY_FADE_MULTIPLIER = 2;
 
@@ -528,7 +527,7 @@ export const ViewModel = DefineMap.extend({
 
 		let isFirstSlide = this.activeSlideIndex == 0;
 		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
-		
+
 		// only fade the active slide if it's fading out into another slide, not on it's own
 		if (
 			(swipeAmount > 0 && !isFirstSlide) ||
@@ -561,7 +560,6 @@ export const ViewModel = DefineMap.extend({
 	* active slide should have higher z-index value
 	*/
 	fadeToActiveSlide() {
-		
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
 			// transition length in ms
@@ -625,9 +623,7 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeAllSlidesOpaque() {
-		
 		$(`${this.classSelector} .slide`).css({'opacity': 1});
-
 	},
 	/**
 	* @function makeOnlyActiveSlideOpaque
@@ -637,7 +633,6 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeOnlyActiveSlideOpaque() {
-	
 		$(`${this.classSelector} .slide`).css({'opacity': 0});
 		this.activeSlide.css({'opacity': 1});
 	},
@@ -650,7 +645,6 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	resetZIndexAllSlides() {
-		
 		$(`${this.classSelector} .slide`).css({'z-index': 0});
 	},
 
@@ -663,9 +657,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	setActiveSlideZIndex() {
-		
-		$(`${this.classSelector} .slide`).css({ 'z-index': 0 });
-		this.activeSlide.css({ 'z-index': 100 });
+		$(`${this.classSelector} .slide`).css({'z-index': 0});
+		this.activeSlide.css({'z-index': 100});
 	}
 });
 
@@ -682,7 +675,6 @@ export default Component.extend({
 		*
 		*/
 		'{viewModel} activeSlideIndex'() {
-			
 			this.viewModel.changeToActiveSlide();
 		},
 		/**

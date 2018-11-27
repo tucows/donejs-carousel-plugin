@@ -829,7 +829,7 @@ describe('tucows-donejs-carousel', () => {
 		}));
 
 		let defineTouchStub;
-	
+
 		beforeEach(() => {
 			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
 			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
