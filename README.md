@@ -37,7 +37,7 @@ Pass it the required properties
 
 ```js
 <tucows-donejs-carousel
-    activeSlideIndex:to='./activeSlideIndex'
+    activeSlideIndex:bind='./activeSlideIndex'
     slides:from='./userReviews'
     carouselOptions:from='./carouselOptions'
 >
@@ -51,7 +51,7 @@ Make sure to do the following:
 
 * Loop through same property that you passed into component as 'slides'; in the example below, this is userReviews
 * Include this in the class of the parent element
-    * ```jsclass="slide {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">```
+    * ```jsclass="slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}"```
     * And any other class you want; in the example below, block and icon are optional classes for styling
 
 ```js
@@ -93,7 +93,10 @@ define carousel options
     carouselOptions: {
         type: 'any',
         value: {
-            navArrows: false,
+            navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
             extraClass: 'userReviewsCarousel',
             breakOnDesktop: true,
             autoPlay: 6000
@@ -105,7 +108,7 @@ define carousel options
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-navArrows | boolean | false | display clickable arrows for slide navigation
+navArrows | object | empty | include leftSvgUrl and rightSvgUrl properties pointing to id in an svg sprite
 extraClasses | string | none | class name to be added to parent carousel element for styling
 breakOnDesktop | boolean | false |  turn off the carousel on desktop view (1024px width and greater). All slides will shown side-by-side.
 autoPlay | number | off | enable auto-play sliding. the number represents interval in millisecond.
