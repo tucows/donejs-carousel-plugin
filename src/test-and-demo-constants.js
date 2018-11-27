@@ -23,7 +23,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: false,
 			extraClass: 'default-carousel'
 		},
@@ -32,7 +35,6 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
 			breakOnDesktop: false,
 			transition: 'dissolve',
 			extraClass: 'fade-carousel',
@@ -51,7 +53,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: false,
 			autoPlay: 4000,
 			extraClass: 'autoplay-slide',
@@ -61,7 +66,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: false,
 			autoPlay: 4000,
 			transition: 'dissolve',
@@ -72,7 +80,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: true,
 			extraClass: 'break-on-desktop-slide',
 		},
@@ -81,7 +92,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: true,
 			transition: 'dissolve',
 			extraClass: 'break-on-desktop-fade',
@@ -91,7 +105,10 @@ export const slideArray = [
 	{
 		slides: slides,
 		carouselOptions: {
-			navArrows: true,
+			navArrows: {
+				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+			},
 			breakOnDesktop: true,
 			autoPlay: 4000,
 			extraClass: 'break-on-desktop-autplay',
