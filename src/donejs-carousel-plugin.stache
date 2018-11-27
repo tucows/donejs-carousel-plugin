@@ -30,7 +30,7 @@
 
 {{#if ./isDesktopBrowser}}
 	
-	{{#if ./isLengthOneOrLess(./slides.length)}}
+	{{#is ./slides.length 1}}
 
 		{{>simpleCarousel}}
 	
@@ -102,7 +102,7 @@
 				</div>
 			{{/each}}
 		</div>
-	{{/if}}
+	{{/is}}
 {{else}} {{! When server side rendering}}
 	{{>simpleCarousel}}
 

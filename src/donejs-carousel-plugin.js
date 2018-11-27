@@ -666,21 +666,7 @@ export const ViewModel = DefineMap.extend({
 		
 		$(`${this.classSelector} .slide`).css({ 'z-index': 0 });
 		this.activeSlide.css({ 'z-index': 100 });
-	},
-	/**
-	* @function isLengthOneOrLess
-	* @description
-	* stache helper in order to decide whether to show dots or not
-	*
-	* @param {number} length length of slide array 
-	* @returns {boolean} 
-	*/
-	isLengthOneOrLess(length) {
-		if (length <= 1) {
-			return true;
-		}
-		return false;
-	},
+	}
 });
 
 export default Component.extend({
