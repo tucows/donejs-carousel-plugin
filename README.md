@@ -51,7 +51,7 @@ Make sure to do the following:
 
 * Loop through same property that you passed into component as 'slides'; in the example below, this is userReviews
 * Include this in the class of the parent element
-    * ```js class="slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}"```
+    * ```class="slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}"```
     * And any other class you want; in the example below, block and icon are optional classes for styling
 
 ```js
@@ -61,7 +61,7 @@ Make sure to do the following:
     carouselOptions:from='./carouselOptions'
 >
     {{#each ./userReviews}}
-        <div class="block icon slide {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">
+        <div class="block icon slide slide{{scope.index}} {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">
         <div class="pointIcon">
             <ting-svg hash="{{./icon}}" title="" dimensions="66" />
         </div>
@@ -94,8 +94,8 @@ define carousel options
         type: 'any',
         value: {
             navArrows: {
-				leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
-				rightSvgUrl: `/src/assets/icons.svg#pointRight`
+                leftSvgUrl: `/src/assets/icons.svg#pointLeft`,
+                rightSvgUrl: `/src/assets/icons.svg#pointRight`
 			},
             extraClass: 'userReviewsCarousel',
             breakOnDesktop: true,
