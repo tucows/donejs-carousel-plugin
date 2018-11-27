@@ -51,7 +51,7 @@ Make sure to do the following:
 
 * Loop through same property that you passed into component as 'slides'; in the example below, this is userReviews
 * Include this in the class of the parent element
-    * ```jsclass="slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}"```
+    * ```js class="slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}"```
     * And any other class you want; in the example below, block and icon are optional classes for styling
 
 ```js
