@@ -1181,7 +1181,9 @@ describe('tucows-donejs-carousel', () => {
 						componentElement.querySelector('.carousel').dispatchEvent(
 							new KeyboardEvent("keydown", {keyCode : 39})
 						);
-						done();
+						//set a timeout to give event a chance to fire and be handled
+						setTimeout(done, 100);
+
 					});
 				});
 				after(afterTeardown);
@@ -1210,7 +1212,8 @@ describe('tucows-donejs-carousel', () => {
 						componentElement.querySelector('.carousel').dispatchEvent(
 							new KeyboardEvent("keydown", {keyCode : 37})
 						);
-						done();
+						//set a timeout to give events a chance to fire and be handled
+						setTimeout(done, 100);
 					});
 				});
 				after(afterTeardown);
