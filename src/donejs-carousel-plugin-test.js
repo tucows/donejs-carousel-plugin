@@ -91,7 +91,7 @@ describe('tucows-donejs-carousel', () => {
 				slides: {
 					type: 'observable',
 					value: () => {
-						['slide1', 'slide2']
+						['slide1', 'slide2'];
 					}
 				}
 			}));
@@ -461,9 +461,7 @@ describe('tucows-donejs-carousel', () => {
 				},
 				carouselOptions: {
 					type: 'any',
-					value: () => {
-						return {};
-					},
+					value: () => ({}),
 				}
 			}));
 			swipeStartStub = sinon.stub(vm, 'swipeStart');
@@ -835,9 +833,7 @@ describe('tucows-donejs-carousel', () => {
 			},
 			swipeObject: {
 				type: 'any',
-				value: () => {
-					return {swipeLength: 0};
-				}
+				value: () => ({swipeLength: 0})
 			},
 			slideWidth: {
 				type: 'number',
@@ -959,9 +955,7 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: () => {
-						return {transition: 'dissolve'};
-					}
+					value: () => ({transition: 'dissolve'})
 				}
 			}));
 			beforeEach(() => {
@@ -981,9 +975,7 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: () => {
-						return {};
-					},
+					value: () => ({}),
 				}
 			}));
 			beforeEach(() => {
@@ -1098,7 +1090,6 @@ describe('tucows-donejs-carousel', () => {
 		const testArea = document.getElementById('mocha-fixture');
 
 		describe('Slide movement', () => {
-
 			/**
 			 * @function beforeSetup
 			 * @description create new carousel with navArrows
@@ -1175,15 +1166,13 @@ describe('tucows-donejs-carousel', () => {
 			});
 
 			describe('Press right arrow key', () => {
-
 				before((done) => {
 					beforeSetup(() => {
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent("keydown", {keyCode : 39})
+							new KeyboardEvent('keydown', {keyCode: 39})
 						);
-						//set a timeout to give event a chance to fire and be handled
+						// set a timeout to give event a chance to fire and be handled
 						setTimeout(done, 100);
-
 					});
 				});
 				after(afterTeardown);
@@ -1200,19 +1189,18 @@ describe('tucows-donejs-carousel', () => {
 			});
 
 			describe('Press right arrow key twice, followed by left arrow once', () => {
-
 				before((done) => {
 					beforeSetup(() => {
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent("keydown", {keyCode : 39})
+							new KeyboardEvent('keydown', {keyCode: 39})
 						);
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent("keydown", {keyCode : 39})
+							new KeyboardEvent('keydown', {keyCode: 39})
 						);
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent("keydown", {keyCode : 37})
+							new KeyboardEvent('keydown', {keyCode: 37})
 						);
-						//set a timeout to give events a chance to fire and be handled
+						// set a timeout to give events a chance to fire and be handled
 						setTimeout(done, 100);
 					});
 				});
@@ -1228,7 +1216,6 @@ describe('tucows-donejs-carousel', () => {
 					});
 				});
 			});
-
 		});
 
 		describe('Transition Length', () => {
@@ -1242,9 +1229,7 @@ describe('tucows-donejs-carousel', () => {
 			const beforeSetup = (done) => {
 				let map = new DefineMap({
 					slides: slides,
-					carouselOptions: {
-						autoPlay: 200
-					}
+					carouselOptions: {autoPlay: 200}
 				});
 				testArea.appendChild(template(map));
 
@@ -1262,12 +1247,10 @@ describe('tucows-donejs-carousel', () => {
 			};
 
 			describe('active slide after 200ms', () => {
-
 				before(beforeSetup);
 				after(afterTeardown);
 
 				it('should be the second slide', (done) => {
-
 					setTimeout(() => {
 						activeSlide = componentElement.querySelector('.slide.active');
 						// get the index of the active slide relative to siblings
@@ -1277,11 +1260,8 @@ describe('tucows-donejs-carousel', () => {
 
 						done();
 					}, 200);
-					
 				});
-
 			});
-
 		});
 	});
 });
