@@ -248,9 +248,6 @@ export const ViewModel = DefineMap.extend({
 	* @param {hash} event click event details
 	*/
 	arrowClickHandler(direction, event) {
-
-		console.log(direction, event);
-		
 		// there is no event if it's being fired by autoPlay's set interval
 		if (event) {
 			event.preventDefault();
