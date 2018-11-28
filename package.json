@@ -1,6 +1,6 @@
 {
   "name": "@tucows/donejs-carousel-plugin",
-  "version": "1.0.1",
+  "version": "3.0.0",
   "description": "A carousel plugin for donejs",
   "homepage": "https://github.com/tucows/donejs-carousel-plugin",
   "repository": {
@@ -25,7 +25,7 @@
     "eslint": "eslint --fix 'src/**/*.js'",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish --access public",
-    "release:major": "npm version major && npm publish",
+    "release:major": "npm version major && npm publish --access public",
     "build": "node build.js",
     "develop": "done-serve --static --develop --port 8080"
   },
