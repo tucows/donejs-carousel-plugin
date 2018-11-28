@@ -1169,10 +1169,14 @@ describe('tucows-donejs-carousel', () => {
 				before((done) => {
 					beforeSetup(() => {
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent('keydown', {keyCode: 39})
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
 						);
-						// set a timeout to give event a chance to fire and be handled
-						setTimeout(done, 100);
+						done();
 					});
 				});
 				after(afterTeardown);
@@ -1192,16 +1196,30 @@ describe('tucows-donejs-carousel', () => {
 				before((done) => {
 					beforeSetup(() => {
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent('keydown', {keyCode: 39})
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
 						);
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent('keydown', {keyCode: 39})
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
 						);
 						componentElement.querySelector('.carousel').dispatchEvent(
-							new KeyboardEvent('keydown', {keyCode: 37})
+							new KeyboardEvent('keydown', {
+								keyCode: 37,
+								which: 37,
+								key: 'ArrowLeft',
+								code: 'ArrowLeft'
+							})
 						);
-						// set a timeout to give events a chance to fire and be handled
-						setTimeout(done, 100);
+						done();
 					});
 				});
 				after(afterTeardown);
