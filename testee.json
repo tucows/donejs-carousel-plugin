@@ -8,7 +8,8 @@
                 "--headless",
                 "--disable-gpu",
                 "--disable-extensions",
-                "--no-sandbox"
+                "--no-sandbox",
+                "--remote-debugging-port=9222"
             ]
         }
     ],
