@@ -8,13 +8,13 @@
                 "--headless",
                 "--disable-gpu",
                 "--disable-extensions",
-                "--no-sandbox",
+								"--no-sandbox",
                 "--remote-debugging-port=9222"
             ]
         }
     ],
-    "coverage": {
-        "dir": "coverage",
-        "ignore": ["node_modules"]
-    }
+	"coverage": {
+		"dir": "coverage",
+		"ignore": ["node_modules"]
+	}
 }

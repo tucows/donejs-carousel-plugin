@@ -1,7 +1,5 @@
 <div class="information">
-	{{#if ./carouselName}}
-		<h2>{{./carouselName}}</h2>
-	{{/if}}
+	<h2>{{./carouselName}}</h2>
 	<pre>
 	{
 		slides: slides,

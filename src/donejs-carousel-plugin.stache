@@ -106,7 +106,7 @@
 {{else}} {{! When server side rendering}}
 	{{>simpleCarousel}}
 
-	{{#is ./slides.length 1}}
+	{{#if ./isLengthOneOrLess(./slides.length)}}
          {{! don't show dots }}
     {{else}}
     
