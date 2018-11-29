@@ -1,6 +1,6 @@
 {
   "name": "@tucows/donejs-carousel-plugin",
-  "version": "3.0.0",
+  "version": "2.0.0",
   "description": "A carousel plugin for donejs",
   "homepage": "https://github.com/tucows/donejs-carousel-plugin",
   "repository": {
@@ -68,7 +68,7 @@
   "dependencies": {
     "can-component": "^3.0.7",
     "can-define": "^1.5.7",
-    "can-stache": "^3.15.1",
+    "can-stache": "^3.14.22",
     "can-view-autorender": "^3.0.4",
     "cssify": "^0.6.0",
     "steal-css": "^1.2.5",
@@ -95,6 +95,6 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Tucows/donejs-carousel-plugin/issues"
+    "url": "https://github.com/tucows/donejs-carousel-plugin/issues"
   }
 }
