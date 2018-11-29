@@ -8,14 +8,12 @@
                 "--headless",
                 "--disable-gpu",
                 "--disable-extensions",
-								"--no-sandbox",
-                "--remote-debugging-port=9222",
-                "--window-size=1920x1080"
+                "--no-sandbox"
             ]
         }
     ],
-	"coverage": {
-		"dir": "coverage",
-		"ignore": ["node_modules"]
-	}
+    "coverage": {
+        "dir": "coverage",
+        "ignore": ["node_modules"]
+    }
 }
