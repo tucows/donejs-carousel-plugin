@@ -22,6 +22,17 @@ import {ViewModel, SWIPE_OBJECT_DEFAULT} from './donejs-carousel-plugin';
 import {slides, slideArray} from 'src/test-and-demo-constants';
 import template from 'src/demo/demo.stache';
 
+/**
+ * @function cleanUpTestArea
+ * @description remove everything inside the testArea DOM element
+ */
+const cleanUpTestArea = (testArea) => {
+	// remove all carousel elements
+	while (testArea.firstChild) {
+		testArea.removeChild(testArea.firstChild);
+	}
+};
+
 // ViewModel unit tests
 describe('tucows-donejs-carousel', () => {
 	describe('viewModel properties', () => {
@@ -79,7 +90,9 @@ describe('tucows-donejs-carousel', () => {
 				},
 				slides: {
 					type: 'observable',
-					value: ['slide1', 'slide2']
+					value: () => {
+						['slide1', 'slide2'];
+					}
 				}
 			}));
 
@@ -448,7 +461,7 @@ describe('tucows-donejs-carousel', () => {
 				},
 				carouselOptions: {
 					type: 'any',
-					value: {}
+					value: () => ({}),
 				}
 			}));
 			swipeStartStub = sinon.stub(vm, 'swipeStart');
@@ -820,7 +833,7 @@ describe('tucows-donejs-carousel', () => {
 			},
 			swipeObject: {
 				type: 'any',
-				value: {swipeLength: 0}
+				value: () => ({swipeLength: 0})
 			},
 			slideWidth: {
 				type: 'number',
@@ -942,7 +955,7 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: {transition: 'dissolve'}
+					value: () => ({transition: 'dissolve'})
 				}
 			}));
 			beforeEach(() => {
@@ -962,7 +975,7 @@ describe('tucows-donejs-carousel', () => {
 			let vm = new (ViewModel.extend({seal: false}, {
 				carouselOptions: {
 					type: 'any',
-					value: {}
+					value: () => ({}),
 				}
 			}));
 			beforeEach(() => {
@@ -1057,10 +1070,7 @@ describe('tucows-donejs-carousel', () => {
 		 * @description remove everything inside the testArea DOM element
 		 */
 		const afterTeardown = () => {
-			// remove all carousel elements
-			while (testArea.firstChild) {
-				testArea.removeChild(testArea.firstChild);
-			}
+			cleanUpTestArea(testArea);
 		};
 
 		describe('placement', () => {
@@ -1077,121 +1087,199 @@ describe('tucows-donejs-carousel', () => {
 		let componentElement;
 		let activeSlide;
 		let indexOfActiveSlide;
-		let testArea = document.getElementById('mocha-fixture');
+		const testArea = document.getElementById('mocha-fixture');
 
-		/**
-		 * @function beforeSetup
-		 * @description create new carousel with navArrows option set to true
-		 */
-		const beforeSetup = (done) => {
-			let map = new DefineMap({
-				slides: slides,
-				carouselOptions: {navArrows: true}
-			});
-			testArea.appendChild(template(map));
+		describe('Slide movement', () => {
+			/**
+			 * @function beforeSetup
+			 * @description create new carousel with navArrows
+			 */
+			const beforeSetup = (done) => {
+				let map = new DefineMap({
+					slides: slides,
+					carouselOptions: {
+						navArrows: {
+							leftSvgUrl: '/src/assets/icons.svg#pointLeft',
+							rightSvgUrl: '/src/assets/icons.svg#pointRight'
+						}
+					}
+				});
+				testArea.appendChild(template(map));
 
-			componentElement = document.body.querySelector('tucows-donejs-carousel');
+				componentElement = document.body.querySelector('tucows-donejs-carousel');
 
-			done();
-		};
+				done();
+			};
 
-		/**
-		 * @function afterTeardown
-		 * @description remove everything inside the testArea DOM element
-		 */
-		const afterTeardown = () => {
-			// remove all carousel elements
-			while (testArea.firstChild) {
-				testArea.removeChild(testArea.firstChild);
-			}
-		};
+			/**
+			 * @function afterTeardown
+			 * @description remove everything inside the testArea DOM element
+			 */
+			const afterTeardown = () => {
+				cleanUpTestArea(testArea);
+			};
 
-		describe('Click on the right arrow', () => {
-			let rightArrow;
+			describe('Click on the right arrow', () => {
+				let rightArrow;
 
-			before((done) => {
-				beforeSetup(() => {
-					rightArrow = componentElement.querySelector('.rightArrow');
-					rightArrow.click();
-					done();
+				before((done) => {
+					beforeSetup(() => {
+						rightArrow = componentElement.querySelector('.rightArrow');
+						rightArrow.click();
+						done();
+					});
+				});
+				after(afterTeardown);
+
+				describe('active slide', () => {
+					it('should be the second one (index 1)', () => {
+						activeSlide = componentElement.querySelector('.slide.active');
+						// get the index of the active slide relative to siblings
+						indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+						indexOfActiveSlide.should.equal(1);
+					});
 				});
 			});
-			after(afterTeardown);
 
-			describe('active slide', () => {
-				it('should be the second one (index 1)', () => {
-					activeSlide = componentElement.querySelector('.slide.active');
-					// get the index of the active slide relative to siblings
-					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+			describe('Click on the left arrow', () => {
+				let leftArrow;
 
-					indexOfActiveSlide.should.equal(1);
+				before((done) => {
+					beforeSetup(() => {
+						leftArrow = componentElement.querySelector('.leftArrow');
+						leftArrow.click();
+						done();
+					});
+				});
+				after(afterTeardown);
+
+				describe('active slide', () => {
+					it('should stay on first slide', () => {
+						activeSlide = componentElement.querySelector('.slide.active');
+						// get the index of the active slide relative to siblings
+						indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+						indexOfActiveSlide.should.equal(0);
+					});
+				});
+			});
+
+			describe('Press right arrow key', () => {
+				before((done) => {
+					beforeSetup(() => {
+						componentElement.querySelector('.carousel').dispatchEvent(
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
+						);
+						done();
+					});
+				});
+				after(afterTeardown);
+
+				describe('active slide', () => {
+					it('should go to second slide', () => {
+						activeSlide = componentElement.querySelector('.slide.active');
+						// get the index of the active slide relative to siblings
+						indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+						indexOfActiveSlide.should.equal(1);
+					});
+				});
+			});
+
+			describe('Press right arrow key twice, followed by left arrow once', () => {
+				before((done) => {
+					beforeSetup(() => {
+						componentElement.querySelector('.carousel').dispatchEvent(
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
+						);
+						componentElement.querySelector('.carousel').dispatchEvent(
+							new KeyboardEvent('keydown', {
+								keyCode: 39,
+								which: 39,
+								key: 'ArrowRight',
+								code: 'ArrowRight'
+							})
+						);
+						componentElement.querySelector('.carousel').dispatchEvent(
+							new KeyboardEvent('keydown', {
+								keyCode: 37,
+								which: 37,
+								key: 'ArrowLeft',
+								code: 'ArrowLeft'
+							})
+						);
+						done();
+					});
+				});
+				after(afterTeardown);
+
+				describe('active slide', () => {
+					it('should finish on second slide ', () => {
+						activeSlide = componentElement.querySelector('.slide.active');
+						// get the index of the active slide relative to siblings
+						indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+						indexOfActiveSlide.should.equal(1);
+					});
 				});
 			});
 		});
 
-		describe('Click on the left arrow', () => {
-			let leftArrow;
+		describe('Transition Length', () => {
+			let activeSlide;
+			let indexOfActiveSlide;
 
-			before((done) => {
-				beforeSetup(() => {
-					leftArrow = componentElement.querySelector('.leftArrow');
-					leftArrow.click();
-					done();
+			/**
+			 * @function beforeSetup
+			 * @description create new carousel with autoPlay set to 500ms
+			 */
+			const beforeSetup = (done) => {
+				let map = new DefineMap({
+					slides: slides,
+					carouselOptions: {autoPlay: 200}
 				});
-			});
-			after(afterTeardown);
+				testArea.appendChild(template(map));
 
-			describe('active slide', () => {
-				it('should stay on first slide', () => {
-					activeSlide = componentElement.querySelector('.slide.active');
-					// get the index of the active slide relative to siblings
-					indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+				componentElement = document.body.querySelector('tucows-donejs-carousel');
 
-					indexOfActiveSlide.should.equal(0);
+				done();
+			};
+
+			/**
+			 * @function afterTeardown
+			 * @description remove everything inside the testArea DOM element
+			 */
+			const afterTeardown = () => {
+				cleanUpTestArea(testArea);
+			};
+
+			describe('active slide after 200ms', () => {
+				before(beforeSetup);
+				after(afterTeardown);
+
+				it('should be the second slide', (done) => {
+					setTimeout(() => {
+						activeSlide = componentElement.querySelector('.slide.active');
+						// get the index of the active slide relative to siblings
+						indexOfActiveSlide = [...activeSlide.parentNode.children].indexOf(activeSlide);
+
+						indexOfActiveSlide.should.equal(1);
+
+						done();
+					}, 200);
 				});
 			});
 		});
-
-		// describe('clicking', () => {
-		// 	before((done) => {
-		// 		beforeSetup(() => {
-		// 			button.click();
-		// 			done();
-		// 		});
-		// 	});
-		// 	after(afterTeardown);
-
-		// 	it('should show the tooltip', () => {
-		// 		tooltip.classList.contains('show').should.equal(true);
-		// 	});
-
-		// 	it('should hide the tooltip when clicked again', () => {
-		// 		button.click();
-		// 		tooltip.classList.contains('show').should.equal(false);
-		// 	});
-		// });
-
-		// describe('hovering', () => {
-		// 	before((done) => {
-		// 		beforeSetup(() => {
-		// 			domEvents.dispatch(button, 'mouseover');
-		// 			done();
-		// 		});
-		// 	});
-		// 	after(afterTeardown);
-
-		// 	it('should show the tooltip', () => {
-		// 		tooltip.classList.contains('show').should.equal(true);
-		// 	});
-
-		// 	it('should set lastHoverTimestamp', () => {
-		// 		componentVM.lastHoverTimestamp.should.be.greaterThan(0);
-		// 	});
-
-		// 	it('should hide the tooltip when no longer being hovered over', () => {
-		// 		domEvents.dispatch(button, 'mouseout');
-		// 		tooltip.classList.contains('show').should.equal(false);
-		// 	});
-		// });
 	});
 });
