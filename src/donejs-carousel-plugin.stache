@@ -28,98 +28,103 @@
 
 {{! partial components end }}
 
-{{#if ./isDesktopBrowser}}
-	
-	{{#is ./slides.length 1}}
+{{#if ./slides.length}}
 
-		{{>simpleCarousel}}
-	
-	{{else}}
+	{{#if ./isDesktopBrowser}}
+		
+		{{#is ./slides.length 1}}
 
-		{{! Note: We prevent default on the dragstart event (and use mouse events instead) to prevent the creation of the 'ghost image' on drag}}
-		{{! Note: The event handlers are on div.carousel because attaching them to div.slideTrack is unreliable (result of .slideTrack being translated)}}
-		<div class="carousel 
-			{{#if ./carouselOptions.extraClass}} 
-				{{./carouselOptions.extraClass}} 
-			{{/if}}
-			{{#is ./carouselOptions.transition 'dissolve'}} 
-				dissolve-transition
-			{{/is}}
-			{{#if ./carouselOptions.breakOnDesktop}}
-				breakOnDesktop
-			{{/if}}"
+			{{>simpleCarousel}}
+		
+		{{else}}
 
-			on:dragstart="./preventDefault(scope.event)"
+			{{! Note: We prevent default on the dragstart event (and use mouse events instead) to prevent the creation of the 'ghost image' on drag}}
+			{{! Note: The event handlers are on div.carousel because attaching them to div.slideTrack is unreliable (result of .slideTrack being translated)}}
+			<div class="carousel 
+				{{#if ./carouselOptions.extraClass}} 
+					{{./carouselOptions.extraClass}} 
+				{{/if}}
+				{{#is ./carouselOptions.transition 'dissolve'}} 
+					dissolve-transition
+				{{/is}}
+				{{#if ./carouselOptions.breakOnDesktop}}
+					breakOnDesktop
+				{{/if}}"
 
-			on:mousedown="./swipeHandler(scope.event, 'start')"
-			on:mouseup="./swipeHandler(scope.event, 'end')"
-			on:mouseleave="./swipeHandler(scope.event, 'end')"
-			on:mousemove="./swipeHandler(scope.event, 'move')"
+				on:dragstart="./preventDefault(scope.event)"
 
-			on:touchstart="./swipeHandler(scope.event, 'start')"
-			on:touchend="./swipeHandler(scope.event, 'end')"
-			on:touchcancel="./swipeHandler(scope.event, 'end')"
-			on:touchmove="./swipeHandler(scope.event, 'move')"
+				on:mousedown="./swipeHandler(scope.event, 'start')"
+				on:mouseup="./swipeHandler(scope.event, 'end')"
+				on:mouseleave="./swipeHandler(scope.event, 'end')"
+				on:mousemove="./swipeHandler(scope.event, 'move')"
 
-			on:keydown="./arrowClickHandler('keyboard', scope.event)"
-		> 
-			<div class="slideTrack">
-				
-				<content />
+				on:touchstart="./swipeHandler(scope.event, 'start')"
+				on:touchend="./swipeHandler(scope.event, 'end')"
+				on:touchcancel="./swipeHandler(scope.event, 'end')"
+				on:touchmove="./swipeHandler(scope.event, 'move')"
+
+				on:keydown="./arrowClickHandler('keyboard', scope.event)"
+			> 
+				<div class="slideTrack">
+					
+					<content />
+
+				</div>
+
+				{{#if ./carouselOptions.navArrows}}
+					<div class="navArrows">
+
+						<a class="leftArrow arrow" 
+							on:click="./arrowClickHandler('left', scope.event)"
+						>
+							<svg role="img" class="iconSvg" title="left nav arrow">
+								<use href="{{./carouselOptions.navArrows.leftSvgUrl}}"></use>
+							</svg>
+						</a>
+						
+						<a class="rightArrow arrow" 
+							on:click="./arrowClickHandler('right', scope.event)"
+						>
+							<svg role="img" class="iconSvg" title="right nav arrow">
+								<use href="{{./carouselOptions.navArrows.rightSvgUrl}}"></use>
+							</svg>
+						</a>
+					</div>
+				{{/if}}
 
 			</div>
+			<div class="navDots
+				{{#if ./carouselOptions.breakOnDesktop}}
+					breakOnDesktop
+				{{/if}}"
+			>
+				{{#each ./slides}}
+					<div class="dot {{#is ../activeSlideIndex scope.index}}active{{/is}}" on:click="../dotClickHandler(scope.index)">
+						{{>navDotsSVG}}
+					</div>
+				{{/each}}
+			</div>
+		{{/is}}
+	{{else}} {{! When server side rendering}}
+		{{>simpleCarousel}}
 
-			{{#if ./carouselOptions.navArrows}}
-				<div class="navArrows">
-
-					<a class="leftArrow arrow" 
-						on:click="./arrowClickHandler('left', scope.event)"
-					>
-						<svg role="img" class="iconSvg" title="left nav arrow">
-							<use href="{{./carouselOptions.navArrows.leftSvgUrl}}"></use>
-						</svg>
-					</a>
-					
-					<a class="rightArrow arrow" 
-						on:click="./arrowClickHandler('right', scope.event)"
-					>
-						<svg role="img" class="iconSvg" title="right nav arrow">
-							<use href="{{./carouselOptions.navArrows.rightSvgUrl}}"></use>
-						</svg>
-					</a>
-				</div>
-			{{/if}}
-
-		</div>
-		<div class="navDots
-			{{#if ./carouselOptions.breakOnDesktop}}
-				breakOnDesktop
-			{{/if}}"
-		>
-			{{#each ./slides}}
-				<div class="dot {{#is ../activeSlideIndex scope.index}}active{{/is}}" on:click="../dotClickHandler(scope.index)">
-					{{>navDotsSVG}}
-				</div>
-			{{/each}}
-		</div>
-	{{/is}}
-{{else}} {{! When server side rendering}}
-	{{>simpleCarousel}}
-
-	{{#is ./slides.length 1}}
-         {{! don't show dots }}
-    {{else}}
-    
-        <div class="navDots
-            {{#if ./carouselOptions.breakOnDesktop}}
-                breakOnDesktop
-            {{/if}}"
-        >
-            {{#each ./slides}}
-                <div class="dot {{#is scope.index 0}}active{{/is}}">
-                    {{>navDotsSVG}}
-                </div>
-            {{/each}}
-        </div>
-    {{/if}}
+		{{#is ./slides.length 1}}
+			{{! don't show dots }}
+		{{else}}
+		
+			<div class="navDots
+				{{#if ./carouselOptions.breakOnDesktop}}
+					breakOnDesktop
+				{{/if}}"
+			>
+				{{#each ./slides}}
+					<div class="dot {{#is scope.index 0}}active{{/is}}">
+						{{>navDotsSVG}}
+					</div>
+				{{/each}}
+			</div>
+		{{/if}}
+	{{/if}}
+{{else}} {{! if there are no slides passed into the viewmodel, just show any content passed into the plugin}}
+	<content />
 {{/if}}
