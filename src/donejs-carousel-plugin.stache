@@ -123,7 +123,7 @@
 					</div>
 				{{/each}}
 			</div>
-		{{/if}}
+		{{/is}}
 	{{/if}}
 {{else}} {{! if there are no slides passed into the viewmodel, just show any content passed into the plugin}}
 	<content />
