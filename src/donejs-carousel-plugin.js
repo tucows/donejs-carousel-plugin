@@ -40,7 +40,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0
+		default: 0
 	},
 	/**
 	* @property {number} activeSlide 
@@ -74,7 +74,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	swipeObject: {
 		type: 'observable',
-		value: SWIPE_OBJECT_DEFAULT
+		default: SWIPE_OBJECT_DEFAULT
 	},
 	/**
 	* @property {boolean} dragging 
@@ -82,7 +82,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	dragging: {
 		type: 'boolean',
-		value: false
+		default: false
 	},
 	/**
 	* @property {number} slideWidth 
@@ -120,7 +120,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	carouselOptions: {
 		type: 'any',
-		value: {},
+		default: {},
 		/**
 		* @function set called when new carouselOptions is set
 		* */
@@ -170,7 +170,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	autoPlayDirection: {
 		type: 'string',
-		value: 'right'
+		default: 'right'
 	},
 	/**
 	* @property {boolean} isDesktopBrowser 
@@ -178,7 +178,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	isDesktopBrowser: {
 		type: 'boolean',
-		value: platform.isDesktopBrowser
+		default: platform.isDesktopBrowser
 	},
 	/**
 	* @property {boolean} classSelector 
