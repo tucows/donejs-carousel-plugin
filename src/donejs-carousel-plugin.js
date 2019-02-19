@@ -40,7 +40,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	activeSlideIndex: {
 		type: 'number',
-		value: 0
+		default: 0
 	},
 	/**
 	* @property {number} activeSlide 
@@ -49,8 +49,8 @@ export const ViewModel = DefineMap.extend({
 	activeSlide: {
 		get() {
 			if (this.activeSlideIndex !== undefined && this.classSelector) {
-				const activeSlideSelector = `${this.classSelector} .slide${this.activeSlideIndex}`;
-				const activeSlideElement = document.querySelector(activeSlideSelector);
+				const selector = `${this.classSelector} .slide${this.activeSlideIndex}`;
+				const activeSlideElement = document.querySelector(selector);
 
 				return activeSlideElement;
 			}
@@ -77,7 +77,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	swipeObject: {
 		type: 'observable',
-		value: SWIPE_OBJECT_DEFAULT
+		default: SWIPE_OBJECT_DEFAULT
 	},
 	/**
 	* @property {boolean} dragging 
@@ -85,7 +85,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	dragging: {
 		type: 'boolean',
-		value: false
+		default: false
 	},
 	/**
 	* @property {number} slideWidth 
@@ -99,15 +99,11 @@ export const ViewModel = DefineMap.extend({
 		get() {
 			const extraClass = this.carouselOptions.extraClass;
 
-			let slide;
+			const selector = extraClass ? `.${extraClass} .slide` : '.slide';
 
-			if (extraClass) {
-				slide = document.querySelector(`.${extraClass} .slide`);
-			} else {
-				slide = document.querySelector('.slide');
-			}
+			// grab the first slide; assumption - all slides are same width
+			const slide = document.querySelector(selector);
 
-			// TODO: add margin width
 			return slide.offsetWidth;
 		}
 	},
@@ -130,7 +126,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	carouselOptions: {
 		type: 'any',
-		value: {},
+		default: {},
 		/**
 		* @function set called when new carouselOptions is set
 		* */
@@ -180,7 +176,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	autoPlayDirection: {
 		type: 'string',
-		value: 'right'
+		default: 'right'
 	},
 	/**
 	* @property {boolean} isDesktopBrowser 
@@ -188,7 +184,7 @@ export const ViewModel = DefineMap.extend({
 	*/
 	isDesktopBrowser: {
 		type: 'boolean',
-		value: platform.isDesktopBrowser
+		default: platform.isDesktopBrowser
 	},
 	/**
 	* @property {boolean} classSelector 
@@ -410,7 +406,6 @@ export const ViewModel = DefineMap.extend({
 		if (this.carouselOptions.transition == 'dissolve') {
 			// calculate swipeAmount as a number between 0 and 1
 			let swipeAmount = swipeLength / this.slideWidth;
-			console.log(swipeAmount);
 			// fade slide and its sibling by swipeAmount
 			this.fadeSlideByAmount(swipeAmount);
 		} else {
@@ -508,7 +503,6 @@ export const ViewModel = DefineMap.extend({
 		const element = document.querySelector(this.classSelector);
 
 		// set css properties according to where we are trying to move to
-
 		// first slide is 0, second slide is -100%, etc.
 		element.style.transform = `translateX(${-(this.activeSlideIndex * 100)}%)`;
 		// 500ms transition when moving between slides
@@ -541,15 +535,18 @@ export const ViewModel = DefineMap.extend({
 			this.activeSlide.style.transition = 'none';
 		}
 
+		let adjacentSlide;
+
 		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
 		if (swipeAmount > 0) {
-			let prevSlide = this.activeSlide.previousElementSibling;
-			prevSlide.style.opacity = 1 - opacity;
-			prevSlide.style.transition = 'none';
+			adjacentSlide = this.activeSlide.previousElementSibling;
 		} else {
-			let nextSlide = this.activeSlide.nextElementSibling;
-			nextSlide.style.opacity = 1 - opacity;
-			nextSlide.style.transition = 'none';
+			adjacentSlide = this.activeSlide.nextElementSibling;
+		}
+
+		if (adjacentSlide) {
+			adjacentSlide.style.opacity = 1 - opacity;
+			adjacentSlide.style.transition = 'none';
 		}
 	},
 	/**
@@ -566,8 +563,8 @@ export const ViewModel = DefineMap.extend({
 			const transitionLength = 1000;
 
 			// make 1s ease transition for all slides
-			const slides = document.querySelectorAll(`${this.classSelector} .slide`);
-			slides.forEach((slide) => {
+			const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+			allSlides.forEach((slide) => {
 				slide.style.transition = `${transitionLength}ms ease`;
 			});
 
@@ -626,8 +623,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeAllSlidesOpaque() {
-		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
-		slides.forEach((slide) => {
+		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		allSlides.forEach((slide) => {
 			slide.style.opacity = 1;
 		});
 	},
@@ -639,8 +636,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeOnlyActiveSlideOpaque() {
-		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
-		slides.forEach((slide) => {
+		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		allSlides.forEach((slide) => {
 			slide.style.opacity = 0;
 		});
 
@@ -655,8 +652,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	resetZIndexAllSlides() {
-		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
-		slides.forEach((slide) => {
+		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		allSlides.forEach((slide) => {
 			slide.style.zIndex = 0;
 		});
 	},
@@ -670,8 +667,8 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	setActiveSlideZIndex() {
-		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
-		slides.forEach((slide) => {
+		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		allSlides.forEach((slide) => {
 			slide.style.zIndex = 0;
 		});
 
