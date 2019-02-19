@@ -5,7 +5,7 @@ import './donejs-carousel-plugin.less';
 import view from './donejs-carousel-plugin.stache';
 
 import platform from 'steal-platform';
-import $ from 'jquery';
+// import $ from 'jquery';
 
 export const SWIPE_OBJECT_DEFAULT = {
 	startX: null,
@@ -49,7 +49,10 @@ export const ViewModel = DefineMap.extend({
 	activeSlide: {
 		get() {
 			if (this.activeSlideIndex !== undefined && this.classSelector) {
-				return $(`${this.classSelector} .slide${this.activeSlideIndex}`);
+				const activeSlideSelector = `${this.classSelector} .slide${this.activeSlideIndex}`;
+				const activeSlideElement = document.querySelector(activeSlideSelector);
+
+				return activeSlideElement;
 			}
 		}
 	},
@@ -94,11 +97,18 @@ export const ViewModel = DefineMap.extend({
 		 * @function get gets the extra class information if available
 		 * */
 		get() {
-			let extraClass = this.carouselOptions.extraClass;
+			const extraClass = this.carouselOptions.extraClass;
 
-			let slide = extraClass ? $(`.${extraClass} .slide`) : $('.slide');
+			let slide;
 
-			return slide.outerWidth(true);
+			if (extraClass) {
+				slide = document.querySelector(`.${extraClass} .slide`);
+			} else {
+				slide = document.querySelector('.slide');
+			}
+
+			// TODO: add margin width
+			return slide.offsetWidth;
 		}
 	},
 	/**
@@ -400,6 +410,7 @@ export const ViewModel = DefineMap.extend({
 		if (this.carouselOptions.transition == 'dissolve') {
 			// calculate swipeAmount as a number between 0 and 1
 			let swipeAmount = swipeLength / this.slideWidth;
+			console.log(swipeAmount);
 			// fade slide and its sibling by swipeAmount
 			this.fadeSlideByAmount(swipeAmount);
 		} else {
@@ -480,16 +491,12 @@ export const ViewModel = DefineMap.extend({
 	* @param {number} pointerPosition (in pixels)
 	*/
 	moveCarouselToPosition(pointerPosition) {
-		let classSelector = this.classSelector;
+		const element = document.querySelector(this.classSelector);
 
 		// set css properties according to where we are trying to move to
-		$(classSelector).css(
-			{
-				'transform': `translateX(${pointerPosition}px)`,
-				// no transition necessary when we are moving slide manually
-				'transition': 'none'
-			}
-		);
+		element.style.transform = `translateX(${pointerPosition}px)`;
+		// no transition necessary when we are moving slide manually
+		element.style.transition = 'none';
 	},
 	/**
 	* @function moveCarouselToActiveSlide
@@ -498,17 +505,14 @@ export const ViewModel = DefineMap.extend({
 	* translate the carousel .slideTrack by moving it to the active slide
 	*/
 	moveCarouselToActiveSlide() {
-		let classSelector = this.classSelector;
+		const element = document.querySelector(this.classSelector);
 
 		// set css properties according to where we are trying to move to
-		$(classSelector).css(
-			{
-				// first slide is 0, second slide is -100%, etc.
-				'transform': `translateX(${-(this.activeSlideIndex * 100)}%)`,
-				// 500ms transition when moving between slides
-				'transition': '500ms ease'
-			}
-		);
+
+		// first slide is 0, second slide is -100%, etc.
+		element.style.transform = `translateX(${-(this.activeSlideIndex * 100)}%)`;
+		// 500ms transition when moving between slides
+		element.style.transition = '500ms ease';
 	},
 	/**
 	* @function fadeSlideByAmount
@@ -533,23 +537,19 @@ export const ViewModel = DefineMap.extend({
 			(swipeAmount > 0 && !isFirstSlide) ||
 			(swipeAmount < 0 && !isLastSlide)
 		){
-			this.activeSlide.css({
-				'opacity': opacity,
-				'transition': 'none'
-			});
+			this.activeSlide.style.opacity = opacity;
+			this.activeSlide.style.transition = 'none';
 		}
 
 		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
 		if (swipeAmount > 0) {
-			this.activeSlide.prev().css({
-				'opacity': 1 - opacity,
-				'transition': 'none'
-			});
+			let prevSlide = this.activeSlide.previousElementSibling;
+			prevSlide.style.opacity = 1 - opacity;
+			prevSlide.style.transition = 'none';
 		} else {
-			this.activeSlide.next().css({
-				'opacity': 1 - opacity,
-				'transition': 'none'
-			});
+			let nextSlide = this.activeSlide.nextElementSibling;
+			nextSlide.style.opacity = 1 - opacity;
+			nextSlide.style.transition = 'none';
 		}
 	},
 	/**
@@ -563,10 +563,13 @@ export const ViewModel = DefineMap.extend({
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
 			// transition length in ms
-			let transitionLength = 1000;
+			const transitionLength = 1000;
 
 			// make 1s ease transition for all slides
-			$(`${this.classSelector} .slide`).css({'transition': `${transitionLength}ms ease`});
+			const slides = document.querySelectorAll(`${this.classSelector} .slide`);
+			slides.forEach((slide) => {
+				slide.style.transition = `${transitionLength}ms ease`;
+			});
 
 			// make only active slide opaque, everything else
 			// should be transparent
@@ -623,7 +626,10 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeAllSlidesOpaque() {
-		$(`${this.classSelector} .slide`).css({'opacity': 1});
+		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
+		slides.forEach((slide) => {
+			slide.style.opacity = 1;
+		});
 	},
 	/**
 	* @function makeOnlyActiveSlideOpaque
@@ -633,8 +639,12 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	makeOnlyActiveSlideOpaque() {
-		$(`${this.classSelector} .slide`).css({'opacity': 0});
-		this.activeSlide.css({'opacity': 1});
+		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
+		slides.forEach((slide) => {
+			slide.style.opacity = 0;
+		});
+
+		this.activeSlide.style.opacity = 1;
 	},
 	/**
 	* @function resetZIndexAllSlides
@@ -645,7 +655,10 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	resetZIndexAllSlides() {
-		$(`${this.classSelector} .slide`).css({'z-index': 0});
+		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
+		slides.forEach((slide) => {
+			slide.style.zIndex = 0;
+		});
 	},
 
 	/**
@@ -657,8 +670,12 @@ export const ViewModel = DefineMap.extend({
 	*
 	*/
 	setActiveSlideZIndex() {
-		$(`${this.classSelector} .slide`).css({'z-index': 0});
-		this.activeSlide.css({'z-index': 100});
+		const slides = document.querySelectorAll(`${this.classSelector} .slide`);
+		slides.forEach((slide) => {
+			slide.style.zIndex = 0;
+		});
+
+		this.activeSlide.style.zIndex = 100;
 	}
 });
 
