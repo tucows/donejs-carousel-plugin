@@ -5,7 +5,6 @@ import './donejs-carousel-plugin.less';
 import view from './donejs-carousel-plugin.stache';
 
 import platform from 'steal-platform';
-// import $ from 'jquery';
 
 export const SWIPE_OBJECT_DEFAULT = {
 	startX: null,

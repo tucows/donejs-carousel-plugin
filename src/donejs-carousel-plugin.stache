@@ -98,7 +98,7 @@
 					breakOnDesktop
 				{{/if}}"
 			>
-				{{#each ./slides}}
+				{{#each(./slides)}}
 					<div class="dot {{#is ../activeSlideIndex scope.index}}active{{/is}}" on:click="../dotClickHandler(scope.index)">
 						{{>navDotsSVG}}
 					</div>
@@ -117,7 +117,7 @@
 					breakOnDesktop
 				{{/if}}"
 			>
-				{{#each ./slides}}
+				{{#each(./slides)}}
 					<div class="dot {{#is scope.index 0}}active{{/is}}">
 						{{>navDotsSVG}}
 					</div>

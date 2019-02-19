@@ -60,10 +60,10 @@ Make sure to do the following:
     slides:from='./userReviews'
     carouselOptions:from='./carouselOptions'
 >
-    {{#each ./userReviews}}
+    {{#each(./userReviews)}}
         <div class="block icon slide slide{{scope.index}} {{#is ../activeSlideIndexAltTest scope.index}} active {{/is}}" tabindex="{{#is ../activeSlideIndexAltTest scope.index}} 0 {{else}} -1 {{/is}}">
         <div class="pointIcon">
-            <ting-svg hash="{{./icon}}" title="" dimensions="66" />
+            <ting-svg hash="'{{./icon}}'" title="''" dimensions="'66'" />
         </div>
         <h2>{{ l10n ./title}}</h2>
         <p class="tagline">{{ l10n ./body}}</p>
