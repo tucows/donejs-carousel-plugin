@@ -4,8 +4,7 @@
         "es6": true,
         "jquery": true,
         "node": true,
-        "mocha": true,
-        "qunit": true
+        "mocha": true
     },
     "extends": "eslint-config-tucows",
     "globals": {
