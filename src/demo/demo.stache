@@ -7,9 +7,9 @@
 		slides: slides,
 		
 		carouselOptions: { 
-			{{#each ./carouselOptions }} {{#is scope.key 'navArrows'}} 
+			{{#each(./carouselOptions)}} {{#is scope.key 'navArrows'}}
 			navArrows: { 
-				{{#each .}}
+				{{#each(.)}}
 				{{scope.key}}: '{{.}}', 
 				{{/each}} 
 			},
@@ -30,7 +30,7 @@
 		slides:from='./slides'
 		carouselOptions:from='./carouselOptions'
 	>
-		{{#each ./slides}}
+		{{#each(./slides)}}
 
 			<div class="block slide slide{{scope.index}} {{#is ../activeSlideIndex scope.index}} active {{/is}}" 
 				tabindex="{{#is ../activeSlideIndex scope.index}} 0 {{else}} -1 {{/is}}" 
