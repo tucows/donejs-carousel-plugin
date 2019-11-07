@@ -89,7 +89,7 @@
     "funcunit": "^3.6.2",
     "sinon": "^7.2.4",
     "steal-mocha": "^2.0.1",
-    "testee": "^0.9.0"
+    "testee": "^0.9.1"
   },
   "license": "MIT",
   "bugs": {
