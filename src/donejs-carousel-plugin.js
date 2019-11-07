@@ -20,7 +20,7 @@ export const SWIPE_OBJECT_DEFAULT = {
  * @param {boolean} isTablet - if we're checking for the tablet
  * @returns {boolean}
  */
-export const isMobile = function(isTablet) {
+export const isMobile = function (isTablet) {
 	if (isTablet) {
 		return window.innerWidth < 1024;
 	}
@@ -29,22 +29,22 @@ export const isMobile = function(isTablet) {
 
 export const ViewModel = DefineMap.extend({
 	/**
-	* @property {array} slides 
-	* @description populates slides with the appropriate data. This will likely change.
-	*/
+	 * @property {array} slides
+	 * @description populates slides with the appropriate data. This will likely change.
+	 */
 	slides: 'any',
 	/**
-	* @property {number} activeSlideIndex 
-	* @description slide that the user wants to see
-	*/
+	 * @property {number} activeSlideIndex
+	 * @description slide that the user wants to see
+	 */
 	activeSlideIndex: {
 		type: 'number',
 		default: 0
 	},
 	/**
-	* @property {number} activeSlide 
-	* @description active slide dom element
-	*/
+	 * @property {number} activeSlide
+	 * @description active slide dom element
+	 */
 	activeSlide: {
 		get() {
 			if (this.activeSlideIndex !== undefined && this.classSelector) {
@@ -56,14 +56,14 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {number} lastSlideIndex 
-	* @description index of last slide in the array
-	*/
+	 * @property {number} lastSlideIndex
+	 * @description index of last slide in the array
+	 */
 	lastSlideIndex: {
 		type: 'number',
 		/**
-	 	 * @function return last slide index
-	 	 * */
+		 * @function return last slide index
+		 * */
 		get() {
 			if (this.slides) {
 				return this.slides.length - 1;
@@ -71,25 +71,25 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {object} swipeObject 
-	* @description properties used to complete the swipe(drag but not drop) functionality (via touch and mouse)
-	*/
+	 * @property {object} swipeObject
+	 * @description properties used to complete the swipe(drag but not drop) functionality (via touch and mouse)
+	 */
 	swipeObject: {
 		type: 'observable',
 		default: SWIPE_OBJECT_DEFAULT
 	},
 	/**
-	* @property {boolean} dragging 
-	* @description flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
-	*/
+	 * @property {boolean} dragging
+	 * @description flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
+	 */
 	dragging: {
 		type: 'boolean',
 		default: false
 	},
 	/**
-	* @property {number} slideWidth 
-	* @description returns the width of the slide (assumes all slides are equal width)
-	* */
+	 * @property {number} slideWidth
+	 * @description returns the width of the slide (assumes all slides are equal width)
+	 * */
 	slideWidth: {
 		type: 'number',
 		/**
@@ -107,7 +107,7 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	 * @property {boolean} isDesktop 
+	 * @property {boolean} isDesktop
 	 * @description returns true if screen is desktop size (> 1024px)
 	 */
 	isDesktop: {
@@ -120,15 +120,15 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {object} carouselOptions 
-	* @description passed in from the parent component 
-	*/
+	 * @property {object} carouselOptions
+	 * @description passed in from the parent component
+	 */
 	carouselOptions: {
 		type: 'any',
 		default: {},
 		/**
-		* @function set called when new carouselOptions is set
-		* */
+		 * @function set called when new carouselOptions is set
+		 * */
 		set(newVal) {
 			// if it's defined
 			if (newVal) {
@@ -143,18 +143,18 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {number} autoPlayInterval 
-	* @description current interval of setInterval function that handles the auto play of the carousel
-	*/
+	 * @property {number} autoPlayInterval
+	 * @description current interval of setInterval function that handles the auto play of the carousel
+	 */
 	autoPlayInterval: {type: 'any'},
 	/**
-	* @property {number} autoPlay 
-	* @description determines the setInterval duration for the auto sliding of the carousel
-	* */
+	 * @property {number} autoPlay
+	 * @description determines the setInterval duration for the auto sliding of the carousel
+	 * */
 	autoPlay: {
 		type: 'number',
 		/**
-		 * @function set 
+		 * @function set
 		 * @description sets the autoplay number and figures out the interval
 		 * */
 		set(duration) {
@@ -170,29 +170,29 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @property {string} autoPlayDirection 
-	* @description changes based on active slide index
-	*/
+	 * @property {string} autoPlayDirection
+	 * @description changes based on active slide index
+	 */
 	autoPlayDirection: {
 		type: 'string',
 		default: 'right'
 	},
 	/**
-	* @property {boolean} isDesktopBrowser 
-	* @description whether or not the current environment is browser
-	*/
+	 * @property {boolean} isDesktopBrowser
+	 * @description whether or not the current environment is browser
+	 */
 	isDesktopBrowser: {
 		type: 'boolean',
 		default: platform.isDesktopBrowser
 	},
 	/**
-	* @property {boolean} classSelector 
-	* @description specifies the appropriate carousel class especially if there are multiple carousels on page
-	*/
+	 * @property {boolean} classSelector
+	 * @description specifies the appropriate carousel class especially if there are multiple carousels on page
+	 */
 	classSelector: {
 		type: 'string',
 		/**
-		 * @function concatenate 
+		 * @function concatenate
 		 * @description extraclass to .slideTrack, if available, otherwise output just .slideTrack
 		 * */
 		get() {
@@ -204,13 +204,13 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function oneSlideOver
-	*
-	* @description
-	* determines the next active slide and calls a function to move carousel to that slide
-	*
-	* @param {string} direction right/left
-	*/
+	 * @function oneSlideOver
+	 *
+	 * @description
+	 * determines the next active slide and calls a function to move carousel to that slide
+	 *
+	 * @param {string} direction right/left
+	 */
 	oneSlideOver(direction) {
 		if (direction == 'right') {
 			// increment the active slide index flag
@@ -221,14 +221,14 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function directionHandler
-	*
-	* @description
-	* handles the direction of the slide movement
-	*
-	* @param {string} direction right/left
-	* @param {number} maxSlide index of last/first slide depending on direction
-	*/
+	 * @function directionHandler
+	 *
+	 * @description
+	 * handles the direction of the slide movement
+	 *
+	 * @param {string} direction right/left
+	 * @param {number} maxSlide index of last/first slide depending on direction
+	 */
 	directionHandler(direction, maxSlide) {
 		// if this isn't the last slide
 		if (this.activeSlideIndex !== maxSlide) {
@@ -244,14 +244,14 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function arrowClickHandler
-	*
-	* @description
-	* handles click events on the right and left slide navigation arrows
-	*
-	* @param {string} direction right/left
-	* @param {hash} event click event details
-	*/
+	 * @function arrowClickHandler
+	 *
+	 * @description
+	 * handles click events on the right and left slide navigation arrows
+	 *
+	 * @param {string} direction right/left
+	 * @param {hash} event click event details
+	 */
 	arrowClickHandler(direction, event) {
 		// there is no event if it's being fired by autoPlay's set interval
 		if (event) {
@@ -274,15 +274,15 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function determineKeyDirection
-	*
-	* @description
-	* used to handle the keydown event
-	*
-	* @param {object} event keydown event details  
-	* 
-	* @return {string} direction right or left depending on which key was pressed
-	*/
+	 * @function determineKeyDirection
+	 *
+	 * @description
+	 * used to handle the keydown event
+	 *
+	 * @param {object} event keydown event details
+	 *
+	 * @return {string} direction right or left depending on which key was pressed
+	 */
 	determineKeyDirection(event) {
 		// make sure it's not a text, input or select area
 		if (!event.target.tagName.match('TEXTAREA|INPUT|SELECT')) {
@@ -296,26 +296,26 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function dotClickHandler
-	*
-	* @description
-	* handles click events on the navigation dots
-	*
-	* @param {number} index index of the slide to be displayed
-	*/
+	 * @function dotClickHandler
+	 *
+	 * @description
+	 * handles click events on the navigation dots
+	 *
+	 * @param {number} index index of the slide to be displayed
+	 */
 	dotClickHandler(index) {
 		// set active slide to the selected index
 		this.activeSlideIndex = index;
 	},
 	/**
-	* @function swipeHandler
-	*
-	* @description
-	* handles mouse and touch events, required to simulate the mouse and finger drag-slide functionality
-	*
-	* @param {object} event mouse/touch event properties
-	* @param {string} action category that the event falls under 
-	*/
+	 * @function swipeHandler
+	 *
+	 * @description
+	 * handles mouse and touch events, required to simulate the mouse and finger drag-slide functionality
+	 *
+	 * @param {object} event mouse/touch event properties
+	 * @param {string} action category that the event falls under
+	 */
 	swipeHandler(event, action) {
 		// if it's supposed to break on desktop and it's desktop size
 		if (this.carouselOptions.breakOnDesktop && this.isDesktop) {
@@ -336,13 +336,13 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function defineTouchEvent
-	*
-	* @description
-	* defines finger count and touches object in the case of a touch event
-	*
-	* @param {object} event mouse/touch event properties 
-	*/
+	 * @function defineTouchEvent
+	 *
+	 * @description
+	 * defines finger count and touches object in the case of a touch event
+	 *
+	 * @param {object} event mouse/touch event properties
+	 */
 	defineTouchEvent(event) {
 		// if it's a touch event, make sure there is only one finger during swiping
 		let fingerCount = event.touches ? event.touches.length : 1;
@@ -355,13 +355,13 @@ export const ViewModel = DefineMap.extend({
 		};
 	},
 	/**
-	* @function swipeStart
-	*
-	* @description
-	* handles the mousedown and touchstart events
-	*
-	* @param {object} event mouse/touch event properties 
-	*/
+	 * @function swipeStart
+	 *
+	 * @description
+	 * handles the mousedown and touchstart events
+	 *
+	 * @param {object} event mouse/touch event properties
+	 */
 	swipeStart(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1
@@ -375,13 +375,13 @@ export const ViewModel = DefineMap.extend({
 		this.dragging = true;
 	},
 	/**
-	* @function swipeMove
-	*
-	* @description
-	* handles the mousemove and touchmove events
-	*
-	* @param {object} event mouse/touch event properties 
-	*/
+	 * @function swipeMove
+	 *
+	 * @description
+	 * handles the mousemove and touchmove events
+	 *
+	 * @param {object} event mouse/touch event properties
+	 */
 	swipeMove(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
@@ -417,12 +417,12 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function swipeEnd
-	*
-	* @description
-	* handles the mouseend, mouseleave, touchend and touchcancel events
-	*
-	*/
+	 * @function swipeEnd
+	 *
+	 * @description
+	 * handles the mouseend, mouseleave, touchend and touchcancel events
+	 *
+	 */
 	swipeEnd(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
@@ -436,7 +436,7 @@ export const ViewModel = DefineMap.extend({
 		if (swipePercentage < -10 && this.activeSlideIndex != this.lastSlideIndex) {
 			// set the next slide to active
 			this.activeSlideIndex++;
-		// if you swipe right enough and it's not the first slides
+			// if you swipe right enough and it's not the first slides
 		} else if (swipePercentage > 10 && this.activeSlideIndex != 0) {
 			// set the previous slide to active
 			this.activeSlideIndex--;
@@ -451,24 +451,24 @@ export const ViewModel = DefineMap.extend({
 		this.dragging = false;
 	},
 	/**
-	* @function getLeft
-	*
-	* @description
-	* finds the left-most x coordinate of this slide
-	*
-	* @param {number} slideIndex index of the slide 
-	*/
+	 * @function getLeft
+	 *
+	 * @description
+	 * finds the left-most x coordinate of this slide
+	 *
+	 * @param {number} slideIndex index of the slide
+	 */
 	getLeft(slideIndex) {
 		let leftOfSlide = -this.slideWidth * slideIndex;
 
 		return leftOfSlide;
 	},
 	/**
-	* @function changeToActiveSlide
-	*
-	* @description
-	* based on carousel options, either fade slide or translate carousel
-	*/
+	 * @function changeToActiveSlide
+	 *
+	 * @description
+	 * based on carousel options, either fade slide or translate carousel
+	 */
 	changeToActiveSlide() {
 		if (this.carouselOptions.transition == 'dissolve') {
 			this.fadeToActiveSlide();
@@ -477,13 +477,13 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function moveCarouselToPosition
-	*
-	* @description
-	* set css transform and transition properties to move the slide 
-	*
-	* @param {number} pointerPosition (in pixels)
-	*/
+	 * @function moveCarouselToPosition
+	 *
+	 * @description
+	 * set css transform and transition properties to move the slide
+	 *
+	 * @param {number} pointerPosition (in pixels)
+	 */
 	moveCarouselToPosition(pointerPosition) {
 		const element = document.querySelector(this.classSelector);
 
@@ -493,11 +493,11 @@ export const ViewModel = DefineMap.extend({
 		element.style.transition = 'none';
 	},
 	/**
-	* @function moveCarouselToActiveSlide
-	*
-	* @description
-	* translate the carousel .slideTrack by moving it to the active slide
-	*/
+	 * @function moveCarouselToActiveSlide
+	 *
+	 * @description
+	 * translate the carousel .slideTrack by moving it to the active slide
+	 */
 	moveCarouselToActiveSlide() {
 		const element = document.querySelector(this.classSelector);
 
@@ -508,13 +508,13 @@ export const ViewModel = DefineMap.extend({
 		element.style.transition = '500ms ease';
 	},
 	/**
-	* @function fadeSlideByAmount
-	*
-	* @description
-	* set css transform and transition properties to move the slide 
-	*
-	* @param {number} swipeAmount (number between 0 and 1) 
-	*/
+	 * @function fadeSlideByAmount
+	 *
+	 * @description
+	 * set css transform and transition properties to move the slide
+	 *
+	 * @param {number} swipeAmount (number between 0 and 1)
+	 */
 	fadeSlideByAmount(swipeAmount) {
 		// controls how much one should have to swipe/drag in order for slide to fade in or out
 		const OPACITY_FADE_MULTIPLIER = 2;
@@ -525,36 +525,39 @@ export const ViewModel = DefineMap.extend({
 		let isFirstSlide = this.activeSlideIndex == 0;
 		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
 
-		// only fade the active slide if it's fading out into another slide, not on it's own
-		if (
-			(swipeAmount > 0 && !isFirstSlide) ||
-			(swipeAmount < 0 && !isLastSlide)
-		){
-			this.activeSlide.style.opacity = opacity;
-			this.activeSlide.style.transition = 'none';
-		}
+		if (this.activeSlide) {
 
-		let adjacentSlide;
+			// only fade the active slide if it's fading out into another slide, not on it's own
+			if (
+				(swipeAmount > 0 && !isFirstSlide) ||
+				(swipeAmount < 0 && !isLastSlide)
+			) {
+				this.activeSlide.style.opacity = opacity;
+				this.activeSlide.style.transition = 'none';
+			}
 
-		// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
-		if (swipeAmount > 0) {
-			adjacentSlide = this.activeSlide.previousElementSibling;
-		} else {
-			adjacentSlide = this.activeSlide.nextElementSibling;
-		}
+			let adjacentSlide;
 
-		if (adjacentSlide) {
-			adjacentSlide.style.opacity = 1 - opacity;
-			adjacentSlide.style.transition = 'none';
+			// fade adjacent sibling slide, depending on the direction of swipe, sign of swipeAmount
+			if (swipeAmount > 0) {
+				adjacentSlide = this.activeSlide.previousElementSibling;
+			} else {
+				adjacentSlide = this.activeSlide.nextElementSibling;
+			}
+
+			if (adjacentSlide) {
+				adjacentSlide.style.opacity = 1 - opacity;
+				adjacentSlide.style.transition = 'none';
+			}
 		}
 	},
 	/**
-	* @function fadeToActiveSlide
-	*
-	* @description
-	* make all slides but the active one transparent
-	* active slide should have higher z-index value
-	*/
+	 * @function fadeToActiveSlide
+	 *
+	 * @description
+	 * make all slides but the active one transparent
+	 * active slide should have higher z-index value
+	 */
 	fadeToActiveSlide() {
 		// only fade if slides are in carousel, not broken on desktop
 		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
@@ -577,24 +580,24 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function preventDefault
-	*
-	* @description
-	* handles simple prevent default functionality
-	*
-	* @param {object} event event to prevent default on
-	*/
+	 * @function preventDefault
+	 *
+	 * @description
+	 * handles simple prevent default functionality
+	 *
+	 * @param {object} event event to prevent default on
+	 */
 	preventDefault(event) {
 		event.preventDefault();
 	},
 	/**
-	* @function handleBreakOnDesktop
-	*
-	* @description
-	* When the carousel breaks on desktop, handle behaviour of how slides should
-	* be displayed without carousel b
-	*
-	*/
+	 * @function handleBreakOnDesktop
+	 *
+	 * @description
+	 * When the carousel breaks on desktop, handle behaviour of how slides should
+	 * be displayed without carousel b
+	 *
+	 */
 	handleBreakOnDesktop() {
 		// set activeSlideIndex to 0
 		this.activeSlideIndex = 0;
@@ -602,12 +605,12 @@ export const ViewModel = DefineMap.extend({
 		this.clearAutoPlay();
 	},
 	/**
-	* @function clearAutoPlay
-	*
-	* @description
-	* Clear the setInterval if there was one defined as per the autoPlay property
-	*
-	*/
+	 * @function clearAutoPlay
+	 *
+	 * @description
+	 * Clear the setInterval if there was one defined as per the autoPlay property
+	 *
+	 */
 	clearAutoPlay() {
 		if (this.autoPlayInterval) {
 			// set time interval is cleared
@@ -615,12 +618,12 @@ export const ViewModel = DefineMap.extend({
 		}
 	},
 	/**
-	* @function makeAllSlidesOpaque
-	*
-	* @description
-	* Reset the opacity of all the slides when breaking on desktop
-	*
-	*/
+	 * @function makeAllSlidesOpaque
+	 *
+	 * @description
+	 * Reset the opacity of all the slides when breaking on desktop
+	 *
+	 */
 	makeAllSlidesOpaque() {
 		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
 		allSlides.forEach((slide) => {
@@ -628,28 +631,30 @@ export const ViewModel = DefineMap.extend({
 		});
 	},
 	/**
-	* @function makeOnlyActiveSlideOpaque
-	*
-	* @description
-	* Make only the active slide opaque and all other slides should be transparent
-	*
-	*/
+	 * @function makeOnlyActiveSlideOpaque
+	 *
+	 * @description
+	 * Make only the active slide opaque and all other slides should be transparent
+	 *
+	 */
 	makeOnlyActiveSlideOpaque() {
 		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
 		allSlides.forEach((slide) => {
 			slide.style.opacity = 0;
 		});
 
-		this.activeSlide.style.opacity = 1;
+		if (this.activeSlide) {
+			this.activeSlide.style.opacity = 1;
+		}
 	},
 	/**
-	* @function resetZIndexAllSlides
-	*
-	* @description
-	* Reset the z-index of slides when resizing the window and going from
-	* broken on desktop to mobile view
-	*
-	*/
+	 * @function resetZIndexAllSlides
+	 *
+	 * @description
+	 * Reset the z-index of slides when resizing the window and going from
+	 * broken on desktop to mobile view
+	 *
+	 */
 	resetZIndexAllSlides() {
 		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
 		allSlides.forEach((slide) => {
@@ -658,20 +663,22 @@ export const ViewModel = DefineMap.extend({
 	},
 
 	/**
-	* @function setActiveSlideZIndex
-	*
-	* @description
-	* Setting a larger z-index for the active slide allows the links to function properly
-	* Set z-index to 100 for active slide, 0 for all other slides
-	*
-	*/
+	 * @function setActiveSlideZIndex
+	 *
+	 * @description
+	 * Setting a larger z-index for the active slide allows the links to function properly
+	 * Set z-index to 100 for active slide, 0 for all other slides
+	 *
+	 */
 	setActiveSlideZIndex() {
 		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
 		allSlides.forEach((slide) => {
 			slide.style.zIndex = 0;
 		});
 
-		this.activeSlide.style.zIndex = 100;
+		if (this.activeSlide) {
+			this.activeSlide.style.zIndex = 100;
+		}
 	}
 });
 
@@ -681,22 +688,22 @@ export default Component.extend({
 	view,
 	events: {
 		/**
-		* @function activeSlideIndex change event handler
-		*
-		* @description
-		* on change of this viewmodel property, fire function to change slidetrack location
-		*
-		*/
+		 * @function activeSlideIndex change event handler
+		 *
+		 * @description
+		 * on change of this viewmodel property, fire function to change slidetrack location
+		 *
+		 */
 		'{viewModel} activeSlideIndex'() {
 			this.viewModel.changeToActiveSlide();
 		},
 		/**
-		* @function window resize event handler
-		*
-		* @description
-		* on window resize sees if it's desktop size and if it's supposed to break on desktop. fires a vm function if so.
-		*
-		*/
+		 * @function window resize event handler
+		 *
+		 * @description
+		 * on window resize sees if it's desktop size and if it's supposed to break on desktop. fires a vm function if so.
+		 *
+		 */
 		'{window} resize'() {
 			let breakOnDesktop = this.viewModel.carouselOptions.breakOnDesktop;
 			let isDesktop = this.viewModel.isDesktop;
@@ -723,12 +730,12 @@ export default Component.extend({
 			}
 		},
 		/**
-		* @function element before-remove event handler
-		*
-		* @description
-		* fires when the ting-carousel component is about to be removed. in this case, cleans up the setTimeout
-		*
-		*/
+		 * @function element before-remove event handler
+		 *
+		 * @description
+		 * fires when the ting-carousel component is about to be removed. in this case, cleans up the setTimeout
+		 *
+		 */
 		'{element} beforeremove'() {
 			this.viewModel.clearAutoPlay();
 		},
