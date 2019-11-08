@@ -21,7 +21,7 @@
     "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
     "test": "npm run eslint && npm run testee",
     "test_debug": "DEBUG='testee:*' testee ./test.html --config testee.json",
-    "testee": "testee ./test.html --config testee.json",
+    "testee": "testee ./test.html --browsers=chrome",
     "eslint": "eslint --fix 'src/**/*.js'",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish --access public",
