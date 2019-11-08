@@ -20,7 +20,7 @@ export const SWIPE_OBJECT_DEFAULT = {
  * @param {boolean} isTablet - if we're checking for the tablet
  * @returns {boolean}
  */
-export const isMobile = function (isTablet) {
+export const isMobile = function(isTablet) {
 	if (isTablet) {
 		return window.innerWidth < 1024;
 	}
@@ -526,7 +526,6 @@ export const ViewModel = DefineMap.extend({
 		let isLastSlide = this.activeSlideIndex == this.lastSlideIndex;
 
 		if (this.activeSlide) {
-
 			// only fade the active slide if it's fading out into another slide, not on it's own
 			if (
 				(swipeAmount > 0 && !isFirstSlide) ||
