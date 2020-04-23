@@ -1,9 +1,5 @@
 'use strict';
 /* global
-	describe,
-	beforeEach,
-	afterEach,
-	it,
 	chance
 */
 
