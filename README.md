@@ -73,7 +73,7 @@ Make sure to do the following:
 </tucows-donejs-carousel>
 ```
 
-### Define the JS properties 
+### Define the properties 
 
 define activeSlideIndex
 
