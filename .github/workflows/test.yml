@@ -5,9 +5,9 @@ name: Test CI
 
 on:
   push:
-    branches: [ test-branch ]
+    branches: [ ** ]
   pull_request:
-    branches: [ test-branch ]
+    branches: [ ** ]
 
 jobs:
   build:
