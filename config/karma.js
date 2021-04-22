@@ -7,9 +7,9 @@ module.exports = function(config) {
 	config.set({
 		autoWatch: false,	// default: true
 		basePath: '../',
-		browserDisconnectTimeout: 45000,	// default: 2000
+		browserDisconnectTimeout: 15000,	// default: 2000
 		browserDisconnectTolerance: 1,	// default: 0
-		browserNoActivityTimeout: 60000, // default: 30000
+		browserNoActivityTimeout: 30000, // default: 30000
 		browsers: [(process.env.IS_CI !== '1') ? 'ChromeHeadless' : 'ChromeHeadlessCI'],
 		browserConsoleLogOptions: {level: karma.constants.LOG_DISABLE},
 		captureTimeout: 60000,	// default: 60000
