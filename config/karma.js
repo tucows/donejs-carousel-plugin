@@ -40,10 +40,6 @@ module.exports = function(config) {
 			'node_modules/steal/steal.js',
 			'karma.bootstrap.js',
 			{
-				pattern: '**/package.json',
-				included: false
-			},
-			{
 				pattern: '**/*.*',
 				included: false
 			},
