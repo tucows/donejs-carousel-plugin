@@ -29,3 +29,9 @@ node_modules
 
 docs/
 dist/
+
+# Pesky DS_Store
+*.DS_Store
+
+# Karma results
+test_results/
