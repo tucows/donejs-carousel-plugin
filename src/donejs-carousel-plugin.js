@@ -13,19 +13,12 @@ export const SWIPE_OBJECT_DEFAULT = {
 };
 
 /**
- * Determines if view is mobile
+ * @function isDesktop
+ * Determines if view is desktop
  *
- * @function
- * @name isMobile
- * @param {boolean} isTablet - if we're checking for the tablet
- * @returns {boolean}
+ * @returns {boolean} if desktop or not
  */
-export const isMobile = function(isTablet) {
-	if (isTablet) {
-		return window.innerWidth < 1024;
-	}
-	return window.innerWidth < 600;
-};
+export const isDesktop = () => Boolean(window.innerWidth >= 1024)
 
 export const ViewModel = DefineMap.extend({
 	/**
@@ -41,35 +34,7 @@ export const ViewModel = DefineMap.extend({
 		type: 'number',
 		default: 0
 	},
-	/**
-	 * @property {number} activeSlide
-	 * @description active slide dom element
-	 */
-	activeSlide: {
-		get() {
-			if (this.activeSlideIndex !== undefined && this.classSelector) {
-				const selector = `${this.classSelector} .slide${this.activeSlideIndex}`;
-				const activeSlideElement = document.querySelector(selector);
 
-				return activeSlideElement;
-			}
-		}
-	},
-	/**
-	 * @property {number} lastSlideIndex
-	 * @description index of last slide in the array
-	 */
-	lastSlideIndex: {
-		type: 'number',
-		/**
-		 * @function return last slide index
-		 * */
-		get() {
-			if (this.slides) {
-				return this.slides.length - 1;
-			}
-		}
-	},
 	/**
 	 * @property {object} swipeObject
 	 * @description properties used to complete the swipe(drag but not drop) functionality (via touch and mouse)
@@ -79,96 +44,26 @@ export const ViewModel = DefineMap.extend({
 		default: SWIPE_OBJECT_DEFAULT
 	},
 	/**
-	 * @property {boolean} dragging
+	 * @property {boolean} isDragging
 	 * @description flag to indicate that the user is dragging (mousedown event fired but mouseup event not fired)
 	 */
-	dragging: {
+	isDragging: {
 		type: 'boolean',
 		default: false
 	},
-	/**
-	 * @property {number} slideWidth
-	 * @description returns the width of the slide (assumes all slides are equal width)
-	 * */
-	slideWidth: {
-		type: 'number',
-		/**
-		 * @function get gets the extra class information if available
-		 * */
-		get() {
-			const extraClass = this.carouselOptions.extraClass;
 
-			const selector = extraClass ? `.${extraClass} .slide` : '.slide';
-
-			// grab the first slide; assumption - all slides are same width
-			const slide = document.querySelector(selector);
-
-			return slide.offsetWidth;
-		}
-	},
-	/**
-	 * @property {boolean} isDesktop
-	 * @description returns true if screen is desktop size (> 1024px)
-	 */
-	isDesktop: {
-		type: 'boolean',
-		/**
-		 * @function get returns the reverse of isMobile
-		 * */
-		get() {
-			return !isMobile('isTablet');
-		}
-	},
 	/**
 	 * @property {object} carouselOptions
 	 * @description passed in from the parent component
 	 */
-	carouselOptions: {
-		type: 'any',
-		default: {},
-		/**
-		 * @function set called when new carouselOptions is set
-		 * */
-		set(newVal) {
-			// if it's defined
-			if (newVal) {
-				// if autoPlay is defined AND if carousel is supposed to break on desktop and is desktop AND slides is greater than 1
-				if (newVal.autoPlay && (newVal.breakOnDesktop ? !this.isDesktop : true) && (this.slides.length > 1)) {
-					// set autoPlay
-					this.autoPlay = newVal.autoPlay;
-				}
-				// return so it's accessible in the VM
-				return newVal;
-			}
-		}
-	},
+	carouselOptions: 'any',
+
 	/**
 	 * @property {number} autoPlayInterval
 	 * @description current interval of setInterval function that handles the auto play of the carousel
 	 */
-	autoPlayInterval: {type: 'any'},
-	/**
-	 * @property {number} autoPlay
-	 * @description determines the setInterval duration for the auto sliding of the carousel
-	 * */
-	autoPlay: {
-		type: 'number',
-		/**
-		 * @function set
-		 * @description sets the autoplay number and figures out the interval
-		 * */
-		set(duration) {
-			// make sure duration is a number
-			if (!isNaN(duration)) {
-				// call a set interval that moves the slides per the defined duration
-				this.autoPlayInterval = setInterval(() => {
-					this.arrowClickHandler(this.autoPlayDirection);
-				}, duration);
-				// return so autoPlay can be used in the VM properly
-				return duration;
-			}
-		}
-	},
+	autoPlayInterval: 'any',
+
 	/**
 	 * @property {string} autoPlayDirection
 	 * @description changes based on active slide index
@@ -177,32 +72,78 @@ export const ViewModel = DefineMap.extend({
 		type: 'string',
 		default: 'right'
 	},
+
+	/**
+	 * @property {Node} element
+	 * @description carousel element
+	 */
+	element: 'any',
+
+	/**
+	 * @property {number} autoPlayDuration
+	 * @description determines the setInterval duration for the auto sliding of the carousel
+	 * */
+	get autoPlayDuration(){
+		if (this.carouselOptions) {
+			const {autoPlay, breakOnDesktop} = {...this.carouselOptions};
+			// if its anything but a number return 0 so it becomes falsy
+			if (isNaN(autoPlay)) {
+				return 0;
+			}
+			// if breakOnDesktop is true then make sure the slides wont autoplay on desktop view
+			const isPlayableOnDesktop = breakOnDesktop ? !isDesktop() : true;
+			const isMultiSlide = this.slides && this.slides.length > 1;
+			if (
+				autoPlay &&
+				isMultiSlide &&
+				isPlayableOnDesktop
+			) {
+				return autoPlay;
+			}
+		}
+		return 0;
+	},
+
+	/**
+	 * @property {number} slideWidth
+	 * @description returns the width of the slide (assumes all slides are equal width)
+	 * */
+	get slideWidth() {
+		// grab the first slide; assumption - all slides are same width
+		const slide = this.element.querySelector('.slide');
+		return slide.offsetWidth;
+	},
+
+	/**
+	 * @property {number} activeSlide
+	 * @description active slide dom element
+	 */
+	get activeSlide() {
+		if (this.activeSlideIndex) {
+			const activeSlideElement = this.element.querySelector(`.slide${this.activeSlideIndex}`);
+			return activeSlideElement;
+		}
+		return this.element;
+	},
+	/**
+	 * @property {number} lastSlideIndex
+	 * @description index of last slide in the array
+	 */
+	get lastSlideIndex() {
+		if (this.slides) {
+			return this.slides.length - 1;
+		}
+		return 0;
+	},
+
 	/**
 	 * @property {boolean} isDesktopBrowser
 	 * @description whether or not the current environment is browser
 	 */
-	isDesktopBrowser: {
-		type: 'boolean',
-		default: platform.isDesktopBrowser
+	get isDesktopBrowser() {
+		return platform.isDesktopBrowser;
 	},
-	/**
-	 * @property {boolean} classSelector
-	 * @description specifies the appropriate carousel class especially if there are multiple carousels on page
-	 */
-	classSelector: {
-		type: 'string',
-		/**
-		 * @function concatenate
-		 * @description extraclass to .slideTrack, if available, otherwise output just .slideTrack
-		 * */
-		get() {
-			// if there is more than one carousel on the page, will need to define extraClass so it knows which track to translate
-			if (this.carouselOptions.extraClass) {
-				return `.${this.carouselOptions.extraClass} .slideTrack`;
-			}
-			return '.slideTrack';
-		}
-	},
+
 	/**
 	 * @function oneSlideOver
 	 *
@@ -235,7 +176,7 @@ export const ViewModel = DefineMap.extend({
 			// move one slide to the right
 			this.oneSlideOver(direction);
 			// if it's the last slide and autoplay is enabled
-		} else if (this.autoPlay) {
+		} else if (this.autoPlayDuration) {
 			let oppositeDirection = direction == 'right' ? 'left' : 'right';
 			// reverse the autoplay direction
 			this.autoPlayDirection = oppositeDirection;
@@ -318,7 +259,7 @@ export const ViewModel = DefineMap.extend({
 	 */
 	swipeHandler(event, action) {
 		// if it's supposed to break on desktop and it's desktop size
-		if (this.carouselOptions.breakOnDesktop && this.isDesktop) {
+		if (this.carouselOptions.breakOnDesktop && isDesktop()) {
 			// break out of this function
 			return false;
 		}
@@ -372,7 +313,7 @@ export const ViewModel = DefineMap.extend({
 		// current and start x coordinates defined based on start event
 		this.swipeObject.startX = this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// dragging has started
-		this.dragging = true;
+		this.isDragging = true;
 	},
 	/**
 	 * @function swipeMove
@@ -385,22 +326,19 @@ export const ViewModel = DefineMap.extend({
 	swipeMove(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
-		if ((touchEvent && touchEvent.fingerCount > 1) || !this.dragging) {
+		if ((touchEvent && touchEvent.fingerCount > 1) || !this.isDragging) {
 			// break out of this function
 			return false;
 		}
-
 		// reassign the current x coordinate based on the event data
 		this.swipeObject.currentX = touchEvent.touches ? touchEvent.touches.pageX : event.clientX;
 		// figure out and assign the swipe length (positive is swipe right, negative is swipe left)
 		let swipeLength;
 		this.swipeObject.swipeLength = swipeLength = this.swipeObject.currentX - this.swipeObject.startX;
-
 		// prevent horizontal scrolling when swiping the carousel
 		if (this.swipeObject.swipeLength < -4 || this.swipeObject.swipeLength > 4) {
 			this.preventDefault(event);
 		}
-
 		// determine type of slide transition (dissolve vs slide)
 		if (this.carouselOptions.transition == 'dissolve') {
 			// calculate swipeAmount as a number between 0 and 1
@@ -426,7 +364,7 @@ export const ViewModel = DefineMap.extend({
 	swipeEnd(event) {
 		let touchEvent = this.defineTouchEvent(event);
 		// if finger count is greater than 1 or dragging is false
-		if ((touchEvent && touchEvent.fingerCount > 1) || !this.dragging) {
+		if ((touchEvent && touchEvent.fingerCount > 1) || !this.isDragging) {
 			// break out of this function
 			return false;
 		}
@@ -448,7 +386,7 @@ export const ViewModel = DefineMap.extend({
 		// reset the swipe object
 		this.swipeObject = SWIPE_OBJECT_DEFAULT;
 		// flag dragging as over
-		this.dragging = false;
+		this.isDragging = false;
 	},
 	/**
 	 * @function getLeft
@@ -485,8 +423,7 @@ export const ViewModel = DefineMap.extend({
 	 * @param {number} pointerPosition (in pixels)
 	 */
 	moveCarouselToPosition(pointerPosition) {
-		const element = document.querySelector(this.classSelector);
-
+		const element = this.element.querySelector('.slideTrack');
 		// set css properties according to where we are trying to move to
 		element.style.transform = `translateX(${pointerPosition}px)`;
 		// no transition necessary when we are moving slide manually
@@ -499,8 +436,7 @@ export const ViewModel = DefineMap.extend({
 	 * translate the carousel .slideTrack by moving it to the active slide
 	 */
 	moveCarouselToActiveSlide() {
-		const element = document.querySelector(this.classSelector);
-
+		const element = this.element.querySelector('.slideTrack');
 		// set css properties according to where we are trying to move to
 		// first slide is 0, second slide is -100%, etc.
 		element.style.transform = `translateX(${-(this.activeSlideIndex * 100)}%)`;
@@ -559,12 +495,12 @@ export const ViewModel = DefineMap.extend({
 	 */
 	fadeToActiveSlide() {
 		// only fade if slides are in carousel, not broken on desktop
-		if (!(this.isDesktop && this.carouselOptions.breakOnDesktop)) {
+		if (!(isDesktop() && this.carouselOptions.breakOnDesktop)) {
 			// transition length in ms
 			const transitionLength = 1000;
 
 			// make 1s ease transition for all slides
-			const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+			const allSlides = this.element.querySelectorAll('.slide');
 			allSlides.forEach((slide) => {
 				slide.style.transition = `${transitionLength}ms ease`;
 			});
@@ -624,7 +560,7 @@ export const ViewModel = DefineMap.extend({
 	 *
 	 */
 	makeAllSlidesOpaque() {
-		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		const allSlides = this.element.querySelectorAll('.slide');
 		allSlides.forEach((slide) => {
 			slide.style.opacity = 1;
 		});
@@ -637,7 +573,7 @@ export const ViewModel = DefineMap.extend({
 	 *
 	 */
 	makeOnlyActiveSlideOpaque() {
-		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		const allSlides = this.element.querySelectorAll('.slide');
 		allSlides.forEach((slide) => {
 			slide.style.opacity = 0;
 		});
@@ -652,10 +588,9 @@ export const ViewModel = DefineMap.extend({
 	 * @description
 	 * Reset the z-index of slides when resizing the window and going from
 	 * broken on desktop to mobile view
-	 *
 	 */
 	resetZIndexAllSlides() {
-		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		const allSlides = this.element.querySelectorAll('.slide');
 		allSlides.forEach((slide) => {
 			slide.style.zIndex = 0;
 		});
@@ -667,10 +602,9 @@ export const ViewModel = DefineMap.extend({
 	 * @description
 	 * Setting a larger z-index for the active slide allows the links to function properly
 	 * Set z-index to 100 for active slide, 0 for all other slides
-	 *
 	 */
 	setActiveSlideZIndex() {
-		const allSlides = document.querySelectorAll(`${this.classSelector} .slide`);
+		const allSlides = this.element.querySelectorAll('.slide');
 		allSlides.forEach((slide) => {
 			slide.style.zIndex = 0;
 		});
@@ -678,44 +612,28 @@ export const ViewModel = DefineMap.extend({
 		if (this.activeSlide) {
 			this.activeSlide.style.zIndex = 100;
 		}
-	}
-});
+	},
 
-export default Component.extend({
-	tag: 'tucows-donejs-carousel',
-	ViewModel,
-	view,
-	events: {
-		/**
-		 * @function activeSlideIndex change event handler
-		 *
-		 * @description
-		 * on change of this viewmodel property, fire function to change slidetrack location
-		 *
-		 */
-		'{viewModel} activeSlideIndex'() {
-			this.viewModel.changeToActiveSlide();
-		},
-		/**
-		 * @function window resize event handler
-		 *
-		 * @description
-		 * on window resize sees if it's desktop size and if it's supposed to break on desktop. fires a vm function if so.
-		 *
-		 */
-		'{window} resize'() {
-			let breakOnDesktop = this.viewModel.carouselOptions.breakOnDesktop;
-			let isDesktop = this.viewModel.isDesktop;
-			let dissolveTransition = this.viewModel.carouselOptions.transition == 'dissolve';
+	connectedCallback(element) {
+		this.element = element;
+		const duration = this.autoPlayDuration;
+		if (duration){
+			this.autoPlayInterval = setInterval(() => {
+				this.arrowClickHandler(this.autoPlayDirection);
+			}, duration);
+		}
+		this.listenTo(window, 'resize', () => {
+			const breakOnDesktop = this.carouselOptions.breakOnDesktop;
+			const dissolveTransition = this.carouselOptions.transition == 'dissolve';
 
 			if (breakOnDesktop) {
-				if (isDesktop) {
+				if (isDesktop()) {
 					// pause autoplay and set slide to 0
-					this.viewModel.handleBreakOnDesktop();
+					this.handleBreakOnDesktop();
 					// if dissolve transition, set opacity of all slides to 1
 					if (dissolveTransition) {
-						this.viewModel.makeAllSlidesOpaque();
-						this.viewModel.resetZIndexAllSlides();
+						this.makeAllSlidesOpaque();
+						this.resetZIndexAllSlides();
 					}
 				} else if (dissolveTransition) {
 					// if set to break on desktop, but not in desktop, this could mean
@@ -723,20 +641,25 @@ export default Component.extend({
 					// the active slide opaque and all the others transparent in order
 					// for dissolve transition to work properly. also set z-index for
 					// active slide to be larger than all the others
-					this.viewModel.makeOnlyActiveSlideOpaque();
-					this.viewModel.setActiveSlideZIndex();
+					this.makeOnlyActiveSlideOpaque();
+					this.setActiveSlideZIndex();
 				}
 			}
-		},
-		/**
-		 * @function element before-remove event handler
-		 *
-		 * @description
-		 * fires when the ting-carousel component is about to be removed. in this case, cleans up the setTimeout
-		 *
-		 */
-		'{element} beforeremove'() {
-			this.viewModel.clearAutoPlay();
-		},
+		});
+
+		this.listenTo('activeSlideIndex', () => {
+			this.changeToActiveSlide();
+		});
+
+		return () => {
+			this.clearAutoPlay();
+			this.stopListening();
+		};
 	}
+});
+
+export default Component.extend({
+	tag: 'tucows-donejs-carousel',
+	ViewModel,
+	view
 });

@@ -74,7 +74,7 @@
 				{{#if ./carouselOptions.navArrows}}
 					<div class="navArrows">
 
-						<a class="leftArrow arrow {{#is ./activeSlideIndex 0}}noMore{{/is}}" 
+						<a class="leftArrow arrow" 
 							on:click="./arrowClickHandler('left', scope.event)"
 						>
 							<svg role="img" class="iconSvg" title="left nav arrow">
@@ -82,7 +82,7 @@
 							</svg>
 						</a>
 						
-						<a class="rightArrow arrow {{#is ./activeSlideIndex ./lastSlideIndex}}noMore{{/is}}" 
+						<a class="rightArrow arrow" 
 							on:click="./arrowClickHandler('right', scope.event)"
 						>
 							<svg role="img" class="iconSvg" title="right nav arrow">
