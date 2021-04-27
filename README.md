@@ -1,7 +1,5 @@
 # @tucows/donejs-carousel-plugin
 
-[![Build Status](https://travis-ci.org/tucows/donejs-carousel-plugin.svg?branch=master)](https://travis-ci.org/tucows/donejs-carousel-plugin)
-
 A carousel plugin for DoneJS.
 
 ## Demo
@@ -73,7 +71,7 @@ Make sure to do the following:
 </tucows-donejs-carousel>
 ```
 
-### Define the JS properties 
+### Define the properties 
 
 define activeSlideIndex
 
