@@ -518,6 +518,9 @@ export const ViewModel = DefineMap.extend({
 	},
 
 	connectedCallback(element) {
+		if (!this.isDesktopBrowser){
+			return;
+		}
 		this.element = element;
 		this.slideCollection = element.querySelectorAll('.slide');
 		this.activeSlide = this.element.querySelector(`.slide${this.activeSlideIndex}`);
