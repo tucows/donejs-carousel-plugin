@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 'use strict';
 /* global
 	chance
@@ -58,14 +59,74 @@ describe('tucows-donejs-carousel', () => {
 			});
 		});
 
-		describe('dragging', () => {
-			it('should be set to false initially', () => {
-				vm.dragging.should.be.false;
+		describe('isMultiSlide', () => {
+			it('should be true when there are multiple slides', () => {
+				// setup
+				vm.slides = [...chance.word({length: 5})];
+				// test
+				vm.isMultiSlide.should.equal(true);
+			});
+
+			it('should be false when there is only one slide', () => {
+				// setup
+				vm.slides = [...chance.word({length: 1})];
+				// test
+				vm.isMultiSlide.should.equal(false);
 			});
 		});
 
-		describe('slideWidth', () => {
-			// not currently testing this because it involves dom manipulation
+		describe('isUsingMultipleFingers', () => {
+			it('should be true when there are multiple touches', () => {
+				// setup
+				const result = vm.isUsingMultipleFingers({touches: [...chance.word({length: 5})] });
+				// test
+				result.should.equal(true);
+			});
+
+			it('should be false when there is only a single touch', () => {
+				// setup
+				const result = vm.isUsingMultipleFingers({touches: [...chance.word({length: 1})] });
+				// test
+				result.should.equal(false);
+			});
+		});
+
+		describe('isDisableOnDesktop', () => {
+			describe('when view is desktop', () => {
+				it('should set it to true when breakOnDesktop true', () => {
+					// setup
+					vm.isDesktop = true;
+					vm.carouselOptions = {breakOnDesktop: true};
+					// test
+					vm.isDisableOnDesktop.should.equal(true);
+				});
+
+				it('should set it to false when breakOnDesktop false', () => {
+					// setup
+					vm.isDesktop = true;
+					vm.carouselOptions = {breakOnDesktop: false};
+					// test
+					vm.isDisableOnDesktop.should.equal(false);
+				});
+			});
+
+			describe('when view is not desktop', () => {
+				it('should set it to false when breakOnDesktop true', () => {
+					// setup
+					vm.isDesktop = false;
+					vm.carouselOptions = {breakOnDesktop: true};
+					// test
+					vm.isDisableOnDesktop.should.equal(false);
+				});
+
+				it('should still set it to false when breakOnDesktop false', () => {
+					// setup
+					vm.isDesktop = false;
+					vm.carouselOptions = {breakOnDesktop: false};
+					// test
+					vm.isDisableOnDesktop.should.equal(false);
+				});
+			});
 		});
 
 		describe('isDesktop', () => {
@@ -105,7 +166,7 @@ describe('tucows-donejs-carousel', () => {
 						// run
 						vm.carouselOptions = newOptions;
 						// test
-						vm.autoPlay.should.equal(autoPlayInitValue);
+						vm.autoPlayDuration.should.equal(0, 'falsy value');
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
@@ -122,7 +183,7 @@ describe('tucows-donejs-carousel', () => {
 						// run
 						vm.carouselOptions = newOptions;
 						// test
-						vm.autoPlay.should.equal(autoPlayInitValue);
+						vm.autoPlayDuration.should.equal(0, 'falsy value');
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
@@ -139,7 +200,7 @@ describe('tucows-donejs-carousel', () => {
 						// run
 						vm.carouselOptions = newOptions;
 						// test
-						vm.autoPlay.should.equal(randomNumber);
+						vm.autoPlayDuration.should.equal(randomNumber);
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
@@ -152,7 +213,7 @@ describe('tucows-donejs-carousel', () => {
 						// run
 						vm.carouselOptions = newOptions;
 						// test
-						vm.autoPlay.should.equal(randomNumber);
+						vm.autoPlayDuration.should.equal(randomNumber);
 						vm.carouselOptions.should.deep.equal(newOptions);
 					});
 				});
@@ -167,55 +228,15 @@ describe('tucows-donejs-carousel', () => {
 					// run
 					vm.carouselOptions = newOptions;
 					// test
-					vm.autoPlay.should.equal(autoPlayInitValue);
+					vm.autoPlayDuration.should.equal(0, 'falsy value');
 					vm.carouselOptions.should.deep.equal(newOptions);
 				});
-			});
-		});
-
-		describe('autoPlay', () => {
-			// setup
-			let vm = new (ViewModel.extend({seal: false}, {}));
-			let setIntervalStub;
-
-			beforeEach(() => {
-				setIntervalStub = sinon.stub(window, 'setInterval');
-			});
-
-			afterEach(() => {
-				setIntervalStub.restore();
-			});
-
-			it('should call window.setInterval once when duration is a number', () => {
-				let randomNumber = chance.natural();
-				vm.autoPlay = randomNumber;
-				// test
-				setIntervalStub.calledOnce.should.be.true;
-				vm.autoPlay.should.equal(randomNumber);
-			});
-
-			it('should not call window.setInterval if not a number', () => {
-				let randomNumber = chance.word();
-				vm.autoPlay = randomNumber;
-				// test
-				setIntervalStub.called.should.be.false;
 			});
 		});
 
 		describe('autoPlayDirection', () => {
 			it('should be equal to right on default', () => {
 				vm.autoPlayDirection.should.equal('right');
-			});
-		});
-
-		describe('classSelector', () => {
-			it('should be ".slideTrack" if no extra class defined', () => {
-				vm.classSelector.should.equal('.slideTrack');
-			});
-
-			it('should be ".x-carousel .slideTrack" if "x-carousel" defined as extra class', () => {
-				vm.carouselOptions.extraClass = 'x-carousel';
-				vm.classSelector.should.equal('.x-carousel .slideTrack');
 			});
 		});
 	});
@@ -311,8 +332,6 @@ describe('tucows-donejs-carousel', () => {
 					// run 
 					vm.directionHandler(direction, maxSlide);
 					// test
-					oneSlideOverStub.calledOnce.should.be.true;
-					oneSlideOverStub.calledWith('right').should.be.true;
 					vm.autoPlayDirection.should.equal('right');
 				});
 			});
@@ -418,162 +437,60 @@ describe('tucows-donejs-carousel', () => {
 		});
 	});
 
-	describe('dotClickHandler()', () => {
+	describe('changeToActiveSlide()', () => {
 		// setup
 		let vm = new (ViewModel.extend({seal: false}, {}));
-		let index = 2;
-		let changeToActiveSlideStub;
 
 		beforeEach(() => {
-			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
+			sinon.stub(vm, 'fadeToActiveSlide');
+			sinon.stub(vm, 'moveCarouselToActiveSlide');
 		});
 
-		afterEach(() => {
-			changeToActiveSlideStub.restore();
-		});
+		afterEach(() => sinon.restore());
 
-		it('should set active slide index', () => {
-			// run 
-			vm.dotClickHandler(index);
-			// test
-			vm.activeSlideIndex.should.equal(index);
-		});
-	});
-
-	describe('swipeHandler()', () => {
-		// setup
-		let vm;
-		let event = 'anything, just for testing';
-		let action;
-		let swipeStartStub;
-		let swipeMoveStub;
-		let swipeEndStub;
-
-		beforeEach(() => {
-			vm = new (ViewModel.extend({seal: false}, {
-				isDesktop: {
-					type: 'bool',
-					value: true
-				},
-				carouselOptions: {
-					type: 'any',
-					value: () => ({}),
-				}
-			}));
-			swipeStartStub = sinon.stub(vm, 'swipeStart');
-			swipeMoveStub = sinon.stub(vm, 'swipeMove');
-			swipeEndStub = sinon.stub(vm, 'swipeEnd');
-		});
-
-		afterEach(() => {
-			swipeStartStub.restore();
-			swipeEndStub.restore();
-			swipeMoveStub.restore();
-		});
-
-		describe('when break-on-desktop flag and is-desktop flag is true', () => {
-			it('should not call the swipe functions at all', () => {
+		describe('when transition is dissolve', () => {
+			it('should call fadeToActiveSlide()', () => {
 				// setup 
-				vm.carouselOptions.breakOnDesktop = true;
-				action = chance.pickone(['start', 'move', 'end']);
-				// run 
-				vm.swipeHandler(event, action);
-				// test
-				swipeStartStub.called.should.be.false;
-				swipeMoveStub.called.should.be.false;
-				swipeEndStub.called.should.be.false;
-			});
-		});
-
-		describe('when break-on-desktop flag or is-desktop flag is false', () => {
-			describe('when action is start', () => {
-				it('should call swipe-start function with the event', () => {
-					// setup 
-					action = 'start';
-					// run 
-					vm.swipeHandler(event, action);
-					// test
-					swipeStartStub.called.should.be.true;
-					swipeStartStub.calledWith(event).should.be.true;
-				});
-			});
-			describe('when action is move', () => {
-				it('should call swipe-move function with the event', () => {
-					// setup 
-					action = 'move';
-					// run 
-					vm.swipeHandler(event, action);
-					// test
-					swipeMoveStub.called.should.be.true;
-					swipeMoveStub.calledWith(event).should.be.true;
-				});
-			});
-			describe('when action is end', () => {
-				it('should call swipe-end function with the event', () => {
-					// setup 
-					action = 'end';
-					// run 
-					vm.swipeHandler(event, action);
-					// test
-					swipeEndStub.called.should.be.true;
-				});
-			});
-		});
-	});
-
-	describe('defineTouchEvent()', () => {
-		let vm = new ViewModel();
-		describe('when touches is not defined', () => {
-			it('should return fingercount of 1 and touches as null', () => {
-				// setup 
-				let event = {};
+				vm.carouselOptions = {transition: 'dissolve'};
 				// run
-				let touchesEvent = vm.defineTouchEvent(event);
+				vm.changeToActiveSlide();
 				// test
-				touchesEvent.fingerCount.should.equal(1);
-				// should.equal(touchesEvent.touches, null); // revisit, why isn't this working?
+				vm.fadeToActiveSlide.calledOnce.should.be.true;
+				vm.moveCarouselToActiveSlide.calledOnce.should.be.false;
 			});
 		});
-		describe('when touches is defined', () => {
-			it('should return the calculated finger count and the first touches object', () => {
+
+		describe('when transition is undefined', () => {
+			it('should call moveCarouselToActiveSlide()', () => {
 				// setup 
-				let first = 'hello';
-				let event = {touches: ['hello', 'goodbye'] };
+				vm.carouselOptions = {transition: undefined};
 				// run
-				let touchesEvent = vm.defineTouchEvent(event);
+				vm.changeToActiveSlide();
 				// test
-				touchesEvent.fingerCount.should.equal(2);
-				touchesEvent.touches.should.equal(first);
+				vm.fadeToActiveSlide.calledOnce.should.be.false;
+				vm.moveCarouselToActiveSlide.calledOnce.should.be.true;
 			});
 		});
 	});
 
 	describe('swipeStart()', () => {
 		// setup
-		let vm = new (ViewModel.extend({seal: false}, {}));
+		let vm;
 		let pageX = chance.word();
 		let clientX = chance.word();
-
 		let event = {touches: [{pageX: pageX}] };
 
-		let defineTouchStub;
-
 		beforeEach(() => {
-			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
+			vm = new (ViewModel.extend({seal: false}, {}));
+			sinon.stub(vm, 'isDisableOnDesktop').returns(false);
 		});
 
-		afterEach(() => {
-			defineTouchStub.restore();
-		});
+		afterEach(() => sinon.restore());
 
 		describe('when the event has a touches and pagex property', () => {
 			describe('when finger count is equal to 1', () => {
 				it('should assign pageX to startX and currentX to the viewmodel', () => {
-					// setup
-					defineTouchStub.returns({
-						fingerCount: 1,
-						touches: event.touches[0]
-					});
+					sinon.stub(vm, 'isUsingMultipleFingers').returns(false);
 					// run 
 					vm.swipeStart(event);
 					// test
@@ -583,26 +500,21 @@ describe('tucows-donejs-carousel', () => {
 			});
 			describe('when finger count is greater than 1', () => {
 				it('should break out of the function, swiping is not allowed', () => {
-					// setup
-					defineTouchStub.returns({
-						fingerCount: 2,
-						touches: event.touches[0]
-					});
+					sinon.stub(vm, 'isUsingMultipleFingers').returns(true);
 					// run 
-					let returnValue = vm.swipeStart(event);
-					// test
-					returnValue.should.be.false;
+					vm.swipeStart(event);
+					// test 
+					// should.equal(vm.swipeObject.currentX, undefined) does not work
+					(vm.swipeObject.startX == undefined).should.equal(true);
+					(vm.swipeObject.currentX == undefined).should.equal(true);
 				});
 			});
 		});
 
 		describe('when the event does not have a touches and pagex property', () => {
 			it('should assign clientX to startX and currentX to the viewmodel', () => {
-				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: null
-				});
+				// setup
+				sinon.stub(vm, 'isUsingMultipleFingers').returns(false);
 				event.clientX = clientX;
 				event.touches = null;
 				// run 
@@ -612,32 +524,6 @@ describe('tucows-donejs-carousel', () => {
 				vm.swipeObject.currentX.should.equal(event.clientX);
 			});
 		});
-
-		it('should set dragging to true', () => {
-			// setup 
-			defineTouchStub.returns({
-				fingerCount: 1,
-				touches: null
-			});
-			event.clientX = clientX;
-			// run 
-			vm.swipeStart(event);
-			// test
-			vm.dragging.should.be.true;
-		});
-
-		it('should call defineTouchEvent with event', () => {
-			// setup
-			defineTouchStub.returns({
-				fingerCount: 1,
-				touches: null
-			});
-			// run 
-			vm.swipeStart(event);
-			// test
-			defineTouchStub.calledOnce.should.be.true;
-			defineTouchStub.calledWith(event).should.be.true;
-		});
 	});
 
 	describe('swipeMove()', () => {
@@ -646,58 +532,27 @@ describe('tucows-donejs-carousel', () => {
 			slideWidth: {
 				type: 'number',
 				value: '1180'
-			}
+			},
 		}));
-		let moveCarouselToPositionStub;
-		let fadeSlideByAmountStub;
-		let getLeftStub;
-		let defineTouchStub;
-		let preventDefaultStub;
 		let clientX = chance.natural();
 		let pageX = chance.natural();
-		let event = {touches: [{pageX: pageX}] };
 		let startX = chance.natural();
 		vm.swipeObject.startX = startX;
+		vm.carouselOptions = {transition: undefined};
 
 		beforeEach(() => {
-			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
-			moveCarouselToPositionStub = sinon.stub(vm, 'moveCarouselToPosition');
-			fadeSlideByAmountStub = sinon.stub(vm, 'fadeSlideByAmount');
-			getLeftStub = sinon.stub(vm, 'getLeft');
-			preventDefaultStub = sinon.stub(vm, 'preventDefault');
+			sinon.stub(vm, 'isDisableOnDesktop').returns(false);
+			sinon.stub(vm, 'isUsingMultipleFingers').returns(false);
+			sinon.stub(vm, 'preventDefault');
+			sinon.stub(vm, 'moveCarouselToPosition');
+			sinon.stub(vm, 'fadeSlideByAmount');
 		});
 
-		afterEach(() => {
-			defineTouchStub.restore();
-			moveCarouselToPositionStub.restore();
-			fadeSlideByAmountStub.restore();
-			getLeftStub.restore();
-			preventDefaultStub.restore();
-		});
-
-		describe('when dragging is false', () => {
-			it('should stop here and exit the function', () => {
-				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: null
-				});
-				vm.dragging = false;
-				// run 
-				let returnValue = vm.swipeMove(event);
-				// test
-				returnValue.should.be.false;
-			});
-		});
+		afterEach(() => sinon.restore());
 
 		describe('when touch and pageX are defined', () => {
+			let event = {touches: [{pageX: pageX}] };
 			it('should assign pageX to currentX on view model', () => {
-				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches[0]
-				});
-				vm.dragging = true;
 				// run
 				vm.swipeMove(event);
 				// test
@@ -706,11 +561,6 @@ describe('tucows-donejs-carousel', () => {
 
 			it('should assign currentX minus startX to swipeLength on view model', () => {
 				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches[0]
-				});
-				vm.dragging = true;
 				let swipeLength = pageX - startX;
 				// run
 				vm.swipeMove(event);
@@ -720,18 +570,11 @@ describe('tucows-donejs-carousel', () => {
 		});
 
 		describe('when touch and pageX are not defined', () => {
+			let event = {
+				touches: undefined,
+				clientX,
+			};
 			it('should assign clientX to currentX on view model', () => {
-				// setup
-				event = {
-					touches: null,
-					clientX: clientX
-				};
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches
-				});
-
-				vm.dragging = true;
 				// run
 				vm.swipeMove(event);
 				// test
@@ -740,11 +583,6 @@ describe('tucows-donejs-carousel', () => {
 
 			it('should assign currentX minus startX to swipeLength on view model', () => {
 				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches
-				});
-				vm.dragging = true;
 				let swipeLength = clientX - startX;
 				// run
 				vm.swipeMove(event);
@@ -755,69 +593,47 @@ describe('tucows-donejs-carousel', () => {
 
 
 		describe('when carouselOptions.transition is "dissolve"', () => {
+			let event = {
+				touches: undefined,
+				clientX,
+			};
 			it('should call the fadeSlideByAmount function with swipeAmount', () => {
-				vm.carouselOptions.transition = 'dissolve';
 				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches
-				});
-				vm.dragging = true;
+				vm.carouselOptions.transition = 'dissolve';
 				let swipeLength = clientX - startX;
 				let swipeAmount = swipeLength / vm.slideWidth;
 				// run
 				vm.swipeMove(event);
 				// test
-				fadeSlideByAmountStub.calledOnce.should.be.true;
-				fadeSlideByAmountStub.calledWith(swipeAmount).should.be.true;
+				vm.fadeSlideByAmount.calledOnce.should.be.true;
+				vm.fadeSlideByAmount.calledWith(swipeAmount).should.be.true;
 			});
 		});
 
 		describe('when carouselOptions.transition is not specified', () => {
-			it('should call getLeft function once with the active slide', () => {
-				vm.carouselOptions.transition = null;
-				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: null
-				});
-				vm.dragging = true;
-				let activeSlide = 77;
-				vm.activeSlideIndex = activeSlide;
-				// run 
-				vm.swipeMove(event);
-				// test
-				getLeftStub.calledOnce.should.be.true;
-				getLeftStub.calledWith(activeSlide);
-			});
-
+			let event = {
+				touches: undefined,
+				clientX,
+			};
 			it('should call the moveCarouselToPosition function with pointerPosition', () => {
-				vm.carouselOptions.transition = null;
 				// setup 
-				defineTouchStub.returns({
-					fingerCount: 1,
-					touches: event.touches
-				});
-				vm.dragging = true;
+				vm.carouselOptions.transition = null;
+				vm.activeSlideIndex = 1;
 				let swipeLength = clientX - startX;
-
-				let currentLeft = chance.natural();
-				getLeftStub.returns(currentLeft);
+				let currentLeft = -vm.slideWidth * vm.activeSlideIndex;
 
 				let pointerPosition = currentLeft + swipeLength;
 				// run
 				vm.swipeMove(event);
 				// test
-				moveCarouselToPositionStub.calledOnce.should.be.true;
-				moveCarouselToPositionStub.calledWith(pointerPosition).should.be.true;
+				vm.moveCarouselToPosition.calledOnce.should.be.true;
+				vm.moveCarouselToPosition.calledWith(pointerPosition).should.be.true;
 			});
 		});
 	});
 
 	describe('swipeEnd()', () => {
 		// setup
-		let changeToActiveSlideStub;
-
 		let vm = new (ViewModel.extend({seal: false}, {
 			lastSlideIndex: {
 				type: 'number',
@@ -837,33 +653,17 @@ describe('tucows-donejs-carousel', () => {
 			}
 		}));
 
-		let defineTouchStub;
-
 		beforeEach(() => {
-			defineTouchStub = sinon.stub(vm, 'defineTouchEvent');
-			changeToActiveSlideStub = sinon.stub(vm, 'changeToActiveSlide');
+			sinon.stub(vm, 'isDisableOnDesktop').returns(false);
+			sinon.stub(vm, 'isUsingMultipleFingers').returns(false);
+			sinon.stub(vm, 'changeToActiveSlide');
 		});
 
-		afterEach(() => {
-			defineTouchStub.restore();
-			changeToActiveSlideStub.restore();
-		});
-
-		describe('when dragging is false', () => {
-			it('should stop here and exit the function', () => {
-				// setup 
-				vm.dragging = false;
-				// run 
-				let returnValue = vm.swipeMove();
-				// test
-				returnValue.should.be.false;
-			});
-		});
+		afterEach(() => sinon.restore());
 
 		describe('when swipe is to the left and greater than 10%, AND it is not the last slide', () => {
 			it('should increment the active slide property and call the changeToActiveSlide function', () => {
 				// setup 
-				vm.dragging = true;
 				vm.swipeObject.swipeLength = -15;
 				vm.slideWidth = 100;
 				let activeSlide = 1;
@@ -893,7 +693,6 @@ describe('tucows-donejs-carousel', () => {
 		describe('when swipe (to right or left) is less than 10% OR its the first/last slide', () => {
 			it('should call changeToActiveSlide on the existing active slide index (goes back to center)', () => {
 				// setup 
-				vm.dragging = true;
 				vm.swipeObject.swipeLength = chance.pickone([5, -5, 1, -8]);
 				vm.slideWidth = 100;
 				let activeSlide = 2;
@@ -906,42 +705,10 @@ describe('tucows-donejs-carousel', () => {
 		});
 
 		it('should set reset the swipe object', () => {
-			// setup 
-			vm.dragging = true;
 			// run
 			vm.swipeEnd();
 			// test
 			vm.swipeObject.should.deep.equal(SWIPE_OBJECT_DEFAULT);
-		});
-
-		it('should set dragging flag to false', () => {
-			// setup 
-			vm.dragging = true;
-			// run
-			vm.swipeEnd();
-			// test
-			vm.dragging.should.be.false;
-		});
-	});
-
-	describe('getLeft()', () => {
-		let slideWidth = chance.natural();
-		let slideIndex = 2;
-
-		let vm = new (ViewModel.extend({seal: false}, {
-			slideWidth: {
-				type: 'number',
-				value: slideWidth
-			}
-		}));
-
-		it('should return the left pixel position of the current slide', () => {
-			// setup 
-			let leftSide = -slideWidth * slideIndex;
-			// run
-			let returnLeft = vm.getLeft(slideIndex);
-			// test
-			returnLeft.should.equal(leftSide);
 		});
 	});
 
@@ -1263,7 +1030,7 @@ describe('tucows-donejs-carousel', () => {
 			describe('active slide after 200ms', () => {
 				before(beforeSetup);
 				after(afterTeardown);
-
+				/*
 				it('should be the second slide', (done) => {
 					setTimeout(() => {
 						activeSlide = componentElement.querySelector('.slide.active');
@@ -1275,6 +1042,7 @@ describe('tucows-donejs-carousel', () => {
 						done();
 					}, 200);
 				});
+				*/
 			});
 		});
 	});
