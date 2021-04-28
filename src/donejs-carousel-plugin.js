@@ -78,6 +78,12 @@ export const ViewModel = DefineMap.extend({
 	 * @description carousel element
 	 */
 	isDesktop: 'boolean',
+
+	/**
+	 * @property {number} slideWidth
+	 * @description returns the width of the slide (assumes all slides are equal width)
+	 * */
+	slideWidth: 'number',
 	/**
 	 * @property {Boolean} isDisableOnDesktop
 	 * @description if breakOnDesktop and is on desktop view then make sure the slides wont autoplay on desktop view
@@ -109,15 +115,6 @@ export const ViewModel = DefineMap.extend({
 			}
 		}
 		return 0;
-	},
-	/**
-	 * @property {number} slideWidth
-	 * @description returns the width of the slide (assumes all slides are equal width)
-	 * */
-	get slideWidth() {
-		// grab the first slide; assumption - all slides are same width
-		const slide = this.element.querySelector('.slide');
-		return slide.offsetWidth;
 	},
 	/**
 	 * @property {number} lastSlideIndex
@@ -525,6 +522,7 @@ export const ViewModel = DefineMap.extend({
 		this.slideCollection = element.querySelectorAll('.slide');
 		this.activeSlide = this.element.querySelector(`.slide${this.activeSlideIndex}`);
 		this.isDesktop = isDesktop(); // set view on initial component render
+		this.slideWidth = this.slideCollection ? this.slideCollection[0].offsetWidth : 0;
 		if (!this.isMultiSlide){
 			return; // if its not a carousel with multiple slide then no need to create listeners 
 		}
@@ -538,6 +536,8 @@ export const ViewModel = DefineMap.extend({
 		}
 		this.listenTo(window, 'resize', () => {
 			this.isDesktop = isDesktop(); // set view on resize event
+			const slide = this.element.querySelector('.slide'); // reset slide width on resize
+			this.slideWidth = slide.offsetWidth;
 			if (breakOnDesktop) {
 				if (this.isDesktop) {
 					// pause autoplay and set slide to 0
