@@ -1,6 +1,6 @@
 {
   "name": "@tucows/donejs-carousel-plugin",
-  "version": "3.6.0",
+  "version": "3.3.0",
   "description": "A carousel plugin for donejs",
   "homepage": "https://github.com/tucows/donejs-carousel-plugin",
   "repository": {
@@ -13,6 +13,10 @@
       "name": "Paul Tichonczuk",
       "email": "junk@tracer.ca",
       "url": "http://tracer.ca"
+    },
+    {
+      "name": "Jerome Vercide",
+      "email": "jvercide@tucowsinc.com"
     }
   ],
   "scripts": {
